@@ -27,10 +27,10 @@
 }
 
 .hexgrid .selection {
-    background: #ddf;
+    background: #eef;
     height: 1em;
     z-index: -1;
 }
 .hexgrid:focus .selection {
-    background: #ccf;
+    background: #ddf;
 }
