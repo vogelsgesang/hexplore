@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { DataGrid } from "./DataGrid"
 
-class App extends React.Component<any, {}> {
+class App extends React.Component<any, any> {
+    state = {
+        cursorPosition: 0,
+        selection: {from: 0, to: 1},
+    }
+
     render() {
-        return <DataGrid data={this.props.data}></DataGrid>;
+        return (
+            <div>
+                <DataGrid data={this.props.data}
+                    cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                    selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}/>
+                <div>position: {this.state.cursorPosition}</div>
+            </div>
+        );
     }
 }
 

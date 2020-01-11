@@ -23,5 +23,14 @@
     border: 1px solid green;
 }
 .hexgrid:focus .octet.cursor span {
-    background: #88ffc3;
+    background: rgba(136, 255, 195, 0.4)
+}
+
+.hexgrid .selection {
+    background: #ddf;
+    height: 1em;
+    z-index: -1;
+}
+.hexgrid:focus .selection {
+    background: #ccf;
 }

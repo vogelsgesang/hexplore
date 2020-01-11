@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, CSSProperties, useLayoutEffect, useRef } from "react";
 import "./DataGrid.css"
 import { assert } from "./util";
 
@@ -7,35 +7,67 @@ function byteAsHex(a:number) {
     return table[Math.floor(a/16)] + table[a%16];
 }
 
-interface HighlightRange {
-    from: number,
-    to: number,
-    key: string,
-    className?: string;
-    style?: CSSProperties,
+export interface Range {
+    from : number;
+    to : number;
 }
 
-export function DataGrid({data} : { data: ArrayBuffer}) {
-    const linewidth = 20;
-    const highlightRanges : HighlightRange[] = [
-        {from: 0, to: 20, style:{marginTop: "1.1em", borderBottom:"1px dotted red"}, key: "range0"},
-        {from: 17, to: 23, style:{background: "red", marginTop: "1em", height:"1px"}, key: "range1"},
-        {from: 49, to: 64, style:{background: "#ccc", height:"1em", zIndex: -1}, key: "range2"},
-    ];
-    const view = new Int8Array(data);
+export interface HighlightRange {
+    from : number,
+    to : number,
+    key : string,
+    className? : string;
+    style? : CSSProperties,
+}
 
-    const [position, setPosition] = useState(0);
+interface DataGridProperties {
+    data : ArrayBuffer;
+    highlightRanges? : HighlightRange[];
+    cursorPosition : number;
+    setCursorPosition? : (pos:number)=>void;
+    selection? : Range;
+    setSelection? : (r:Range)=>void;
+}
+
+export function DataGrid(props : DataGridProperties) {
+    const linewidth = 20;
+    let highlightRanges = props.highlightRanges ?? [];
+    const cursorPosition = props.cursorPosition;
+    const setCursorPosition = props.setCursorPosition ?? ((x:number) => {});
+    const selection = props.selection;
+    const setSelectionRaw = props.setSelection ?? ((x:Range) => {});
+    const view = new Int8Array(props.data);
+    if (selection !== undefined) {
+        highlightRanges = highlightRanges.concat([{from: selection.from, to: selection.to, key: "selection", className: "selection"}]);
+    }
+
     // Event handlers influencing the current position
+    const [selectionGestureStart, setSelectionGestureStart] = useState(cursorPosition);
+    const setSelection = (a : number, b : number) => {
+        if (a < b) setSelectionRaw({from: a, to: b+1});
+        else setSelectionRaw({from: b, to: a+1});
+    }
+    const updateCursorPosition = (pos : number, select : boolean) => {
+        setCursorPosition(pos);
+        if (select) {
+            setSelection(selectionGestureStart, pos);
+        } else {
+            setSelectionGestureStart(pos);
+            setSelection(pos, pos);
+        }
+    }
     const clickOctet = (e:React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        setPosition(parseInt(e.currentTarget.dataset.idx as string) || 0);
+        updateCursorPosition(parseInt(e.currentTarget.dataset.idx as string), e.shiftKey);
     }
     const keyPress = (e:React.KeyboardEvent<HTMLDivElement>) => {
+        let newPos = undefined;
         switch (e.key) {
-            case "ArrowLeft": setPosition(Math.max(position - 1, 0)); break;
-            case "ArrowRight": setPosition(Math.min(position + 1, view.length - 1)); break;
-            case "ArrowUp": setPosition((position >= linewidth) ? (position - linewidth) : position); break;
-            case "ArrowDown": setPosition((position < view.length - linewidth) ? (position + linewidth) : position); break;
+            case "ArrowLeft": newPos = Math.max(cursorPosition - 1, 0); break;
+            case "ArrowRight": newPos = Math.min(cursorPosition + 1, view.length - 1); break;
+            case "ArrowUp": newPos = (cursorPosition >= linewidth) ? (cursorPosition - linewidth) : cursorPosition; break;
+            case "ArrowDown": newPos = (cursorPosition < view.length - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
         }
+        if (newPos) updateCursorPosition(newPos, e.shiftKey);
     }
 
     // Highlights are positioned after rendering the main DOM
@@ -66,7 +98,7 @@ export function DataGrid({data} : { data: ArrayBuffer}) {
         const lineLimit = Math.min(view.length, idx + linewidth);
         let line = [];
         for (; idx < lineLimit; ++idx) {
-            let className = "octet " + (idx == position ? "cursor" : "");
+            let className = "octet " + (idx == cursorPosition ? "cursor" : "");
             line.push(<span key={"o"+idx} className={className} data-idx={idx} onClick={clickOctet}><span>{byteAsHex(view[idx])}</span></span>);
         }
         let highlightDivs = [];
