@@ -1,6 +1,7 @@
 .hexgrid {
     font-family: monospace;
     color: #00a;
+    font-size: 1.5em;
 -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
