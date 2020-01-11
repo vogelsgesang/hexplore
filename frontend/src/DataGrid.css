@@ -12,5 +12,15 @@
 
 .hexgrid .octet {
     display: inline-block;
-    padding-right: .8em;
+    padding-left: .8em;
+}
+.hexgrid .octet:first-child {
+    padding-left: 0;
+}
+.hexgrid .octet.cursor span {
+    margin: -1px;
+    border: 1px solid green;
+}
+.hexgrid:focus .octet.cursor span {
+    background: #88ffc3;
 }
