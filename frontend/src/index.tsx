@@ -8,6 +8,7 @@ interface AppProps {
 }
 
 interface AppState {
+    lineWidth : number;
     cursorPosition : number;
     selection : Range;
     highlighted : Array<HighlightRange>;
@@ -22,8 +23,18 @@ const styles : Array<CSSProperties> = [
     {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
+function parseIntWithDefault(str : string, defaultValue : number) {
+    const parsed = parseInt(str);
+    return !isNaN(parsed) ? parsed : defaultValue;
+}
+
+function clampRange(val : number, min : number, max : number) {
+    return Math.min(max, Math.max(min, val));
+}
+
 class App extends React.Component<AppProps, AppState> {
     state = {
+        lineWidth: 16,
         cursorPosition: 0,
         selection: {from: 0, to: 1},
         highlighted: new Array<HighlightRange>()
@@ -54,11 +65,12 @@ class App extends React.Component<AppProps, AppState> {
             <div onKeyPress={(e) => this.onKeyPress(e)}>
                 <div style={{display: "flex"}}>
                     <div style={{flexShrink: 1}}>
-                        <AddressGutter stepSize={20} end={length}/>
+                        <AddressGutter stepSize={this.state.lineWidth} end={length}/>
                     </div>
                     <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
                     <div style={{flexShrink: 1}}>
                         <DataGrid data={this.props.data} renderer={byteAsHex}
+                            lineWidth={this.state.lineWidth}
                             className="spaced"
                             cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
                             selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
@@ -68,10 +80,13 @@ class App extends React.Component<AppProps, AppState> {
                     <div style={{flexShrink: 1}}>
                         <DataGrid data={this.props.data} renderer={byteAsAscii}
                             cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                            lineWidth={this.state.lineWidth}
                             selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
                             highlightRanges={this.state.highlighted}/>
                     </div>
                 </div>
+                Width:
+                <input type="text" size={2} value={this.state.lineWidth} onChange={(e) => this.setState({lineWidth: clampRange(parseIntWithDefault(e.target.value, this.state.lineWidth), 1, 128)})}/>
                 <div>{markList}</div>
                 <div>position: {this.state.cursorPosition}</div>
             </div>

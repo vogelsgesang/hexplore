@@ -32,7 +32,8 @@ export interface HighlightRange {
 
 interface DataGridProperties {
     data : ArrayBuffer;
-    renderer : (x:number) => string;
+    renderer? : (x:number) => string;
+    lineWidth? : number;
     highlightRanges? : HighlightRange[];
     cursorPosition : number;
     setCursorPosition? : (pos:number)=>void;
@@ -43,8 +44,8 @@ interface DataGridProperties {
 
 export function DataGrid(props : DataGridProperties) {
     const view = new Int8Array(props.data);
-    const renderer = props.renderer;
-    const linewidth = 20;
+    const renderer = props.renderer ?? byteAsHex;
+    const linewidth = props.lineWidth ?? 16;
     let highlightRanges = props.highlightRanges ?? [];
     const cursorPosition = props.cursorPosition;
     const setCursorPosition = props.setCursorPosition ?? ((x:number) => {});
