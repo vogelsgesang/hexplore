@@ -12,6 +12,9 @@
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Opera and Firefox */
 }
+.data-grid:focus {
+    outline-width: 0;
+}
 
 .data-grid .element {
     display: inline-block;
