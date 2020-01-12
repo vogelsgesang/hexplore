@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, CSSProperties } from "react";
+import { HighlightRange, Range } from "./DataGrid";
+import { HexViewer } from "./HexViewer";
 import ReactDOM from "react-dom";
-import { DataGrid, HighlightRange, Range, byteAsAscii, byteAsHex } from "./DataGrid"
-import { AddressGutter } from "./AddressGutter"
 import "./index.css"
 
 interface AppProps {
@@ -60,33 +60,13 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     render() {
-        let length = this.props.data.byteLength;
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%"}}>
-                <div style={{overflow: "auto"}}>
-                    <div style={{display: "flex", flex: 1}}>
-                        <div style={{flexShrink: 1}}>
-                            <AddressGutter stepSize={this.state.lineWidth} end={length}/>
-                        </div>
-                        <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
-                        <div style={{flexShrink: 1}}>
-                            <DataGrid data={this.props.data} renderer={byteAsHex}
-                                lineWidth={this.state.lineWidth}
-                                className="spaced"
-                                cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                                selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                                highlightRanges={this.state.highlighted}/>
-                        </div>
-                        <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
-                        <div style={{flexShrink: 1}}>
-                            <DataGrid data={this.props.data} renderer={byteAsAscii}
-                                cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                                lineWidth={this.state.lineWidth}
-                                selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                                highlightRanges={this.state.highlighted}/>
-                        </div>
-                    </div>
-                </div>
+                <HexViewer data={this.props.data}
+                    cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                    lineWidth={this.state.lineWidth}
+                    selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
+                    highlightRanges={this.state.highlighted}/>
                 <div style={{flex: 0}}>
                     <span style={{padding: ".2em", display: "inline-block"}}>
                         Width:
