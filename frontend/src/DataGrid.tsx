@@ -43,7 +43,7 @@ interface DataGridProperties {
 }
 
 export function DataGrid(props : DataGridProperties) {
-    const view = new Int8Array(props.data);
+    const view = new Uint8Array(props.data);
     const renderer = props.renderer ?? byteAsHex;
     const linewidth = props.lineWidth ?? 16;
     let highlightRanges = props.highlightRanges ?? [];
