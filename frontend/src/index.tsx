@@ -1,6 +1,11 @@
 import React, { KeyboardEvent, CSSProperties } from "react";
 import ReactDOM from "react-dom";
 import { DataGrid, HighlightRange, Range, byteAsAscii, byteAsHex } from "./DataGrid"
+import { AddressGutter } from "./AddressGutter"
+
+interface AppProps {
+    data : ArrayBuffer;
+}
 
 interface AppState {
     cursorPosition : number;
@@ -17,7 +22,7 @@ const styles : Array<CSSProperties> = [
     {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
-class App extends React.Component<any, AppState> {
+class App extends React.Component<AppProps, AppState> {
     state = {
         cursorPosition: 0,
         selection: {from: 0, to: 1},
@@ -43,10 +48,15 @@ class App extends React.Component<any, AppState> {
     }
 
     render() {
+        let length = this.props.data.byteLength;
         let markList = this.state.highlighted.map((e) => <div>{e.from} - {e.to}</div>);
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)}>
                 <div style={{display: "flex"}}>
+                    <div style={{flexShrink: 1}}>
+                        <AddressGutter stepSize={20} end={length}/>
+                    </div>
+                    <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
                     <div style={{flexShrink: 1}}>
                         <DataGrid data={this.props.data} renderer={byteAsHex}
                             className="spaced"
