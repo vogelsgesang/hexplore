@@ -67,7 +67,11 @@ export function DataGrid(props : DataGridProperties) {
             case "ArrowUp": newPos = (cursorPosition >= linewidth) ? (cursorPosition - linewidth) : cursorPosition; break;
             case "ArrowDown": newPos = (cursorPosition < view.length - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
         }
-        if (newPos !== undefined) updateCursorPosition(newPos, e.shiftKey);
+        if (newPos !== undefined) {
+            updateCursorPosition(newPos, e.shiftKey);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     }
 
     // Highlights are positioned after rendering the main DOM
