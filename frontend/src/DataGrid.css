@@ -1,7 +1,9 @@
-.hexgrid {
+.data-grid {
     font-family: monospace;
     color: #00a;
-    font-size: 1.5em;
+    font-size: 1.2em;
+    margin: .5em;
+    white-space: nowrap;
 -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -11,26 +13,29 @@
                                 supported by Chrome, Opera and Firefox */
 }
 
-.hexgrid .octet {
+.data-grid .element {
     display: inline-block;
+    white-space: pre;
+}
+.data-grid.spaced .element {
     padding-left: .8em;
 }
-.hexgrid .octet:first-child {
+.data-grid.spaced .element:first-child {
     padding-left: 0;
 }
-.hexgrid .octet.cursor span {
+.data-grid .element.cursor span {
     margin: -1px;
     border: 1px solid green;
 }
-.hexgrid:focus .octet.cursor span {
+.data-grid:focus .element.cursor span {
     background: rgba(136, 255, 195, 0.4)
 }
 
-.hexgrid .selection {
+.data-grid .selection {
     background: #eef;
     height: 1em;
     z-index: -1;
 }
-.hexgrid:focus .selection {
+.data-grid:focus .selection {
     background: #ddf;
 }

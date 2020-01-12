@@ -1,6 +1,6 @@
 import React, { KeyboardEvent, CSSProperties } from "react";
 import ReactDOM from "react-dom";
-import { DataGrid, HighlightRange, Range } from "./DataGrid"
+import { DataGrid, HighlightRange, Range, byteAsAscii, byteAsHex } from "./DataGrid"
 
 interface AppState {
     cursorPosition : number;
@@ -12,9 +12,9 @@ const styles : Array<CSSProperties> = [
     {height: "1em", zIndex: -1, backgroundColor: "#fcc"},
     {height: "1em", zIndex: -1, backgroundColor: "#cfc"},
     {height: "1em", zIndex: -1, backgroundColor: "#ccf"},
-    {marginTop: "1.1em", borderWidth:"3px", borderBottomStyle: "solid", borderColor: "red"},
-    {marginTop: "1.1em", borderWidth:"3px", borderBottomStyle: "solid", borderColor: "green"},
-    {marginTop: "1.1em", borderWidth:"3px", borderBottomStyle: "solid", borderColor: "blue"},
+    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "red"},
+    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "green"},
+    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
 class App extends React.Component<any, AppState> {
@@ -46,10 +46,22 @@ class App extends React.Component<any, AppState> {
         let markList = this.state.highlighted.map((e) => <div>{e.from} - {e.to}</div>);
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)}>
-                <DataGrid data={this.props.data}
-                    cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                    selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                    highlightRanges={this.state.highlighted}/>
+                <div style={{display: "flex"}}>
+                    <div style={{flexShrink: 1}}>
+                        <DataGrid data={this.props.data} renderer={byteAsHex}
+                            className="spaced"
+                            cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                            selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
+                            highlightRanges={this.state.highlighted}/>
+                    </div>
+                    <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
+                    <div style={{flexShrink: 1}}>
+                        <DataGrid data={this.props.data} renderer={byteAsAscii}
+                            cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                            selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
+                            highlightRanges={this.state.highlighted}/>
+                    </div>
+                </div>
                 <div>{markList}</div>
                 <div>position: {this.state.cursorPosition}</div>
             </div>
