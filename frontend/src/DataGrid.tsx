@@ -33,6 +33,8 @@ export interface HighlightRange {
 interface DataGridProperties {
     data : ArrayBuffer;
     renderer? : (x:number) => string;
+    startOffset? : number;
+    endOffset? : number;
     lineWidth? : number;
     highlightRanges? : HighlightRange[];
     cursorPosition : number;
@@ -111,9 +113,11 @@ export function DataGrid(props : DataGridProperties) {
 
     // Render the grid
     let lines = [];
-    for (let idx = 0; idx < view.length; ) {
+    const startOffset = props.startOffset ?? 0;
+    const endOffset = props.endOffset ?? view.length;
+    for (let idx = startOffset; idx < endOffset; ) {
         const lineStart = idx;
-        const lineLimit = Math.min(view.length, idx + linewidth);
+        const lineLimit = Math.min(endOffset, idx + linewidth);
         let line = [];
         for (; idx < lineLimit; ++idx) {
             let className = "element " + (idx == cursorPosition ? "cursor" : "");
@@ -130,7 +134,7 @@ export function DataGrid(props : DataGridProperties) {
             }
         }
         lines.push(
-            <div key={lineStart} style={{position:"relative"}}>
+            <div key={lineStart} className="line">
                 {line}
                 {highlightDivs}
             </div>);

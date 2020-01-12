@@ -1,8 +1,8 @@
 .address-gutter {
     font-family: monospace;
     color: #00a;
-    font-size: 1.2em;
-    margin: .5em;
+    font-size: 17.6px;
+    min-width: 4em;
     white-space: nowrap;
     text-align: right;
 -webkit-touch-callout: none; /* iOS Safari */
@@ -12,4 +12,8 @@
       -ms-user-select: none; /* Internet Explorer/Edge */
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Opera and Firefox */
+}
+
+.address-gutter .address {
+    height: 17.6px;
 }
