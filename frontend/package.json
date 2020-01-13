@@ -5,14 +5,18 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "watch": "webpack -w"
+    "build": "webpack --mode production",
+    "dev-server": "webpack-dev-server"
   },
   "author": "Adrian Vogelsgesang",
   "license": "MIT",
+  "sideEffects": [
+    "*.css"
+  ],
   "devDependencies": {
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
+    "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^3.4.2",
     "react": "^16.12.0",
@@ -22,6 +26,7 @@
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.4",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   }
 }

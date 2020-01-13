@@ -1,9 +1,17 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: "development",
   entry: './src/index.tsx',
+  mode: "development",
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyPlugin([
+      "src/index.html",
+      "test.data"
+    ]),
+  ],
   module: {
     rules: [
       {
@@ -24,9 +32,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  plugins: [
-    new CopyPlugin([
-      "src/index.html"
-    ]),
-  ],
+  devServer: {
+    contentBase: './dist',
+  },
 };
