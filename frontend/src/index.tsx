@@ -81,7 +81,8 @@ class App extends React.Component<AppProps, AppState> {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    fetch('test.data')
+    const fileName = new URL(window.location.href).searchParams.get("file") ?? "test.data";
+    fetch(fileName)
     .then(function(response) {
         if (!response.ok) {
             throw new Error('HTTP error, status = ' + response.status);
