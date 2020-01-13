@@ -62,7 +62,8 @@ class App extends React.Component<AppProps, AppState> {
     render() {
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%"}}>
-                <HexViewer data={this.props.data}
+                <HexViewer style={{flex: 1}}
+                    data={this.props.data}
                     cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
                     lineWidth={this.state.lineWidth}
                     selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
