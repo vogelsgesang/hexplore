@@ -110,7 +110,7 @@ export function HexViewer(props : HexViewerProps) {
         <div className={props.className} style={{...props.style, overflow: "auto"}} ref={ref}>
             <div style={{display: "flex", flex: 1}}>
                 <div style={{flexShrink: 1}}>
-                    <div style={{height: listHeight, position: "relative", overflow: "hidden", margin: ".5em"}}>
+                    <div style={{height: listHeight, position: "relative", margin: ".5em"}}>
                         <div style={{transform: `translateY(${firstRenderedIdx*elementHeight}px)`}}>
                             <AddressGutter {...scrollRelatedProps}/>
                         </div>
@@ -118,7 +118,7 @@ export function HexViewer(props : HexViewerProps) {
                 </div>
                 <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
                 <div style={{flexShrink: 1}}>
-                    <div style={{height: listHeight, position: "relative", overflow: "hidden", margin: ".5em"}}>
+                    <div style={{height: listHeight, position: "relative", margin: ".5em"}}>
                         <div style={{transform: `translateY(${firstRenderedIdx*elementHeight}px)`}}>
                             <DataGrid {...gridProps}
                                 renderer={byteAsHex}
@@ -128,7 +128,7 @@ export function HexViewer(props : HexViewerProps) {
                 </div>
                 <div style={{borderLeft: "1px solid red", margin: "0 .1em"}}/>
                 <div style={{flexShrink: 1}}>
-                    <div style={{height: listHeight, position: "relative", overflow: "hidden", margin: ".5em"}}>
+                    <div style={{height: listHeight, position: "relative", margin: ".5em"}}>
                         <div style={{transform: `translateY(${firstRenderedIdx*elementHeight}px)`}}>
                             <DataGrid {...gridProps}
                                 renderer={byteAsAscii}/>

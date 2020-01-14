@@ -71,11 +71,9 @@ export function DataGrid(props : DataGridProperties) {
             setSelection(pos, pos);
         }
     }
-    const clickElement = (e:React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    const clickElement = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         let el : HTMLElement | null = e.target as HTMLElement;
-        console.log(el);
         while ((el.dataset.idx === undefined) && !el.classList.contains("data-grid") && (el = el.parentElement));
-        console.log(el);
         if(el !== null && el.dataset.idx) {
             updateCursorPosition(parseInt(el.dataset.idx as string), e.shiftKey);
         }
