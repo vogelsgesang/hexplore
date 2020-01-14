@@ -44,18 +44,17 @@ interface DataGridProperties {
     className? : string;
 }
 
+const rangeMarkClass = "range-mark";
+
 export function DataGrid(props : DataGridProperties) {
-    const view = new Uint8Array(props.data);
+    const data = props.data;
     const renderer = props.renderer ?? byteAsHex;
     const linewidth = props.lineWidth ?? 16;
-    let highlightRanges = props.highlightRanges ?? [];
+    const highlightRanges = props.highlightRanges ?? [];
     const cursorPosition = props.cursorPosition;
     const setCursorPosition = props.setCursorPosition ?? ((x:number) => {});
     const selection = props.selection;
     const setSelectionRaw = props.setSelection ?? ((x:Range) => {});
-    if (selection !== undefined) {
-        highlightRanges = highlightRanges.concat([{from: selection.from, to: selection.to, key: "selection", className: "selection"}]);
-    }
 
     // Event handlers influencing the current position
     const [selectionGestureStart, setSelectionGestureStart] = useState(cursorPosition);
@@ -73,15 +72,21 @@ export function DataGrid(props : DataGridProperties) {
         }
     }
     const clickElement = (e:React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        updateCursorPosition(parseInt(e.currentTarget.dataset.idx as string), e.shiftKey);
+        let el : HTMLElement | null = e.target as HTMLElement;
+        console.log(el);
+        while ((el.dataset.idx === undefined) && !el.classList.contains("data-grid") && (el = el.parentElement));
+        console.log(el);
+        if(el !== null && el.dataset.idx) {
+            updateCursorPosition(parseInt(el.dataset.idx as string), e.shiftKey);
+        }
     }
     const keyPress = (e:React.KeyboardEvent<HTMLDivElement>) => {
         let newPos = undefined;
         switch (e.key) {
             case "ArrowLeft": newPos = Math.max(cursorPosition - 1, 0); break;
-            case "ArrowRight": newPos = Math.min(cursorPosition + 1, view.length - 1); break;
+            case "ArrowRight": newPos = Math.min(cursorPosition + 1, data.byteLength - 1); break;
             case "ArrowUp": newPos = (cursorPosition >= linewidth) ? (cursorPosition - linewidth) : cursorPosition; break;
-            case "ArrowDown": newPos = (cursorPosition < view.length - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
+            case "ArrowDown": newPos = (cursorPosition < data.byteLength - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
         }
         if (newPos !== undefined) {
             updateCursorPosition(newPos, e.shiftKey);
@@ -91,7 +96,6 @@ export function DataGrid(props : DataGridProperties) {
     }
 
     // Highlights are positioned after rendering the main DOM
-    const rangeMarkClass = "range-mark";
     const gridRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
         let gridDom = gridRef.current;
@@ -110,39 +114,57 @@ export function DataGrid(props : DataGridProperties) {
         }
     });
 
-
     // Render the grid
     let lines = [];
     const startOffset = props.startOffset ?? 0;
-    const endOffset = props.endOffset ?? view.length;
+    const endOffset = props.endOffset ?? data.byteLength;
     for (let idx = startOffset; idx < endOffset; ) {
-        const lineStart = idx;
         const lineLimit = Math.min(endOffset, idx + linewidth);
-        let line = [];
-        for (; idx < lineLimit; ++idx) {
-            let className = "element " + (idx == cursorPosition ? "cursor" : "");
-            line.push(<span key={"o"+idx} className={className} data-idx={idx} onClick={clickElement}><span>{renderer(view[idx])}</span></span>);
-        }
-        let highlightDivs = [];
-        for (let h of highlightRanges) {
-            if (h.from < lineLimit && h.to > lineStart) {
-                let style : CSSProperties = {...h.style, position: "absolute", top: 0, right: undefined, bottom: undefined};
-                let localFrom = Math.max(h.from - lineStart, 0);
-                let localTo = Math.min(h.to - lineStart , linewidth);
-                let className = rangeMarkClass + " " + (h.className ?? "");
-                highlightDivs.push(<div key={"r"+h.key} data-from={localFrom} data-to={localTo} className={className} style={style}></div>)
-            }
-        }
-        lines.push(
-            <div key={lineStart} className="line">
-                {line}
-                {highlightDivs}
-            </div>);
+        lines.push(<Line key={idx} data={data} lineStart={idx} lineLimit={lineLimit} cursorPosition={cursorPosition} renderer={renderer} highlightRanges={highlightRanges} selection={selection}/>);
+        idx = lineLimit;
     }
     const className = "data-grid " + (props.className ?? "");
     return  (
-        <div className={className} tabIndex={0} onKeyDown={keyPress} ref={gridRef}>
+        <div className={className} tabIndex={0} onKeyDown={keyPress} onClick={clickElement} ref={gridRef}>
             {lines}
         </div>
     );
 }
+
+interface LineProps {
+    data: ArrayBuffer;
+    lineStart: number;
+    lineLimit: number;
+    cursorPosition: number;
+    renderer: (x: number) => string;
+    highlightRanges: HighlightRange[];
+    selection? : Range;
+}
+
+const Line = React.memo(({data, lineStart, lineLimit, cursorPosition, renderer, highlightRanges, selection} : LineProps) => {
+    const view = new Uint8Array(data);
+    let line = [];
+    for (let idx = lineStart; idx < lineLimit; ++idx) {
+        let className = "element " + (idx == cursorPosition ? "cursor" : "");
+        line.push(<span key={"o" + idx} className={className} data-idx={idx}><span>{renderer(view[idx])}</span></span>);
+    }
+    let highlightDivs = [];
+    if (selection !== undefined) {
+        highlightRanges = highlightRanges.concat([{from: selection.from, to: selection.to, key: "selection", className: "selection"}]);
+    }
+    for (let h of highlightRanges) {
+        if (h.from < lineLimit && h.to > lineStart) {
+            let style: CSSProperties = { ...h.style, position: "absolute", top: 0, right: undefined, bottom: undefined };
+            let localFrom = Math.max(h.from - lineStart, 0);
+            let localTo = Math.min(h.to - lineStart, lineLimit - lineStart);
+            let className = rangeMarkClass + " " + (h.className ?? "");
+            highlightDivs.push(<div key={"r" + h.key} data-from={localFrom} data-to={localTo} className={className} style={style}></div>);
+        }
+    }
+    return (
+        <div key={lineStart} className="line">
+            {line}
+            {highlightDivs}
+        </div>
+    );
+});
