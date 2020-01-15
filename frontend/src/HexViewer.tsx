@@ -21,28 +21,12 @@ interface Vector2 {
     y : number;
 }
 
-function useDebouncedState<T>(initialValue : T) : [T, (v:T)=>void, (v:T)=>void] {
-    const [value, setValue] = useState<T>(initialValue);
-    const animationFrame = useRef<number>();
-
-    function setValueDebounced(newValue : T) {
-        if (animationFrame.current) {
-            cancelAnimationFrame(animationFrame.current);
-        }
-        animationFrame.current = requestAnimationFrame(() => {
-            setValue(newValue);
-        });
-    }
-
-    return [value, setValue, setValueDebounced];
-}
-
 function useScrollAware<T extends HTMLElement>(prevRef? : RefObject<T>) : [Vector2, RefObject<T>] {
     const ref = prevRef ?? useRef<T>(null);
-    const [scrollPos, setScrollPos, setScrollPosDebounced] = useDebouncedState<Vector2>({x: 0, y: 0});
+    const [scrollPos, setScrollPos] = useState<Vector2>({x: 0, y: 0});
 
     function onScroll(e : Event) {
-        setScrollPosDebounced({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
+        setScrollPos({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
     }
 
     useEffect(() => {
@@ -58,7 +42,7 @@ function useScrollAware<T extends HTMLElement>(prevRef? : RefObject<T>) : [Vecto
 
 function useSizeAware<T extends HTMLElement>(prevRef? : RefObject<T>) : [Vector2, RefObject<T>] {
     const ref = prevRef ?? useRef<T>(null);
-    const [size, setSize, setSizeDebounced] = useDebouncedState<Vector2>({x: 0, y: 0});
+    const [size, setSize] = useState<Vector2>({x: 0, y: 0});
 
     useLayoutEffect(() => {
         const elem = ref.current;
@@ -67,7 +51,7 @@ function useSizeAware<T extends HTMLElement>(prevRef? : RefObject<T>) : [Vector2
             assert(entries.length === 1);
             const entry = entries[0];
             const {width, height} = entry.contentRect;
-            setSizeDebounced({x: width, y: height});
+            setSize({x: width, y: height});
         });
         const {width, height} = elem.getBoundingClientRect();
         setSize({x: width, y: height});
