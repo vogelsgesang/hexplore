@@ -38,6 +38,13 @@
             "args": ["-p", "8080"],
             "group": "none",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "test",
+            "path": "frontend/",
+            "group": "test",
+            "problemMatcher": []
         }
     ]
 }
