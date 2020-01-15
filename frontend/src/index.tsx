@@ -92,5 +92,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     .then(function(response) {
         const domContainer = document.querySelector('#main');
         ReactDOM.render(<App data={response}/>, domContainer);
+    })
+    .catch(function(e) {
+        const domContainer = document.querySelector('#main');
+        (window as any).err = e;
+        ReactDOM.render(<React.Fragment>Unable to load {fileName}: {e.toString()}</React.Fragment>, domContainer);
     });
 });
