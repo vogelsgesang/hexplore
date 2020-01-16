@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useLayoutEffect, CSSProperties, Ref, RefObject } from "react";
+import React, { useRef, useState, useEffect, useLayoutEffect, CSSProperties, Ref, RefObject, useMemo } from "react";
 import ResizeObserver from 'resize-observer-polyfill';
 import { DataGrid, HighlightRange, Range, byteAsAscii, byteAsHex } from "./DataGrid"
 import { AddressGutter } from "./AddressGutter"
@@ -76,6 +76,8 @@ export function HexViewer(props : HexViewerProps) {
     const firstRenderedIdx = Math.max(Math.floor((scrollY - paddingSize) / elementHeight), 0);
     const lastRenderedIdx = Math.min(Math.ceil((scrollY + viewportHeight + paddingSize) / elementHeight), listLength);
 
+    const dataView = useMemo(() => new Uint8Array(props.data), []);
+
     const scrollRelatedProps = {
         startOffset: firstRenderedIdx*lineWidth,
         endOffset: Math.min(lastRenderedIdx*lineWidth, byteLength),
@@ -83,7 +85,8 @@ export function HexViewer(props : HexViewerProps) {
     };
     const gridProps = {
         ...scrollRelatedProps,
-        data: props.data,
+        data: dataView,
+        overallLength: byteLength,
         cursorPosition: props.cursorPosition,
         setCursorPosition: props.setCursorPosition,
         selection: props.selection,

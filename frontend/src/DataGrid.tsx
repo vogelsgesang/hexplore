@@ -1,13 +1,15 @@
-import React, { useState, CSSProperties, useLayoutEffect, useRef } from "react";
+import React, { useState, CSSProperties, useLayoutEffect, useRef, NamedExoticComponent } from "react";
 import "./DataGrid.css"
 import { assert } from "./util";
 
-export function byteAsHex(byte:number) {
+export function byteAsHex(data : Uint8Array, idx: number) {
+    const byte = data[idx];
     const table = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
     return table[Math.floor(byte/16)] + table[byte%16];
 }
 
-export function byteAsAscii(byte:number) {
+export function byteAsAscii(data : Uint8Array, idx: number) {
+    const byte = data[idx];
     const asciiTable = [' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'];
     const isPrintable = (byte > 0x20) && (byte < 127);
     if (isPrintable) {
@@ -30,11 +32,12 @@ export interface HighlightRange {
     style? : CSSProperties,
 }
 
-interface DataGridProperties {
-    data : ArrayBuffer;
-    renderer? : (x:number) => string;
-    startOffset? : number;
-    endOffset? : number;
+interface DataGridProperties<T> {
+    data : T;
+    renderer: (x: T, idx: number) => string;
+    overallLength : number;
+    startOffset : number;
+    endOffset : number;
     lineWidth? : number;
     highlightRanges? : HighlightRange[];
     cursorPosition : number;
@@ -46,10 +49,11 @@ interface DataGridProperties {
 
 const rangeMarkClass = "range-mark";
 
-export function DataGrid(props : DataGridProperties) {
+export function DataGrid<T>(props : DataGridProperties<T>) {
     const data = props.data;
-    const renderer = props.renderer ?? byteAsHex;
+    const renderer = props.renderer;
     const linewidth = props.lineWidth ?? 16;
+    const overallLength = props.overallLength;
     const highlightRanges = props.highlightRanges ?? [];
     const cursorPosition = props.cursorPosition;
     const setCursorPosition = props.setCursorPosition ?? ((x:number) => {});
@@ -82,9 +86,9 @@ export function DataGrid(props : DataGridProperties) {
         let newPos = undefined;
         switch (e.key) {
             case "ArrowLeft": newPos = Math.max(cursorPosition - 1, 0); break;
-            case "ArrowRight": newPos = Math.min(cursorPosition + 1, data.byteLength - 1); break;
+            case "ArrowRight": newPos = Math.min(cursorPosition + 1, overallLength - 1); break;
             case "ArrowUp": newPos = (cursorPosition >= linewidth) ? (cursorPosition - linewidth) : cursorPosition; break;
-            case "ArrowDown": newPos = (cursorPosition < data.byteLength - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
+            case "ArrowDown": newPos = (cursorPosition < overallLength - linewidth) ? (cursorPosition + linewidth) : cursorPosition; break;
         }
         if (newPos !== undefined) {
             updateCursorPosition(newPos, e.shiftKey);
@@ -114,11 +118,12 @@ export function DataGrid(props : DataGridProperties) {
 
     // Render the grid
     let lines = [];
-    const startOffset = props.startOffset ?? 0;
-    const endOffset = props.endOffset ?? data.byteLength;
+    const startOffset = props.startOffset;
+    const endOffset = props.endOffset;
+    let LineT = Line as NamedExoticComponent<LineProps<T>>;
     for (let idx = startOffset; idx < endOffset; ) {
         const lineLimit = Math.min(endOffset, idx + linewidth);
-        lines.push(<Line key={idx} data={data} lineStart={idx} lineLimit={lineLimit} cursorPosition={cursorPosition} renderer={renderer} highlightRanges={highlightRanges} selection={selection}/>);
+        lines.push(<LineT key={idx} data={data} lineStart={idx} lineLimit={lineLimit} cursorPosition={cursorPosition} renderer={renderer} highlightRanges={highlightRanges} selection={selection}/>);
         idx = lineLimit;
     }
     const className = "data-grid " + (props.className ?? "");
@@ -129,22 +134,28 @@ export function DataGrid(props : DataGridProperties) {
     );
 }
 
-interface LineProps {
-    data: ArrayBuffer;
+interface LineProps<T> {
+    data: T;
+    renderer: (x: T, idx: number) => string;
     lineStart: number;
     lineLimit: number;
     cursorPosition: number;
-    renderer: (x: number) => string;
     highlightRanges: HighlightRange[];
     selection? : Range;
 }
 
-const Line = React.memo(({data, lineStart, lineLimit, cursorPosition, renderer, highlightRanges, selection} : LineProps) => {
-    const view = new Uint8Array(data);
+let last : any = null;
+
+const Line = React.memo(function Line<T>({data, lineStart, lineLimit, cursorPosition, renderer, highlightRanges, selection} : LineProps<T>) {
     let line = [];
+    if (lineStart == 0x20) {
+        console.log("drawing 0x20");
+        console.log(last === highlightRanges);
+        last = highlightRanges;
+    }
     for (let idx = lineStart; idx < lineLimit; ++idx) {
         let className = "element " + (idx == cursorPosition ? "cursor" : "");
-        line.push(<span key={"o" + idx} className={className} data-idx={idx}><span>{renderer(view[idx])}</span></span>);
+        line.push(<span key={"o" + idx} className={className} data-idx={idx}><span>{renderer(data,  idx)}</span></span>);
     }
     let highlightDivs = [];
     if (selection !== undefined) {
