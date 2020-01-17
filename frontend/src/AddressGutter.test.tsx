@@ -3,6 +3,7 @@ import React from "react";
 import { act } from 'react-dom/test-utils';
 import { assert } from "./util";
 import { AddressGutter } from "./AddressGutter";
+import { AddressDisplayMode } from "./HexViewerConfig";
 
 let container : HTMLDivElement | null = null;
 beforeEach(() => {
@@ -20,10 +21,15 @@ afterEach(() => {
 });
 
 describe("displays the right addresses", ()=> {
+    const defaultProps = {
+        offset: 0,
+        displayMode: AddressDisplayMode.Hexadecimal,
+        paddingWidth: 0
+    }
     it("for 1-byte lines", () => {
         assert(container);
         act(() => {
-          ReactDOM.render(<AddressGutter startOffset={0} endOffset={8} lineWidth={1} />, container);
+          ReactDOM.render(<AddressGutter {...defaultProps} startOffset={0} endOffset={8} lineWidth={1} />, container);
         });
         const addresses = container.querySelectorAll('.address');
         expect(addresses.length).toBe(8);
@@ -33,7 +39,7 @@ describe("displays the right addresses", ()=> {
     it("for 8-byte lines", () => {
         assert(container);
         act(() => {
-          ReactDOM.render(<AddressGutter startOffset={0} endOffset={128} lineWidth={8} />, container);
+          ReactDOM.render(<AddressGutter {...defaultProps} startOffset={0} endOffset={128} lineWidth={8} />, container);
         });
         const addresses = container.querySelectorAll('.address');
         expect(addresses.length).toBe(16);
@@ -43,7 +49,7 @@ describe("displays the right addresses", ()=> {
     it("with a start offset", () => {
         assert(container);
         act(() => {
-          ReactDOM.render(<AddressGutter startOffset={32} endOffset={64} lineWidth={8} />, container);
+          ReactDOM.render(<AddressGutter {...defaultProps} startOffset={32} endOffset={64} lineWidth={8} />, container);
         });
         const addresses = container.querySelectorAll('.address');
         expect(addresses.length).toBe(4 );

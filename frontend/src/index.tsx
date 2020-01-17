@@ -1,7 +1,8 @@
 import React, { KeyboardEvent, CSSProperties } from "react";
+import ReactDOM from "react-dom";
 import { HighlightRange, Range } from "./DataGrid";
 import { HexViewer } from "./HexViewer";
-import ReactDOM from "react-dom";
+import { HexViewerConfig, defaultConfig } from "./HexViewerConfig";
 import "./index.css"
 
 interface AppProps {
@@ -9,10 +10,10 @@ interface AppProps {
 }
 
 interface AppState {
-    lineWidth : number;
     cursorPosition : number;
     selection : Range;
     highlighted : Array<HighlightRange>;
+    viewConfig : HexViewerConfig;
 }
 
 const styles : Array<CSSProperties> = [
@@ -24,21 +25,12 @@ const styles : Array<CSSProperties> = [
     {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
-function parseIntWithDefault(str : string, defaultValue : number) {
-    const parsed = parseInt(str);
-    return !isNaN(parsed) ? parsed : defaultValue;
-}
-
-function clampRange(val : number, min : number, max : number) {
-    return Math.min(max, Math.max(min, val));
-}
-
 class App extends React.Component<AppProps, AppState> {
     state = {
-        lineWidth: 16,
         cursorPosition: 0,
         selection: {from: 0, to: 1},
-        highlighted: new Array<HighlightRange>()
+        highlighted: new Array<HighlightRange>(),
+        viewConfig: defaultConfig,
     }
     nextStyle = 0;
 
@@ -60,19 +52,17 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     render() {
+        (window as any).currentConfig = this.state.viewConfig;
+        (window as any).setConfig = (c:any) => this.setState({viewConfig: c});
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%"}}>
-                <HexViewer style={{flex: 1}}
+                <HexViewer style={{flex: 1}} // TODO: remove, as this is an antipattern
                     data={this.props.data}
+                    viewConfig={this.state.viewConfig}
                     cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                    lineWidth={this.state.lineWidth}
                     selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
                     highlightRanges={this.state.highlighted}/>
                 <div style={{flex: 0}}>
-                    <span style={{padding: ".2em", display: "inline-block"}}>
-                        Width:
-                        <input type="text" size={2} value={this.state.lineWidth} onChange={(e) => this.setState({lineWidth: clampRange(parseIntWithDefault(e.target.value, this.state.lineWidth), 1, 128)})}/>
-                    </span>
                     <span style={{padding: ".2em", display: "inline-block"}}>position: {this.state.cursorPosition}</span>
                 </div>
             </div>

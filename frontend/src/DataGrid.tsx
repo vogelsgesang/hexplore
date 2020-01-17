@@ -2,23 +2,6 @@ import React, { useState, CSSProperties, useLayoutEffect, useRef, NamedExoticCom
 import "./DataGrid.css"
 import { assert } from "./util";
 
-export function byteAsHex(data : Uint8Array, idx: number) {
-    const byte = data[idx];
-    const table = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
-    return table[Math.floor(byte/16)] + table[byte%16];
-}
-
-export function byteAsAscii(data : Uint8Array, idx: number) {
-    const byte = data[idx];
-    const asciiTable = [' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'];
-    const isPrintable = (byte > 0x20) && (byte < 127);
-    if (isPrintable) {
-        return asciiTable[byte - 0x20];
-    } else {
-        return '.';
-    }
-}
-
 export interface Range {
     from : number;
     to : number;
@@ -144,15 +127,8 @@ interface LineProps<T> {
     selection? : Range;
 }
 
-let last : any = null;
-
 const Line = React.memo(function Line<T>({data, lineStart, lineLimit, cursorPosition, renderer, highlightRanges, selection} : LineProps<T>) {
     let line = [];
-    if (lineStart == 0x20) {
-        console.log("drawing 0x20");
-        console.log(last === highlightRanges);
-        last = highlightRanges;
-    }
     for (let idx = lineStart; idx < lineLimit; ++idx) {
         let className = "element " + (idx == cursorPosition ? "cursor" : "");
         line.push(<span key={"o" + idx} className={className} data-idx={idx}><span>{renderer(data,  idx)}</span></span>);
