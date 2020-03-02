@@ -3,8 +3,10 @@ import ReactDOM from "react-dom";
 import { HighlightRange, Range } from "./DataGrid";
 import { HexViewer } from "./HexViewer";
 import { HexViewerConfig, defaultConfig } from "./HexViewerConfig";
-import "./index.css"
 import { HexViewerConfigEditor } from "./HexViewerConfigEditor";
+
+import "./index.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface AppProps {
     data : ArrayBuffer;
