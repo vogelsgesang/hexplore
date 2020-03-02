@@ -4,6 +4,7 @@ import { HighlightRange, Range } from "./DataGrid";
 import { HexViewer } from "./HexViewer";
 import { HexViewerConfig, defaultConfig } from "./HexViewerConfig";
 import "./index.css"
+import { HexViewerConfigEditor } from "./HexViewerConfigEditor";
 
 interface AppProps {
     data : ArrayBuffer;
@@ -55,13 +56,21 @@ class App extends React.Component<AppProps, AppState> {
         (window as any).currentConfig = this.state.viewConfig;
         (window as any).setConfig = (c:any) => this.setState({viewConfig: c});
         return (
-            <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%"}}>
-                <HexViewer style={{flex: 1}} // TODO: remove, as this is an antipattern
-                    data={this.props.data}
-                    viewConfig={this.state.viewConfig}
-                    cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                    selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                    highlightRanges={this.state.highlighted}/>
+            <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
+                <div style={{flex: 1, minHeight: 0, display: "flex"}}>
+                    <div style={{flex: 1}}>
+                        <HexViewer style={{height: "100%"}} // TODO: remove, as this blocks caching
+                            data={this.props.data}
+                            viewConfig={this.state.viewConfig}
+                            cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                            selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
+                            highlightRanges={this.state.highlighted}/>
+                    </div>
+                    <div style={{width: "20em"}}>
+                        <HexViewerConfigEditor config={this.state.viewConfig}
+                            setConfig={(c) => this.setState({viewConfig: c})}/>
+                    </div>
+                </div>
                 <div style={{flex: 0}}>
                     <span style={{padding: ".2em", display: "inline-block"}}>position: {this.state.cursorPosition}</span>
                 </div>
