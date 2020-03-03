@@ -82,17 +82,52 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
             draft.columns.splice(pos, 1);
         }));
     }
+    function setColumnConfig(pos : number, columnConfig : ColumnConfig) {
+        setConfig(produce(config, (draft)=>{
+            draft.columns.splice(pos, 1, columnConfig);
+        }));
+    }
 
     function columnDescription(columnConfig : ColumnConfig) {
         switch (columnConfig.columnType) {
             case ColumnType.AddressGutter: {
-                return <span>AddressGutter</span>;
+                return "Address Gutter";
             }
             case ColumnType.AsciiColumn: {
-                return <span>ASCII</span>;
+                return "ASCII";
             }
             case ColumnType.IntegerColumn: {
-                return <span>Integer</span>;
+                let c = columnConfig as IntegerColumnConfig;
+                let d = "";
+                if (c.signed) {
+                    d += "Signed "
+                }
+                d += c.width + "-byte ";
+                switch (c.displayMode) {
+                    case IntegerDisplayMode.Binary: d += "Binary"; break;
+                    case IntegerDisplayMode.Octal: d += "Octal"; break;
+                    case IntegerDisplayMode.Decimal: d += "Decimal"; break;
+                    case IntegerDisplayMode.Hexadecimal: d += "Hex"; break;
+                }
+                if (!c.littleEndian) {
+                    d += " (BE)"
+                }
+                return d;
+            }
+        }
+    }
+
+    function columnEditor(idx : number) {
+        let columnConfig = config.columns[idx];
+        switch (columnConfig.columnType) {
+            case ColumnType.AddressGutter: {
+                return <AddressGutterConfigEditor columnConfig={columnConfig as AddressGutterConfig} setColumnConfig={setColumnConfig.bind(undefined, i)}/>;
+            }
+            case ColumnType.AsciiColumn: {
+                return <React.Fragment></React.Fragment>;
+            }
+            case ColumnType.IntegerColumn: {
+                return <IntegerColumnConfigEditor columnConfig={columnConfig as IntegerColumnConfig} setColumnConfig={setColumnConfig.bind(undefined, i)}/>;
             }
         }
     }
@@ -109,6 +144,7 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
                     <Button disabled={isLast} onClick={moveDown.bind(undefined, i)} size="sm">Down</Button>
                     <Button onClick={removeColumn.bind(undefined, i)} size="sm">X</Button>
                 </ButtonGroup>
+                {columnEditor(i)}
             </ListGroup.Item>
         );
     }
@@ -139,38 +175,88 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
     );
 }
 
+interface AddressGutterConfigEditorProps {
+    columnConfig : AddressGutterConfig,
+    setColumnConfig : (columnConfig : AddressGutterConfig) => void
+}
 
-function IntegerColumnSetting() {
+function AddressGutterConfigEditor({columnConfig, setColumnConfig} : AddressGutterConfigEditorProps) {
+    let id = useUniqueId();
+    let changeBase = (v : AddressDisplayMode) => {
+        setColumnConfig(produce(columnConfig, (draft) => {
+            draft.displayMode = v;
+        }));
+    };
     return (
         <React.Fragment>
-            <Form.Group>
+            <Form.Group controlId={"b"+id}>
+                <Form.Label>Base</Form.Label>
+                <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
+                    <ToggleButton value={AddressDisplayMode.Decimal}>10</ToggleButton>
+                    <ToggleButton value={AddressDisplayMode.Hexadecimal}>16</ToggleButton>
+                </ToggleButtonGroup>
+            </Form.Group>
+        </React.Fragment>
+    );
+}
+
+interface IntegerColumnConfigEditorProps {
+    columnConfig : IntegerColumnConfig,
+    setColumnConfig : (columnConfig : IntegerColumnConfig) => void
+}
+
+function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColumnConfigEditorProps) {
+    let id = useUniqueId();
+    let changeWidth = (v : 1 | 2 | 4) => {
+        setColumnConfig(produce(columnConfig, (draft) => {
+            draft.width = v;
+        }));
+    };
+    let changeBase = (v : IntegerDisplayMode) => {
+        setColumnConfig(produce(columnConfig, (draft) => {
+            draft.displayMode = v;
+        }));
+    };
+    let changeLE = (v : boolean) => {
+        setColumnConfig(produce(columnConfig, (draft) => {
+            draft.littleEndian = v;
+        }));
+    };
+    let changeSigned = (v : boolean) => {
+        setColumnConfig(produce(columnConfig, (draft) => {
+            draft.signed = v;
+        }));
+    };
+    return (
+        <React.Fragment>
+            <Form.Group controlId={"w"+id}>
                 <Form.Label>Width</Form.Label>
-                <ToggleButtonGroup type="radio" name="options" defaultValue={1} size="sm">
+                <ToggleButtonGroup type="radio" name={"w"+id} value={columnConfig.width} onChange={changeWidth} size="sm">
                     <ToggleButton value={1}>1</ToggleButton>
                     <ToggleButton value={2}>2</ToggleButton>
                     <ToggleButton value={4}>4</ToggleButton>
-                    <ToggleButton value={8}>8</ToggleButton>
                 </ToggleButtonGroup>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId={"b"+id}>
                 <Form.Label>Base</Form.Label>
-                <ToggleButtonGroup type="radio" name="options" defaultValue={16} size="sm">
-                    <ToggleButton value={8}>8</ToggleButton>
-                    <ToggleButton value={10}>10</ToggleButton>
-                    <ToggleButton value={16}>16</ToggleButton>
+                <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
+                    <ToggleButton value={IntegerDisplayMode.Binary}>2</ToggleButton>
+                    <ToggleButton value={IntegerDisplayMode.Octal}>8</ToggleButton>
+                    <ToggleButton value={IntegerDisplayMode.Decimal}>10</ToggleButton>
+                    <ToggleButton value={IntegerDisplayMode.Hexadecimal}>16</ToggleButton>
                 </ToggleButtonGroup>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId={"e"+id}>
                 <Form.Label>Endianess</Form.Label>
-                <ToggleButtonGroup type="radio" name="options" defaultValue="le" size="sm">
-                    <ToggleButton value="le">Little</ToggleButton>
-                    <ToggleButton value="be">Big</ToggleButton>
+                <ToggleButtonGroup type="radio" name={"e"+id} value={columnConfig.littleEndian} onChange={changeLE} size="sm">
+                    <ToggleButton value={true}>Little</ToggleButton>
+                    <ToggleButton value={false}>Big</ToggleButton>
                 </ToggleButtonGroup>
             </Form.Group>
-            <Form.Group>
-                <ToggleButtonGroup type="radio" name="options" defaultValue="signed" size="sm">
-                    <ToggleButton value="signed">Signed</ToggleButton>
-                    <ToggleButton value="unsigned">Unsigned</ToggleButton>
+            <Form.Group controlId={"s"+id}>
+                <ToggleButtonGroup type="radio" name={"s"+id} value={columnConfig.signed} onChange={changeSigned} size="sm">
+                    <ToggleButton value={true}>Signed</ToggleButton>
+                    <ToggleButton value={false}>Unsigned</ToggleButton>
                 </ToggleButtonGroup>
             </Form.Group>
         </React.Fragment>
