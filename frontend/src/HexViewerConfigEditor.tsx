@@ -1,4 +1,4 @@
-import { HexViewerConfig, ColumnConfig, ColumnType, AddressGutterConfig, AddressDisplayMode, AsciiColumnConfig, IntegerColumnConfig, IntegerDisplayMode } from "./HexViewerConfig";
+import { HexViewerConfig, ColumnConfig, ColumnType, AddressGutterConfig, AddressDisplayMode, AsciiColumnConfig, IntegerColumnConfig, IntegerDisplayMode, getAlignment } from "./HexViewerConfig";
 import React, { useState } from "react";
 import {produce} from "immer";
 import Button from 'react-bootstrap/Button';
@@ -25,16 +25,10 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
 
     let widthSteps = 1;
     for (let c of config.columns) {
-        let width;
-        switch (c.columnType) {
-            case ColumnType.AddressGutter: width = 1; break;
-            case ColumnType.AsciiColumn: width = 1; break;
-            case ColumnType.IntegerColumn: width = (c as IntegerColumnConfig).width; break;
-        }
-        widthSteps = Math.max(widthSteps, width);
+        widthSteps = Math.max(widthSteps, getAlignment(c));
     }
     let widthOptions = [];
-    for (let w = 1; w <= 128; w += widthSteps) {
+    for (let w = widthSteps; w <= 128; w += widthSteps) {
         widthOptions.push(<option value={w} key={w}>{w}</option>);
     }
     let lineWidthId = "linewidth-" + uniqueId;
@@ -85,6 +79,8 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
     function setColumnConfig(pos : number, columnConfig : ColumnConfig) {
         setConfig(produce(config, (draft)=>{
             draft.columns.splice(pos, 1, columnConfig);
+            let alignment = getAlignment(columnConfig);
+            draft.lineWidth = Math.ceil(draft.lineWidth/alignment) * alignment;
         }));
     }
 

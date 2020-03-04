@@ -52,3 +52,11 @@ export const defaultConfig : HexViewerConfig = {
         new AsciiColumnConfig()
     ]
 }
+
+export function getAlignment(c : ColumnConfig) {
+    switch (c.columnType) {
+        case ColumnType.AddressGutter: return 1;
+        case ColumnType.AsciiColumn: return 1;
+        case ColumnType.IntegerColumn: return (c as IntegerColumnConfig).width;
+    }
+}
