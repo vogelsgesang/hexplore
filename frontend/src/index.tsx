@@ -60,7 +60,7 @@ class App extends React.Component<AppProps, AppState> {
         return (
             <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
                 <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                    <div style={{flex: 1}}>
+                    <div style={{flex: 1, minWidth: 0}}>
                         <HexViewer style={{height: "100%"}} // TODO: remove, as this blocks caching
                             data={this.props.data}
                             viewConfig={this.state.viewConfig}
@@ -68,7 +68,7 @@ class App extends React.Component<AppProps, AppState> {
                             selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
                             highlightRanges={this.state.highlighted}/>
                     </div>
-                    <div style={{width: "20em"}}>
+                    <div style={{width: "20em", height: "100%", overflow: "auto"}}>
                         <HexViewerConfigEditor config={this.state.viewConfig}
                             setConfig={(c) => this.setState({viewConfig: c})}/>
                     </div>
