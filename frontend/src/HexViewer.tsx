@@ -70,7 +70,30 @@ function formatInteger(v : number, base : number, width: number, signed : boolea
     return s;
 }
 
-const createIntegerRenderer = memoize(function createIntegerRenderer(width : 1|2|4, signed : boolean, littleEndian : boolean, display : IntegerDisplayMode) {
+function formatInteger64bit(low : number, high : number, base : number, width: number, signed : boolean) {
+    const bit32 = 0x100000000;
+    let negative = signed && (high & 0x80000000);
+    if (negative) {
+        high = ~high;
+        low = bit32 - low;
+    }
+    let s = "";
+    debugger;
+    console.log(high, low);
+    while (high || low) {
+        var mod = (high % base) * bit32 + low;
+        high = Math.floor(high / base);
+        low = Math.floor(mod / base);
+        s = (mod % base).toString(base) + s;
+    }
+    s = s.padStart(width, '0');
+    if (signed) {
+        s = (negative ? "-" : " ") + s;
+    }
+    return s;
+}
+
+const createIntegerRenderer = memoize(function createIntegerRenderer(width : 1|2|4|8, signed : boolean, littleEndian : boolean, display : IntegerDisplayMode) {
     let base : number;
     switch(display) {
         case IntegerDisplayMode.Binary: base = 2; break;
@@ -94,6 +117,16 @@ const createIntegerRenderer = memoize(function createIntegerRenderer(width : 1|2
         } else if (width == 4) {
             const v = signed ? data.getInt32(idx, littleEndian) : data.getUint32(idx, littleEndian);
             return formatInteger(v, base, strWidth, signed);
+        } else if (width == 8) {
+            let low, high;
+            if (littleEndian) {
+                low = data.getUint32(idx, true);
+                high = data.getUint32(idx + 4, true);
+            } else {
+                low = data.getUint32(idx + 4, false);
+                high = data.getUint32(idx, false);
+            }
+            return formatInteger64bit(low, high, base, strWidth, signed);
         }
         assertExhausted(width);
     }

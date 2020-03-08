@@ -36,7 +36,7 @@ export class AsciiColumnConfig implements ColumnConfig {
 export class IntegerColumnConfig implements ColumnConfig {
     [immerable] = true;
     columnType = ColumnType.IntegerColumn;
-    constructor(public signed : boolean, public width: 1 | 2 | 4, public littleEndian: boolean, public displayMode: IntegerDisplayMode) { }
+    constructor(public signed : boolean, public width: 1 | 2 | 4 | 8, public littleEndian: boolean, public displayMode: IntegerDisplayMode) { }
 }
 
 export interface HexViewerConfig {

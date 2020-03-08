@@ -203,7 +203,7 @@ interface IntegerColumnConfigEditorProps {
 
 function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColumnConfigEditorProps) {
     let id = useUniqueId();
-    let changeWidth = (v : 1 | 2 | 4) => {
+    let changeWidth = (v : 1 | 2 | 4 | 8) => {
         setColumnConfig(produce(columnConfig, (draft) => {
             draft.width = v;
         }));
@@ -231,6 +231,7 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColu
                     <ToggleButton value={1}>1</ToggleButton>
                     <ToggleButton value={2}>2</ToggleButton>
                     <ToggleButton value={4}>4</ToggleButton>
+                    <ToggleButton value={8}>8</ToggleButton>
                 </ToggleButtonGroup>
             </Form.Group>
             <Form.Group controlId={"b"+id}>
