@@ -27,6 +27,7 @@
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.12.0",
+    "react-dropzone": "^10.2.1",
     "resize-observer-polyfill": "^1.5.1",
     "style-loader": "^1.1.2",
     "ts-jest": "^24.3.0",

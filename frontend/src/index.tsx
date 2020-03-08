@@ -7,12 +7,10 @@ import { HexViewerConfigEditor } from "./HexViewerConfigEditor";
 
 import "./index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-interface AppProps {
-    data : ArrayBuffer;
-}
+import { FileOpener } from "./FileOpener";
 
 interface AppState {
+    data? : ArrayBuffer;
     cursorPosition : number;
     selection : Range;
     highlighted : Array<HighlightRange>;
@@ -28,8 +26,9 @@ const styles : Array<CSSProperties> = [
     {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
-class App extends React.Component<AppProps, AppState> {
-    state = {
+class App extends React.Component<{}, AppState> {
+    state : AppState = {
+        data: undefined,
         cursorPosition: 0,
         selection: {from: 0, to: 1},
         highlighted: new Array<HighlightRange>(),
@@ -57,46 +56,35 @@ class App extends React.Component<AppProps, AppState> {
     render() {
         (window as any).currentConfig = this.state.viewConfig;
         (window as any).setConfig = (c:any) => this.setState({viewConfig: c});
-        return (
-            <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
-                <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                    <div style={{flex: 1, minWidth: 0}}>
-                        <HexViewer style={{height: "100%"}} // TODO: remove, as this blocks caching
-                            data={this.props.data}
-                            viewConfig={this.state.viewConfig}
-                            cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                            selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                            highlightRanges={this.state.highlighted}/>
+        if (!this.state.data) {
+            return <FileOpener setData={(d) => this.setState({"data": d})}/>;
+        } else if (this.state.data) {
+            return (
+                <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
+                    <div style={{flex: 1, minHeight: 0, display: "flex"}}>
+                        <div style={{flex: 1, minWidth: 0}}>
+                            <HexViewer style={{height: "100%"}} // TODO: remove, as this blocks caching
+                                data={this.state.data}
+                                viewConfig={this.state.viewConfig}
+                                cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
+                                selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
+                                highlightRanges={this.state.highlighted}/>
+                        </div>
+                        <div style={{width: "15em", height: "100%", overflow: "auto"}}>
+                            <HexViewerConfigEditor config={this.state.viewConfig}
+                                setConfig={(c) => this.setState({viewConfig: c})}/>
+                        </div>
                     </div>
-                    <div style={{width: "15em", height: "100%", overflow: "auto"}}>
-                        <HexViewerConfigEditor config={this.state.viewConfig}
-                            setConfig={(c) => this.setState({viewConfig: c})}/>
+                    <div style={{flex: 0}}>
+                        <span style={{padding: ".2em", display: "inline-block"}}>position: {this.state.cursorPosition}</span>
                     </div>
                 </div>
-                <div style={{flex: 0}}>
-                    <span style={{padding: ".2em", display: "inline-block"}}>position: {this.state.cursorPosition}</span>
-                </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    const fileName = new URL(window.location.href).searchParams.get("file") ?? "test.data";
-    fetch(fileName)
-    .then(function(response) {
-        if (!response.ok) {
-            throw new Error('HTTP error, status = ' + response.status);
-        }
-        return response.arrayBuffer();
-    })
-    .then(function(response) {
-        const domContainer = document.querySelector('#main');
-        ReactDOM.render(<App data={response}/>, domContainer);
-    })
-    .catch(function(e) {
-        const domContainer = document.querySelector('#main');
-        (window as any).err = e;
-        ReactDOM.render(<React.Fragment>Unable to load {fileName}: {e.toString()}</React.Fragment>, domContainer);
-    });
+    const domContainer = document.querySelector('#main');
+    ReactDOM.render(<App/>, domContainer);
 });
