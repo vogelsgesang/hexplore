@@ -9,6 +9,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 
+import "./HexViewerConfigEditor.css";
+
 let nextId = 0;
 function useUniqueId() {
     let [id] = useState(() => "id-"+(++nextId));
@@ -33,7 +35,7 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
     }
     let lineWidthId = "linewidth-" + uniqueId;
     let lineWidthSelector = (
-        <div>
+        <div className="hv-form-row">
             <label htmlFor={lineWidthId}>Line Width: </label>
             <select id={lineWidthId} value={config.lineWidth} onChange={(e) => setConfig({...config, lineWidth: Number.parseInt(e.target.value)})}>
                 {widthOptions}
@@ -133,41 +135,45 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
         let isFirst = i == 0;
         let isLast = i == config.columns.length - 1;
         columnItems.push(
-            <ListGroup.Item key={i}>
-                {columnDescription(config.columns[i])}
-                <ButtonGroup>
-                    <Button disabled={isFirst} onClick={moveUp.bind(undefined, i)} size="sm">Up</Button>
-                    <Button disabled={isLast} onClick={moveDown.bind(undefined, i)} size="sm">Down</Button>
-                    <Button onClick={removeColumn.bind(undefined, i)} size="sm">X</Button>
-                </ButtonGroup>
-                {columnEditor(i)}
-            </ListGroup.Item>
+            <div key={i}>
+                <div className="hv-form-row">
+                    {columnDescription(config.columns[i])}
+                    <ButtonGroup>
+                        <Button disabled={isFirst} onClick={moveUp.bind(undefined, i)} size="sm" variant="outline-secondary">⮝</Button>
+                        <Button disabled={isLast} onClick={moveDown.bind(undefined, i)} size="sm" variant="outline-secondary">⮟</Button>
+                        <Button onClick={removeColumn.bind(undefined, i)} size="sm" variant="outline-danger">X</Button>
+                    </ButtonGroup>
+                </div>
+                <div className="hv-column-details">
+                    {columnEditor(i)}
+                </div>
+            </div>
         );
     }
 
     return (
-        <React.Fragment>
-            <ListGroup variant="flush">
-                <ListGroup.Item>
-                    {lineWidthSelector}
-                </ListGroup.Item>
+        <div className="hexviewerconfigeditor">
+            <div className="hv-linewidth-column">
+                {lineWidthSelector}
+            </div>
+            <div className="hv-column-list">
                 {columnItems}
-                <ListGroup.Item>
-                    <Dropdown>
-                        <Dropdown.Toggle variant="primary" block size="sm" id={"dropdown-"+uniqueId}>
-                            Add column
-                        </Dropdown.Toggle>
+            </div>
+            <div className="hv-add-column">
+                <Dropdown>
+                    <Dropdown.Toggle variant="primary" block size="sm" id={"dropdown-"+uniqueId}>
+                        Add column
+                    </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={addAddressGutter}>Add Address Gutter</Dropdown.Item>
-                            <Dropdown.Item onClick={addIntegerColumn}>Add Integer Column</Dropdown.Item>
-                            <Dropdown.Item onClick={addHexColumn}>Add Hex Column</Dropdown.Item>
-                            <Dropdown.Item onClick={addAsciiColumn}>Add ASCII Column</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </ListGroup.Item>
-            </ListGroup>
-        </React.Fragment>
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={addAddressGutter}>Add Address Gutter</Dropdown.Item>
+                        <Dropdown.Item onClick={addIntegerColumn}>Add Integer Column</Dropdown.Item>
+                        <Dropdown.Item onClick={addHexColumn}>Add Hex Column</Dropdown.Item>
+                        <Dropdown.Item onClick={addAsciiColumn}>Add ASCII Column</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+        </div>
     );
 }
 
@@ -185,13 +191,13 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig} : AddressGutt
     };
     return (
         <React.Fragment>
-            <Form.Group controlId={"b"+id}>
-                <Form.Label>Base</Form.Label>
+            <div className="hv-form-row">
+                Base
                 <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
                     <ToggleButton value={AddressDisplayMode.Decimal}>10</ToggleButton>
                     <ToggleButton value={AddressDisplayMode.Hexadecimal}>16</ToggleButton>
                 </ToggleButtonGroup>
-            </Form.Group>
+            </div>
         </React.Fragment>
     );
 }
@@ -225,16 +231,16 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColu
     };
     return (
         <React.Fragment>
-            <Form.Group controlId={"w"+id}>
-                <Form.Label>Width</Form.Label>
+            <div className="hv-form-row">
+                Width
                 <ToggleButtonGroup type="radio" name={"w"+id} value={columnConfig.width} onChange={changeWidth} size="sm">
                     <ToggleButton value={1}>1</ToggleButton>
                     <ToggleButton value={2}>2</ToggleButton>
                     <ToggleButton value={4}>4</ToggleButton>
                     <ToggleButton value={8}>8</ToggleButton>
                 </ToggleButtonGroup>
-            </Form.Group>
-            <Form.Group controlId={"b"+id}>
+            </div>
+            <div className="hv-form-row">
                 <Form.Label>Base</Form.Label>
                 <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
                     <ToggleButton value={IntegerDisplayMode.Binary}>2</ToggleButton>
@@ -242,20 +248,21 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColu
                     <ToggleButton value={IntegerDisplayMode.Decimal}>10</ToggleButton>
                     <ToggleButton value={IntegerDisplayMode.Hexadecimal}>16</ToggleButton>
                 </ToggleButtonGroup>
-            </Form.Group>
-            <Form.Group controlId={"e"+id}>
+            </div>
+            <div className="hv-form-row">
                 <Form.Label>Endianess</Form.Label>
                 <ToggleButtonGroup type="radio" name={"e"+id} value={columnConfig.littleEndian} onChange={changeLE} size="sm">
                     <ToggleButton value={true}>Little</ToggleButton>
                     <ToggleButton value={false}>Big</ToggleButton>
                 </ToggleButtonGroup>
-            </Form.Group>
-            <Form.Group controlId={"s"+id}>
+            </div>
+            <div className="hv-form-row">
+                <span/>
                 <ToggleButtonGroup type="radio" name={"s"+id} value={columnConfig.signed} onChange={changeSigned} size="sm">
                     <ToggleButton value={true}>Signed</ToggleButton>
                     <ToggleButton value={false}>Unsigned</ToggleButton>
                 </ToggleButtonGroup>
-            </Form.Group>
+            </div>
         </React.Fragment>
     );
 }

@@ -68,7 +68,7 @@ class App extends React.Component<AppProps, AppState> {
                             selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
                             highlightRanges={this.state.highlighted}/>
                     </div>
-                    <div style={{width: "20em", height: "100%", overflow: "auto"}}>
+                    <div style={{width: "15em", height: "100%", overflow: "auto"}}>
                         <HexViewerConfigEditor config={this.state.viewConfig}
                             setConfig={(c) => this.setState({viewConfig: c})}/>
                     </div>
