@@ -1,14 +1,5 @@
 import {assert, assertUnreachable as assertExhausted} from "./util";
-import React, {
-    useRef,
-    useState,
-    useEffect,
-    useLayoutEffect,
-    CSSProperties,
-    RefObject,
-    useMemo,
-    useCallback,
-} from "react";
+import React, {useRef, useState, useEffect, useLayoutEffect, RefObject, useMemo, useCallback} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
 import {AddressGutter} from "./AddressGutter";
@@ -273,8 +264,6 @@ export interface HexViewerProps {
     setCursorPosition?: (pos: number) => void;
     selection?: Range;
     setSelection?: (r: Range) => void;
-    style?: CSSProperties;
-    className?: string;
 }
 
 export function HexViewer(props: HexViewerProps) {
@@ -322,7 +311,7 @@ export function HexViewer(props: HexViewerProps) {
     }
 
     return (
-        <div className={props.className} style={{...props.style, overflow: "auto"}} ref={ref}>
+        <div style={{width: "100%", height: "100%", overflow: "auto"}} ref={ref}>
             <div style={{display: "flex"}}>{renderedContent}</div>
         </div>
     );

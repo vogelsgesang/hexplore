@@ -68,7 +68,6 @@ class App extends React.Component<{}, AppState> {
                     <div style={{flex: 1, minHeight: 0, display: "flex"}}>
                         <div style={{flex: 1, minWidth: 0}}>
                             <HexViewer
-                                style={{height: "100%"}} // TODO: remove, as this blocks caching
                                 data={this.state.data}
                                 viewConfig={this.state.viewConfig}
                                 cursorPosition={this.state.cursorPosition}
@@ -78,14 +77,22 @@ class App extends React.Component<{}, AppState> {
                                 highlightRanges={this.state.highlighted}
                             />
                         </div>
-                        <div style={{width: "15em", height: "100%", overflow: "auto"}}>
+                        <div
+                            style={{
+                                width: "15em",
+                                height: "100%",
+                                overflow: "auto",
+                                borderLeft: "1px solid #999",
+                                background: "#fcfcfc",
+                            }}
+                        >
                             <HexViewerConfigEditor
                                 config={this.state.viewConfig}
                                 setConfig={c => this.setState({viewConfig: c})}
                             />
                         </div>
                     </div>
-                    <div style={{flex: 0}}>
+                    <div style={{flex: 0, borderTop: "1px solid #999", background: "#fcfcfc"}}>
                         <span style={{padding: ".2em", display: "inline-block"}}>
                             position: {this.state.cursorPosition}
                         </span>
