@@ -1,50 +1,53 @@
-import React, { KeyboardEvent, CSSProperties } from "react";
+import React, {KeyboardEvent, CSSProperties} from "react";
 import ReactDOM from "react-dom";
-import { HighlightRange, Range } from "./DataGrid";
-import { HexViewer } from "./HexViewer";
-import { HexViewerConfig, defaultConfig } from "./HexViewerConfig";
-import { HexViewerConfigEditor } from "./HexViewerConfigEditor";
+import {HighlightRange, Range} from "./DataGrid";
+import {HexViewer} from "./HexViewer";
+import {HexViewerConfig, defaultConfig} from "./HexViewerConfig";
+import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 
 import "./index.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FileOpener } from "./FileOpener";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {FileOpener} from "./FileOpener";
 
 interface AppState {
-    data? : ArrayBuffer;
-    cursorPosition : number;
-    selection : Range;
-    highlighted : Array<HighlightRange>;
-    viewConfig : HexViewerConfig;
+    data?: ArrayBuffer;
+    cursorPosition: number;
+    selection: Range;
+    highlighted: Array<HighlightRange>;
+    viewConfig: HexViewerConfig;
 }
 
-const styles : Array<CSSProperties> = [
+const styles: Array<CSSProperties> = [
     {height: "1em", zIndex: -1, backgroundColor: "#fcc"},
     {height: "1em", zIndex: -1, backgroundColor: "#cfc"},
     {height: "1em", zIndex: -1, backgroundColor: "#ccf"},
-    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "red"},
-    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "green"},
-    {marginTop: "1.1em", borderWidth:"2px", borderBottomStyle: "solid", borderColor: "blue"},
+    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "red"},
+    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "green"},
+    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
 class App extends React.Component<{}, AppState> {
-    state : AppState = {
+    state: AppState = {
         data: undefined,
         cursorPosition: 0,
         selection: {from: 0, to: 1},
         highlighted: new Array<HighlightRange>(),
         viewConfig: defaultConfig,
-    }
+    };
     nextStyle = 0;
 
-    onKeyPress(e : KeyboardEvent<HTMLDivElement>) {
-        if ((e.key.toLowerCase() == "m") && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    onKeyPress(e: KeyboardEvent<HTMLDivElement>) {
+        if (e.key.toLowerCase() == "m" && !e.ctrlKey && !e.altKey && !e.metaKey) {
             if (!e.shiftKey) {
                 // Add mark
                 const key = "m" + new Date().getTime();
                 const style = styles[this.nextStyle++ % styles.length];
-                const newMark : HighlightRange = {...this.state.selection, style: style, key: key};
+                const newMark: HighlightRange = {...this.state.selection, style: style, key: key};
                 const marks = this.state.highlighted.concat([newMark]);
-                this.setState({highlighted: marks, selection: {from: this.state.cursorPosition, to: this.state.cursorPosition+1}});
+                this.setState({
+                    highlighted: marks,
+                    selection: {from: this.state.cursorPosition, to: this.state.cursorPosition + 1},
+                });
             } else if (e.shiftKey) {
                 // Remove mark
                 this.setState({highlighted: []});
@@ -54,29 +57,38 @@ class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        (window as any).currentConfig = this.state.viewConfig;
-        (window as any).setConfig = (c:any) => this.setState({viewConfig: c});
         if (!this.state.data) {
-            return <FileOpener setData={(d) => this.setState({"data": d})}/>;
+            return <FileOpener setData={d => this.setState({data: d})} />;
         } else if (this.state.data) {
             return (
-                <div onKeyPress={(e) => this.onKeyPress(e)} style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
+                <div
+                    onKeyPress={e => this.onKeyPress(e)}
+                    style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}
+                >
                     <div style={{flex: 1, minHeight: 0, display: "flex"}}>
                         <div style={{flex: 1, minWidth: 0}}>
-                            <HexViewer style={{height: "100%"}} // TODO: remove, as this blocks caching
+                            <HexViewer
+                                style={{height: "100%"}} // TODO: remove, as this blocks caching
                                 data={this.state.data}
                                 viewConfig={this.state.viewConfig}
-                                cursorPosition={this.state.cursorPosition} setCursorPosition={(x) => this.setState({cursorPosition: x})}
-                                selection={this.state.selection} setSelection={(x) => this.setState({selection: x})}
-                                highlightRanges={this.state.highlighted}/>
+                                cursorPosition={this.state.cursorPosition}
+                                setCursorPosition={x => this.setState({cursorPosition: x})}
+                                selection={this.state.selection}
+                                setSelection={x => this.setState({selection: x})}
+                                highlightRanges={this.state.highlighted}
+                            />
                         </div>
                         <div style={{width: "15em", height: "100%", overflow: "auto"}}>
-                            <HexViewerConfigEditor config={this.state.viewConfig}
-                                setConfig={(c) => this.setState({viewConfig: c})}/>
+                            <HexViewerConfigEditor
+                                config={this.state.viewConfig}
+                                setConfig={c => this.setState({viewConfig: c})}
+                            />
                         </div>
                     </div>
                     <div style={{flex: 0}}>
-                        <span style={{padding: ".2em", display: "inline-block"}}>position: {this.state.cursorPosition}</span>
+                        <span style={{padding: ".2em", display: "inline-block"}}>
+                            position: {this.state.cursorPosition}
+                        </span>
                     </div>
                 </div>
             );
@@ -84,7 +96,7 @@ class App extends React.Component<{}, AppState> {
     }
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
-    const domContainer = document.querySelector('#main');
-    ReactDOM.render(<App/>, domContainer);
+window.addEventListener("DOMContentLoaded", _event => {
+    const domContainer = document.querySelector("#main");
+    ReactDOM.render(<App />, domContainer);
 });

@@ -8,14 +8,14 @@ export enum ColumnType {
 
 export enum AddressDisplayMode {
     Decimal,
-    Hexadecimal
+    Hexadecimal,
 }
 
 export enum IntegerDisplayMode {
     Binary,
     Octal,
     Decimal,
-    Hexadecimal
+    Hexadecimal,
 }
 
 export interface ColumnConfig {
@@ -25,7 +25,7 @@ export interface ColumnConfig {
 export class AddressGutterConfig implements ColumnConfig {
     [immerable] = true;
     columnType = ColumnType.AddressGutter;
-    constructor(public offset: number, public displayMode: AddressDisplayMode, public paddingWidth: number) { }
+    constructor(public offset: number, public displayMode: AddressDisplayMode, public paddingWidth: number) {}
 }
 
 export class AsciiColumnConfig implements ColumnConfig {
@@ -36,7 +36,12 @@ export class AsciiColumnConfig implements ColumnConfig {
 export class IntegerColumnConfig implements ColumnConfig {
     [immerable] = true;
     columnType = ColumnType.IntegerColumn;
-    constructor(public signed : boolean, public width: 1 | 2 | 4 | 8, public littleEndian: boolean, public displayMode: IntegerDisplayMode) { }
+    constructor(
+        public signed: boolean,
+        public width: 1 | 2 | 4 | 8,
+        public littleEndian: boolean,
+        public displayMode: IntegerDisplayMode,
+    ) {}
 }
 
 export interface HexViewerConfig {
@@ -44,19 +49,22 @@ export interface HexViewerConfig {
     columns: ColumnConfig[];
 }
 
-export const defaultConfig : HexViewerConfig = {
+export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
     columns: [
         new AddressGutterConfig(0, AddressDisplayMode.Hexadecimal, 0),
         new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal),
-        new AsciiColumnConfig()
-    ]
-}
+        new AsciiColumnConfig(),
+    ],
+};
 
-export function getAlignment(c : ColumnConfig) {
+export function getAlignment(c: ColumnConfig) {
     switch (c.columnType) {
-        case ColumnType.AddressGutter: return 1;
-        case ColumnType.AsciiColumn: return 1;
-        case ColumnType.IntegerColumn: return (c as IntegerColumnConfig).width;
+        case ColumnType.AddressGutter:
+            return 1;
+        case ColumnType.AsciiColumn:
+            return 1;
+        case ColumnType.IntegerColumn:
+            return (c as IntegerColumnConfig).width;
     }
 }

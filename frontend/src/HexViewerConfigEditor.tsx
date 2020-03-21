@@ -1,92 +1,123 @@
-import { HexViewerConfig, ColumnConfig, ColumnType, AddressGutterConfig, AddressDisplayMode, AsciiColumnConfig, IntegerColumnConfig, IntegerDisplayMode, getAlignment } from "./HexViewerConfig";
-import React, { useState } from "react";
+import {
+    HexViewerConfig,
+    ColumnConfig,
+    ColumnType,
+    AddressGutterConfig,
+    AddressDisplayMode,
+    AsciiColumnConfig,
+    IntegerColumnConfig,
+    IntegerDisplayMode,
+    getAlignment,
+} from "./HexViewerConfig";
+import React, {useState} from "react";
 import {produce} from "immer";
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Dropdown from "react-bootstrap/Dropdown";
+import Form from "react-bootstrap/Form";
+import ToggleButton from "react-bootstrap/ToggleButton";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 
 import "./HexViewerConfigEditor.css";
 
 let nextId = 0;
 function useUniqueId() {
-    let [id] = useState(() => "id-"+(++nextId));
+    const [id] = useState(() => "id-" + ++nextId);
     return id;
 }
 
 interface HexViewerConfigEditorProps {
-    config : HexViewerConfig,
-    setConfig : (config : HexViewerConfig) => void
+    config: HexViewerConfig;
+    setConfig: (config: HexViewerConfig) => void;
 }
 
-export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEditorProps) {
-    let uniqueId = useUniqueId();
+export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditorProps) {
+    const uniqueId = useUniqueId();
 
     let widthSteps = 1;
-    for (let c of config.columns) {
+    for (const c of config.columns) {
         widthSteps = Math.max(widthSteps, getAlignment(c));
     }
-    let widthOptions = [];
+    const widthOptions = [];
     for (let w = widthSteps; w <= 128; w += widthSteps) {
-        widthOptions.push(<option value={w} key={w}>{w}</option>);
+        widthOptions.push(
+            <option value={w} key={w}>
+                {w}
+            </option>,
+        );
     }
-    let lineWidthId = "linewidth-" + uniqueId;
-    let lineWidthSelector = (
+    const lineWidthId = "linewidth-" + uniqueId;
+    const lineWidthSelector = (
         <div className="hv-form-row">
             <label htmlFor={lineWidthId}>Line Width: </label>
-            <select id={lineWidthId} value={config.lineWidth} onChange={(e) => setConfig({...config, lineWidth: Number.parseInt(e.target.value)})}>
+            <select
+                id={lineWidthId}
+                value={config.lineWidth}
+                onChange={e => setConfig({...config, lineWidth: Number.parseInt(e.target.value)})}
+            >
                 {widthOptions}
-           </select>
+            </select>
         </div>
     );
 
     function addAddressGutter() {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.push(new AddressGutterConfig(0, AddressDisplayMode.Hexadecimal, 0));
-        }));
+        setConfig(
+            produce(config, draft => {
+                draft.columns.push(new AddressGutterConfig(0, AddressDisplayMode.Hexadecimal, 0));
+            }),
+        );
     }
     function addIntegerColumn() {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Decimal));
-        }));
+        setConfig(
+            produce(config, draft => {
+                draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Decimal));
+            }),
+        );
     }
     function addHexColumn() {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal));
-        }));
+        setConfig(
+            produce(config, draft => {
+                draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal));
+            }),
+        );
     }
     function addAsciiColumn() {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.push(new AsciiColumnConfig());
-        }));
+        setConfig(
+            produce(config, draft => {
+                draft.columns.push(new AsciiColumnConfig());
+            }),
+        );
     }
-    function moveUp(pos : number) {
-        setConfig(produce(config, (draft)=>{
-            let tmp = draft.columns[pos-1];
-            draft.columns[pos-1] = draft.columns[pos];
-            draft.columns[pos] = tmp;
-        }));
+    function moveUp(pos: number) {
+        setConfig(
+            produce(config, draft => {
+                const tmp = draft.columns[pos - 1];
+                draft.columns[pos - 1] = draft.columns[pos];
+                draft.columns[pos] = tmp;
+            }),
+        );
     }
-    function moveDown(pos : number) {
-        moveUp(pos+1);
+    function moveDown(pos: number) {
+        moveUp(pos + 1);
     }
-    function removeColumn(pos : number) {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.splice(pos, 1);
-        }));
+    function removeColumn(pos: number) {
+        setConfig(
+            produce(config, draft => {
+                draft.columns.splice(pos, 1);
+            }),
+        );
     }
-    function setColumnConfig(pos : number, columnConfig : ColumnConfig) {
-        setConfig(produce(config, (draft)=>{
-            draft.columns.splice(pos, 1, columnConfig);
-            let alignment = getAlignment(columnConfig);
-            draft.lineWidth = Math.ceil(draft.lineWidth/alignment) * alignment;
-        }));
+    function setColumnConfig(pos: number, columnConfig: ColumnConfig) {
+        setConfig(
+            produce(config, draft => {
+                draft.columns.splice(pos, 1, columnConfig);
+                const alignment = getAlignment(columnConfig);
+                draft.lineWidth = Math.ceil(draft.lineWidth / alignment) * alignment;
+            }),
+        );
     }
 
-    function columnDescription(columnConfig : ColumnConfig) {
+    function columnDescription(columnConfig: ColumnConfig) {
         switch (columnConfig.columnType) {
             case ColumnType.AddressGutter: {
                 return "Address Gutter";
@@ -95,73 +126,101 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
                 return "ASCII";
             }
             case ColumnType.IntegerColumn: {
-                let c = columnConfig as IntegerColumnConfig;
+                const c = columnConfig as IntegerColumnConfig;
                 let d = "";
                 if (c.signed) {
-                    d += "Signed "
+                    d += "Signed ";
                 }
                 d += c.width + "-byte ";
                 switch (c.displayMode) {
-                    case IntegerDisplayMode.Binary: d += "Binary"; break;
-                    case IntegerDisplayMode.Octal: d += "Octal"; break;
-                    case IntegerDisplayMode.Decimal: d += "Decimal"; break;
-                    case IntegerDisplayMode.Hexadecimal: d += "Hex"; break;
+                    case IntegerDisplayMode.Binary:
+                        d += "Binary";
+                        break;
+                    case IntegerDisplayMode.Octal:
+                        d += "Octal";
+                        break;
+                    case IntegerDisplayMode.Decimal:
+                        d += "Decimal";
+                        break;
+                    case IntegerDisplayMode.Hexadecimal:
+                        d += "Hex";
+                        break;
                 }
                 if (!c.littleEndian) {
-                    d += " (BE)"
+                    d += " (BE)";
                 }
                 return d;
             }
         }
     }
 
-    function columnEditor(idx : number) {
-        let columnConfig = config.columns[idx];
+    function columnEditor(idx: number) {
+        const columnConfig = config.columns[idx];
         switch (columnConfig.columnType) {
             case ColumnType.AddressGutter: {
-                return <AddressGutterConfigEditor columnConfig={columnConfig as AddressGutterConfig} setColumnConfig={setColumnConfig.bind(undefined, i)}/>;
+                return (
+                    <AddressGutterConfigEditor
+                        columnConfig={columnConfig as AddressGutterConfig}
+                        setColumnConfig={setColumnConfig.bind(undefined, idx)}
+                    />
+                );
             }
             case ColumnType.AsciiColumn: {
                 return <React.Fragment></React.Fragment>;
             }
             case ColumnType.IntegerColumn: {
-                return <IntegerColumnConfigEditor columnConfig={columnConfig as IntegerColumnConfig} setColumnConfig={setColumnConfig.bind(undefined, i)}/>;
+                return (
+                    <IntegerColumnConfigEditor
+                        columnConfig={columnConfig as IntegerColumnConfig}
+                        setColumnConfig={setColumnConfig.bind(undefined, idx)}
+                    />
+                );
             }
         }
     }
 
-    let columnItems = [];
-    for (var i = 0; i < config.columns.length; ++i) {
-        let isFirst = i == 0;
-        let isLast = i == config.columns.length - 1;
+    const columnItems = [];
+    for (let i = 0; i < config.columns.length; ++i) {
+        const isFirst = i == 0;
+        const isLast = i == config.columns.length - 1;
         columnItems.push(
             <div key={i}>
                 <div className="hv-form-row">
                     {columnDescription(config.columns[i])}
                     <ButtonGroup>
-                        <Button disabled={isFirst} onClick={moveUp.bind(undefined, i)} size="sm" variant="outline-secondary">⮝</Button>
-                        <Button disabled={isLast} onClick={moveDown.bind(undefined, i)} size="sm" variant="outline-secondary">⮟</Button>
-                        <Button onClick={removeColumn.bind(undefined, i)} size="sm" variant="outline-danger">X</Button>
+                        <Button
+                            disabled={isFirst}
+                            onClick={moveUp.bind(undefined, i)}
+                            size="sm"
+                            variant="outline-secondary"
+                        >
+                            ⮝
+                        </Button>
+                        <Button
+                            disabled={isLast}
+                            onClick={moveDown.bind(undefined, i)}
+                            size="sm"
+                            variant="outline-secondary"
+                        >
+                            ⮟
+                        </Button>
+                        <Button onClick={removeColumn.bind(undefined, i)} size="sm" variant="outline-danger">
+                            X
+                        </Button>
                     </ButtonGroup>
                 </div>
-                <div className="hv-column-details">
-                    {columnEditor(i)}
-                </div>
-            </div>
+                <div className="hv-column-details">{columnEditor(i)}</div>
+            </div>,
         );
     }
 
     return (
         <div className="hexviewerconfigeditor">
-            <div className="hv-linewidth-column">
-                {lineWidthSelector}
-            </div>
-            <div className="hv-column-list">
-                {columnItems}
-            </div>
+            <div className="hv-linewidth-column">{lineWidthSelector}</div>
+            <div className="hv-column-list">{columnItems}</div>
             <div className="hv-add-column">
                 <Dropdown>
-                    <Dropdown.Toggle variant="primary" block size="sm" id={"dropdown-"+uniqueId}>
+                    <Dropdown.Toggle variant="primary" block size="sm" id={"dropdown-" + uniqueId}>
                         Add column
                     </Dropdown.Toggle>
 
@@ -178,22 +237,30 @@ export function HexViewerConfigEditor({config, setConfig} : HexViewerConfigEdito
 }
 
 interface AddressGutterConfigEditorProps {
-    columnConfig : AddressGutterConfig,
-    setColumnConfig : (columnConfig : AddressGutterConfig) => void
+    columnConfig: AddressGutterConfig;
+    setColumnConfig: (columnConfig: AddressGutterConfig) => void;
 }
 
-function AddressGutterConfigEditor({columnConfig, setColumnConfig} : AddressGutterConfigEditorProps) {
-    let id = useUniqueId();
-    let changeBase = (v : AddressDisplayMode) => {
-        setColumnConfig(produce(columnConfig, (draft) => {
-            draft.displayMode = v;
-        }));
+function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
+    const id = useUniqueId();
+    const changeBase = (v: AddressDisplayMode) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.displayMode = v;
+            }),
+        );
     };
     return (
         <React.Fragment>
             <div className="hv-form-row">
                 Base
-                <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"b" + id}
+                    value={columnConfig.displayMode}
+                    onChange={changeBase}
+                    size="sm"
+                >
                     <ToggleButton value={AddressDisplayMode.Decimal}>10</ToggleButton>
                     <ToggleButton value={AddressDisplayMode.Hexadecimal}>16</ToggleButton>
                 </ToggleButtonGroup>
@@ -203,37 +270,51 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig} : AddressGutt
 }
 
 interface IntegerColumnConfigEditorProps {
-    columnConfig : IntegerColumnConfig,
-    setColumnConfig : (columnConfig : IntegerColumnConfig) => void
+    columnConfig: IntegerColumnConfig;
+    setColumnConfig: (columnConfig: IntegerColumnConfig) => void;
 }
 
-function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColumnConfigEditorProps) {
-    let id = useUniqueId();
-    let changeWidth = (v : 1 | 2 | 4 | 8) => {
-        setColumnConfig(produce(columnConfig, (draft) => {
-            draft.width = v;
-        }));
+function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColumnConfigEditorProps) {
+    const id = useUniqueId();
+    const changeWidth = (v: 1 | 2 | 4 | 8) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.width = v;
+            }),
+        );
     };
-    let changeBase = (v : IntegerDisplayMode) => {
-        setColumnConfig(produce(columnConfig, (draft) => {
-            draft.displayMode = v;
-        }));
+    const changeBase = (v: IntegerDisplayMode) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.displayMode = v;
+            }),
+        );
     };
-    let changeLE = (v : boolean) => {
-        setColumnConfig(produce(columnConfig, (draft) => {
-            draft.littleEndian = v;
-        }));
+    const changeLE = (v: boolean) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.littleEndian = v;
+            }),
+        );
     };
-    let changeSigned = (v : boolean) => {
-        setColumnConfig(produce(columnConfig, (draft) => {
-            draft.signed = v;
-        }));
+    const changeSigned = (v: boolean) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.signed = v;
+            }),
+        );
     };
     return (
         <React.Fragment>
             <div className="hv-form-row">
                 Width
-                <ToggleButtonGroup type="radio" name={"w"+id} value={columnConfig.width} onChange={changeWidth} size="sm">
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"w" + id}
+                    value={columnConfig.width}
+                    onChange={changeWidth}
+                    size="sm"
+                >
                     <ToggleButton value={1}>1</ToggleButton>
                     <ToggleButton value={2}>2</ToggleButton>
                     <ToggleButton value={4}>4</ToggleButton>
@@ -242,7 +323,13 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColu
             </div>
             <div className="hv-form-row">
                 <Form.Label>Base</Form.Label>
-                <ToggleButtonGroup type="radio" name={"b"+id} value={columnConfig.displayMode} onChange={changeBase} size="sm">
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"b" + id}
+                    value={columnConfig.displayMode}
+                    onChange={changeBase}
+                    size="sm"
+                >
                     <ToggleButton value={IntegerDisplayMode.Binary}>2</ToggleButton>
                     <ToggleButton value={IntegerDisplayMode.Octal}>8</ToggleButton>
                     <ToggleButton value={IntegerDisplayMode.Decimal}>10</ToggleButton>
@@ -251,14 +338,26 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig} : IntegerColu
             </div>
             <div className="hv-form-row">
                 <Form.Label>Endianess</Form.Label>
-                <ToggleButtonGroup type="radio" name={"e"+id} value={columnConfig.littleEndian} onChange={changeLE} size="sm">
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"e" + id}
+                    value={columnConfig.littleEndian}
+                    onChange={changeLE}
+                    size="sm"
+                >
                     <ToggleButton value={true}>Little</ToggleButton>
                     <ToggleButton value={false}>Big</ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <span/>
-                <ToggleButtonGroup type="radio" name={"s"+id} value={columnConfig.signed} onChange={changeSigned} size="sm">
+                <span />
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"s" + id}
+                    value={columnConfig.signed}
+                    onChange={changeSigned}
+                    size="sm"
+                >
                     <ToggleButton value={true}>Signed</ToggleButton>
                     <ToggleButton value={false}>Unsigned</ToggleButton>
                 </ToggleButtonGroup>
