@@ -87,13 +87,13 @@ export function FileOpener({setData}: FileOpenerProps) {
                 {renderedError}
                 <div className="caption">Which file do you want to open?</div>
                 <div className="source-alternatives">
-                    <div className="source-alternative-url">
+                    <form onSubmit={() => openURL(url)} className="source-alternative-url">
                         <div className="source-caption">Remote file</div>
                         <input value={url} onChange={e => setUrl(e.target.value)} />
-                        <Button onClick={() => openURL(url)} size="sm" block>
+                        <Button type="submit" size="sm" block>
                             Open URL
                         </Button>
-                    </div>
+                    </form>
                     <div>
                         <div className="source-caption">Local file</div>
                         <div {...getRootProps({className: dropClassName})}>
