@@ -1,0 +1,25 @@
+.hex-viewer {
+    display: flex;
+    min-height: 100%;
+    font-family: monospace;
+    color: #00a;
+    font-size: 17.6px;
+    white-space: nowrap;
+}
+
+.hex-viewer-column {
+    padding: 0.5em;
+    border-right: 1px solid red;
+}
+
+.hex-viewer-column:last-child {
+    border-right: none;
+}
+
+.measure-text {
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    white-space: nowrap;
+}

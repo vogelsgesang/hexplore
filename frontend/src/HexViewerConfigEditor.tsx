@@ -63,7 +63,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     function addAddressGutter() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new AddressGutterConfig(0, AddressDisplayMode.Hexadecimal, 0));
+                draft.columns.push(new AddressGutterConfig(AddressDisplayMode.Hexadecimal));
             }),
         );
     }

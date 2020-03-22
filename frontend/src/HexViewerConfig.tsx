@@ -25,7 +25,7 @@ export interface ColumnConfig {
 export class AddressGutterConfig implements ColumnConfig {
     [immerable] = true;
     columnType = ColumnType.AddressGutter;
-    constructor(public offset: number, public displayMode: AddressDisplayMode, public paddingWidth: number) {}
+    constructor(public displayMode: AddressDisplayMode) {}
 }
 
 export class AsciiColumnConfig implements ColumnConfig {
@@ -52,7 +52,7 @@ export interface HexViewerConfig {
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
     columns: [
-        new AddressGutterConfig(0, AddressDisplayMode.Hexadecimal, 0),
+        new AddressGutterConfig(AddressDisplayMode.Hexadecimal),
         new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal),
         new AsciiColumnConfig(),
     ],

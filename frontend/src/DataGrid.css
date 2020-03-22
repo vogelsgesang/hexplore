@@ -1,8 +1,7 @@
 .data-grid {
-    font-family: monospace;
     color: #00a;
-    font-size: 17.6px;
     white-space: nowrap;
+    position: relative;
 -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -15,32 +14,16 @@
     outline-width: 0;
 }
 
-.data-grid .line {
-    position: relative;
-    height: 17.6px;
+.data-grid .cursor {
+    border: 1px solid #bbe;
 }
-
-.data-grid .element {
-    display: inline-block;
-    white-space: pre;
-}
-.data-grid.spaced .element {
-    padding-left: .8em;
-}
-.data-grid.spaced .element:first-child {
-    padding-left: 0;
-}
-.data-grid .element.cursor span {
-    margin: -1px;
+.data-grid:focus .cursor {
     border: 1px solid green;
-}
-.data-grid:focus .element.cursor span {
     background: rgba(136, 255, 195, 0.4)
 }
 
 .data-grid .selection {
     background: #eef;
-    height: 1em;
     z-index: -1;
 }
 .data-grid:focus .selection {
