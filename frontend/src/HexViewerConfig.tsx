@@ -6,17 +6,9 @@ export enum ColumnType {
     IntegerColumn,
 }
 
-export enum AddressDisplayMode {
-    Decimal,
-    Hexadecimal,
-}
+export type AddressDisplayBase = 10 | 16;
 
-export enum IntegerDisplayMode {
-    Binary,
-    Octal,
-    Decimal,
-    Hexadecimal,
-}
+export type IntegerDisplayBase = 2 | 8 | 10 | 16;
 
 export interface ColumnConfig {
     columnType: ColumnType;
@@ -25,7 +17,7 @@ export interface ColumnConfig {
 export class AddressGutterConfig implements ColumnConfig {
     [immerable] = true;
     columnType = ColumnType.AddressGutter;
-    constructor(public displayMode: AddressDisplayMode) {}
+    constructor(public displayBase: AddressDisplayBase) {}
 }
 
 export class AsciiColumnConfig implements ColumnConfig {
@@ -40,7 +32,7 @@ export class IntegerColumnConfig implements ColumnConfig {
         public signed: boolean,
         public width: 1 | 2 | 4 | 8,
         public littleEndian: boolean,
-        public displayMode: IntegerDisplayMode,
+        public displayBase: IntegerDisplayBase,
     ) {}
 }
 
@@ -52,8 +44,8 @@ export interface HexViewerConfig {
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
     columns: [
-        new AddressGutterConfig(AddressDisplayMode.Hexadecimal),
-        new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal),
+        new AddressGutterConfig(16),
+        new IntegerColumnConfig(false, 1, true, 16),
         new AsciiColumnConfig(),
     ],
 };

@@ -3,11 +3,11 @@ import {
     ColumnConfig,
     ColumnType,
     AddressGutterConfig,
-    AddressDisplayMode,
     AsciiColumnConfig,
     IntegerColumnConfig,
-    IntegerDisplayMode,
     getAlignment,
+    IntegerDisplayBase,
+    AddressDisplayBase,
 } from "./HexViewerConfig";
 import React, {useState} from "react";
 import {produce} from "immer";
@@ -63,21 +63,21 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     function addAddressGutter() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new AddressGutterConfig(AddressDisplayMode.Hexadecimal));
+                draft.columns.push(new AddressGutterConfig(16));
             }),
         );
     }
     function addIntegerColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Decimal));
+                draft.columns.push(new IntegerColumnConfig(false, 1, true, 10));
             }),
         );
     }
     function addHexColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new IntegerColumnConfig(false, 1, true, IntegerDisplayMode.Hexadecimal));
+                draft.columns.push(new IntegerColumnConfig(false, 1, true, 16));
             }),
         );
     }
@@ -132,17 +132,17 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                     d += "Signed ";
                 }
                 d += c.width + "-byte ";
-                switch (c.displayMode) {
-                    case IntegerDisplayMode.Binary:
+                switch (c.displayBase) {
+                    case 2:
                         d += "Binary";
                         break;
-                    case IntegerDisplayMode.Octal:
+                    case 8:
                         d += "Octal";
                         break;
-                    case IntegerDisplayMode.Decimal:
+                    case 10:
                         d += "Decimal";
                         break;
-                    case IntegerDisplayMode.Hexadecimal:
+                    case 16:
                         d += "Hex";
                         break;
                 }
@@ -243,10 +243,10 @@ interface AddressGutterConfigEditorProps {
 
 function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
     const id = useUniqueId();
-    const changeBase = (v: AddressDisplayMode) => {
+    const changeBase = (v: AddressDisplayBase) => {
         setColumnConfig(
             produce(columnConfig, draft => {
-                draft.displayMode = v;
+                draft.displayBase = v;
             }),
         );
     };
@@ -257,12 +257,12 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutte
                 <ToggleButtonGroup
                     type="radio"
                     name={"b" + id}
-                    value={columnConfig.displayMode}
+                    value={columnConfig.displayBase}
                     onChange={changeBase}
                     size="sm"
                 >
-                    <ToggleButton value={AddressDisplayMode.Decimal}>10</ToggleButton>
-                    <ToggleButton value={AddressDisplayMode.Hexadecimal}>16</ToggleButton>
+                    <ToggleButton value={10}>10</ToggleButton>
+                    <ToggleButton value={16}>16</ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>
@@ -283,10 +283,10 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
             }),
         );
     };
-    const changeBase = (v: IntegerDisplayMode) => {
+    const changeBase = (v: IntegerDisplayBase) => {
         setColumnConfig(
             produce(columnConfig, draft => {
-                draft.displayMode = v;
+                draft.displayBase = v;
             }),
         );
     };
@@ -326,14 +326,14 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 <ToggleButtonGroup
                     type="radio"
                     name={"b" + id}
-                    value={columnConfig.displayMode}
+                    value={columnConfig.displayBase}
                     onChange={changeBase}
                     size="sm"
                 >
-                    <ToggleButton value={IntegerDisplayMode.Binary}>2</ToggleButton>
-                    <ToggleButton value={IntegerDisplayMode.Octal}>8</ToggleButton>
-                    <ToggleButton value={IntegerDisplayMode.Decimal}>10</ToggleButton>
-                    <ToggleButton value={IntegerDisplayMode.Hexadecimal}>16</ToggleButton>
+                    <ToggleButton value={2}>2</ToggleButton>
+                    <ToggleButton value={8}>8</ToggleButton>
+                    <ToggleButton value={10}>10</ToggleButton>
+                    <ToggleButton value={16}>16</ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">

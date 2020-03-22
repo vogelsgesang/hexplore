@@ -7,9 +7,9 @@ import {
     ColumnType,
     AddressGutterConfig,
     IntegerColumnConfig,
-    IntegerDisplayMode,
+    IntegerDisplayBase,
     ColumnConfig,
-    AddressDisplayMode,
+    AddressDisplayBase,
 } from "./HexViewerConfig";
 import memoize from "fast-memoize";
 import "./HexViewer.css";
@@ -102,47 +102,12 @@ function formatInteger64bit(low: number, high: number, base: number, width: numb
     return s;
 }
 
-function getIntegerStrWidth(width: 1 | 2 | 4 | 8, display: IntegerDisplayMode) {
-    let base: number;
-    switch (display) {
-        case IntegerDisplayMode.Binary:
-            base = 2;
-            break;
-        case IntegerDisplayMode.Octal:
-            base = 8;
-            break;
-        case IntegerDisplayMode.Decimal:
-            base = 10;
-            break;
-        case IntegerDisplayMode.Hexadecimal:
-            base = 16;
-            break;
-    }
-    return Math.ceil((Math.log(1 << 8) / Math.log(base)) * width);
-}
-
 const createIntegerRenderer = memoize(function createIntegerRenderer(
     width: 1 | 2 | 4 | 8,
     signed: boolean,
     littleEndian: boolean,
-    display: IntegerDisplayMode,
+    base: IntegerDisplayBase,
 ) {
-    // TODO: deduplicate with getIntegerStrWidth
-    let base: number;
-    switch (display) {
-        case IntegerDisplayMode.Binary:
-            base = 2;
-            break;
-        case IntegerDisplayMode.Octal:
-            base = 8;
-            break;
-        case IntegerDisplayMode.Decimal:
-            base = 10;
-            break;
-        case IntegerDisplayMode.Hexadecimal:
-            base = 16;
-            break;
-    }
     const strWidth = Math.ceil((Math.log(1 << 8) / Math.log(base)) * width);
 
     return function intRenderer(data: DataView, idx: number): string {
@@ -175,16 +140,16 @@ const createIntegerRenderer = memoize(function createIntegerRenderer(
 });
 
 const createAddressGutterRenderer = memoize(function createIntegerRenderer(
-    mode: AddressDisplayMode,
+    base: AddressDisplayBase,
     lineWidth: number,
 ) {
     return function addressRenderer(_data: DataView, idx: number): string {
         const addr = idx * lineWidth;
-        switch (mode) {
-            case AddressDisplayMode.Decimal: {
+        switch (base) {
+            case 10: {
                 return addr.toString(10);
             }
-            case AddressDisplayMode.Hexadecimal: {
+            case 16: {
                 return "0x" + addr.toString(16);
             }
         }
@@ -240,7 +205,9 @@ function HexViewerColumn({
         case ColumnType.IntegerColumn: {
             const cc = columnConfig as IntegerColumnConfig;
             elementWidth = cc.width;
-            cellWidth = (getIntegerStrWidth(cc.width, cc.displayMode) + (cc.signed ? 1 : 0)) * charWidth;
+            let strLen = Math.ceil((Math.log(1 << 8) / Math.log(cc.displayBase)) * cc.width);
+            strLen += cc.signed ? 1 : 0;
+            cellWidth = strLen * charWidth;
             cellPaddingX = 0.8 * charWidth;
             break;
         }
@@ -281,14 +248,14 @@ function HexViewerColumn({
     switch (columnConfig.columnType) {
         case ColumnType.AddressGutter: {
             const cc = columnConfig as AddressGutterConfig;
-            return <DataGrid {...gridProps} renderer={createAddressGutterRenderer(cc.displayMode, lineWidth)} />;
+            return <DataGrid {...gridProps} renderer={createAddressGutterRenderer(cc.displayBase, lineWidth)} />;
         }
         case ColumnType.AsciiColumn: {
             return <DataGrid {...gridProps} renderer={byteAsAscii} />;
         }
         case ColumnType.IntegerColumn: {
             const cc = columnConfig as IntegerColumnConfig;
-            const renderer = createIntegerRenderer(cc.width, cc.signed, cc.littleEndian, cc.displayMode);
+            const renderer = createIntegerRenderer(cc.width, cc.signed, cc.littleEndian, cc.displayBase);
             return <DataGrid {...gridProps} renderer={renderer} />;
         }
         default:
