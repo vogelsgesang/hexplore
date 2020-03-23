@@ -172,7 +172,7 @@ interface HexViewerColumnProps {
     setSelection?: (r: Range) => void;
 }
 
-function HexViewerColumn({
+const HexViewerColumn = React.memo(function HexViewerColumn({
     dataView,
     columnConfig,
     lineWidth,
@@ -229,9 +229,13 @@ function HexViewerColumn({
         setCursorPosition: useCallback(e => (setCursorPosition ? setCursorPosition(e * elementWidth) : undefined), [
             elementWidth,
         ]),
-        selection: selection
-            ? {from: Math.floor(selection.from / elementWidth), to: Math.ceil(selection.to / elementWidth)}
-            : undefined,
+        selection: useMemo(
+            () =>
+                selection
+                    ? {from: Math.floor(selection.from / elementWidth), to: Math.ceil(selection.to / elementWidth)}
+                    : undefined,
+            [selection],
+        ),
         setSelection: useCallback(
             (s: Range) =>
                 setSelection ? setSelection({from: s.from * elementWidth, to: s.to * elementWidth}) : undefined,
@@ -261,7 +265,7 @@ function HexViewerColumn({
         default:
             assertExhausted(columnConfig.columnType);
     }
-}
+});
 
 export interface HexViewerProps {
     data: ArrayBuffer;

@@ -43,11 +43,7 @@ export interface HexViewerConfig {
 
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
-    columns: [
-        new AddressGutterConfig(16),
-        new IntegerColumnConfig(false, 1, true, 16),
-        new AsciiColumnConfig(),
-    ],
+    columns: [new AddressGutterConfig(16), new IntegerColumnConfig(false, 1, true, 16), new AsciiColumnConfig()],
 };
 
 export function getAlignment(c: ColumnConfig) {

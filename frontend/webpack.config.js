@@ -27,6 +27,12 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
+    alias: {
+      /* to enable tracing in a production build:
+      'react-dom$': 'react-dom/profiling',
+      'scheduler/tracing': 'scheduler/tracing-profiling',
+      */
+    }
   },
   output: {
     filename: 'bundle.js',
