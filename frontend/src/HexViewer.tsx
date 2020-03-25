@@ -165,7 +165,8 @@ interface HexViewerColumnProps {
     cellPaddingY: number;
     firstRenderedLine: number;
     lastRenderedLine: number;
-    highlightRanges?: HighlightRange[];
+    highlightRanges: HighlightRange[];
+    setHoverRange?: (pos: Range | undefined) => void;
     cursorPosition: number;
     setCursorPosition?: (pos: number) => void;
     selection?: Range;
@@ -182,6 +183,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
     cellHeight,
     cellPaddingY,
     highlightRanges,
+    setHoverRange,
     cursorPosition,
     setCursorPosition,
     selection,
@@ -226,6 +228,13 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         renderLineStart: firstRenderedLine,
         renderLineLimit: lastRenderedLine + 1, // TODO: pass line limits consitently
         cursorPosition: Math.floor(cursorPosition / elementWidth),
+        setHoverPosition: useCallback(
+            e =>
+                setHoverRange
+                    ? setHoverRange(e ? {from: e * elementWidth, to: (e + 1) * elementWidth} : undefined)
+                    : undefined,
+            [elementWidth],
+        ),
         setCursorPosition: useCallback(e => (setCursorPosition ? setCursorPosition(e * elementWidth) : undefined), [
             elementWidth,
         ]),
@@ -284,6 +293,7 @@ export function HexViewer(props: HexViewerProps) {
     const [scrollPos, ref1] = useScrollAware<HTMLDivElement>();
     const [size, ref] = useSizeAware<HTMLDivElement>(ref1);
     const [textSize, textMeasureRef] = useSizeAware<HTMLDivElement>();
+    const [hoverRange, setHoverRange] = useState<Range | undefined>(undefined);
 
     const cellHeight = textSize.y;
     const cellPaddingY = 0.05 * cellHeight;
@@ -297,6 +307,12 @@ export function HexViewer(props: HexViewerProps) {
     const lastRenderedLine = Math.min(Math.ceil((scrollY + viewportHeight + paddingSize) / elementHeight), listLength);
 
     const dataView = useMemo(() => new DataView(props.data), []);
+
+    const highlightRanges = useMemo(() => {
+        const r = props.highlightRanges ?? [];
+        if (hoverRange?.from === undefined || hoverRange?.to === undefined) return r;
+        return r.concat([{from: hoverRange.from, to: hoverRange.to, key: "hover", className: "hover"}]);
+    }, [props.highlightRanges, hoverRange?.from, hoverRange?.to]);
 
     const renderedContent = [];
     for (let columnIdx = 0; columnIdx < viewConfig.columns.length; ++columnIdx) {
@@ -312,7 +328,8 @@ export function HexViewer(props: HexViewerProps) {
                     charWidth={textSize.x}
                     cellHeight={cellHeight}
                     cellPaddingY={cellPaddingY}
-                    highlightRanges={props.highlightRanges}
+                    highlightRanges={highlightRanges}
+                    setHoverRange={setHoverRange}
                     cursorPosition={props.cursorPosition}
                     setCursorPosition={props.setCursorPosition}
                     selection={props.selection}

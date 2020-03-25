@@ -30,6 +30,7 @@ interface DataGridProperties<T> {
     renderLineStart: number;
     renderLineLimit: number;
     // Navigation and selection
+    setHoverPosition?: (pos: number | undefined) => void;
     cursorPosition?: number;
     setCursorPosition?: (pos: number) => void;
     selection?: Range;
@@ -53,6 +54,7 @@ export function DataGrid<T>({
     cellPaddingY,
     renderLineStart,
     renderLineLimit,
+    setHoverPosition = () => {},
     cursorPosition,
     setCursorPosition = () => {},
     selection,
@@ -89,14 +91,22 @@ export function DataGrid<T>({
             setSelection(pos, pos);
         }
     };
-    const click = (e: React.MouseEvent) => {
+    const getElementIdxFromMouseEvent = (e: React.MouseEvent) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const relX = e.clientX - rect.left + cellPaddingX / 2;
         const relY = e.clientY - rect.top + cellPaddingY / 2;
         const clickedX = Math.floor(relX / (cellWidth + cellPaddingX));
         const clickedY = Math.floor(relY / (cellHeight + cellPaddingY));
-        const idx = clickedY * lineWidth + clickedX;
-        updateCursorPosition(idx, e.shiftKey);
+        return clickedY * lineWidth + clickedX;
+    };
+    const mousedown = (e: React.MouseEvent) => {
+        updateCursorPosition(getElementIdxFromMouseEvent(e), e.shiftKey);
+    };
+    const mousemove = (e: React.MouseEvent) => {
+        setHoverPosition(getElementIdxFromMouseEvent(e));
+    };
+    const mouseleave = (_e: React.MouseEvent) => {
+        setHoverPosition(undefined);
     };
     const keyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (cursorPosition !== undefined) {
@@ -178,7 +188,15 @@ export function DataGrid<T>({
     };
 
     return (
-        <div className="data-grid" style={wrapperStyle} tabIndex={0} onKeyDown={keyPress} onClick={click}>
+        <div
+            className="data-grid"
+            style={wrapperStyle}
+            tabIndex={0}
+            onKeyDown={keyPress}
+            onMouseDown={mousedown}
+            onMouseMove={mousemove}
+            onMouseLeave={mouseleave}
+        >
             {lines}
         </div>
     );

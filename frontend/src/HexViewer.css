@@ -23,3 +23,9 @@
     width: auto;
     white-space: nowrap;
 }
+
+.hex-viewer .data-grid .hover {
+    border: 1px solid #bbe;
+    background: #fff5ff;
+    z-index: -1;
+}
