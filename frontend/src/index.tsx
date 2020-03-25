@@ -21,9 +21,9 @@ const styles: Array<CSSProperties> = [
     {height: "1em", zIndex: -1, backgroundColor: "#fcc"},
     {height: "1em", zIndex: -1, backgroundColor: "#cfc"},
     {height: "1em", zIndex: -1, backgroundColor: "#ccf"},
-    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "red"},
-    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "green"},
-    {marginTop: "1.1em", borderWidth: "2px", borderBottomStyle: "solid", borderColor: "blue"},
+    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "red"},
+    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "green"},
+    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "blue"},
 ];
 
 class App extends React.Component<{}, AppState> {
