@@ -14,6 +14,10 @@
     outline-width: 0;
 }
 
+.data-grid > .grid-cell {
+    pointer-events: none;
+}
+
 .data-grid .cursor {
     border: 1px solid #bbe;
 }

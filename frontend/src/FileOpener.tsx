@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDropzone} from "react-dropzone";
-import {Alert} from "react-bootstrap";
+import Alert from "react-bootstrap/Alert";
 import objstr from "./objstr";
 import Button from "react-bootstrap/Button";
 
