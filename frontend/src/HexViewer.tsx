@@ -33,7 +33,7 @@ function useScrollAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2
         setScrollPos({x: scrollElem.scrollLeft, y: scrollElem.scrollTop});
         scrollElem.addEventListener("scroll", onScroll);
         return () => scrollElem.removeEventListener("scroll", onScroll);
-    }, [ref.current]);
+    }, [ref]);
 
     return [scrollPos, ref];
 }
@@ -55,7 +55,7 @@ function useSizeAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, 
         setSize({x: width, y: height});
         ro.observe(elem);
         return () => ro.disconnect();
-    }, [ref.current]);
+    }, [ref]);
     return [size, ref];
 }
 
@@ -233,9 +233,10 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
                 setHoverRange
                     ? setHoverRange(e ? {from: e * elementWidth, to: (e + 1) * elementWidth} : undefined)
                     : undefined,
-            [elementWidth],
+            [setHoverRange, elementWidth],
         ),
         setCursorPosition: useCallback(e => (setCursorPosition ? setCursorPosition(e * elementWidth) : undefined), [
+            setCursorPosition,
             elementWidth,
         ]),
         selection: useMemo(
@@ -243,7 +244,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
                 selection
                     ? {from: Math.floor(selection.from / elementWidth), to: Math.ceil(selection.to / elementWidth)}
                     : undefined,
-            [selection],
+            [selection, elementWidth],
         ),
         setSelection: useCallback(
             (s: Range) =>
@@ -306,13 +307,15 @@ export function HexViewer(props: HexViewerProps) {
     const firstRenderedLine = Math.max(Math.floor((scrollY - paddingSize) / elementHeight), 0);
     const lastRenderedLine = Math.min(Math.ceil((scrollY + viewportHeight + paddingSize) / elementHeight), listLength);
 
-    const dataView = useMemo(() => new DataView(props.data), []);
+    const dataView = useMemo(() => new DataView(props.data), [props.data]);
 
+    const hoverFrom = hoverRange?.from;
+    const hoverTo = hoverRange?.to;
     const highlightRanges = useMemo(() => {
         const r = props.highlightRanges ?? [];
-        if (hoverRange?.from === undefined || hoverRange?.to === undefined) return r;
-        return r.concat([{from: hoverRange.from, to: hoverRange.to, key: "hover", className: "hover"}]);
-    }, [props.highlightRanges, hoverRange?.from, hoverRange?.to]);
+        if (hoverFrom === undefined || hoverTo === undefined) return r;
+        return r.concat([{from: hoverFrom, to: hoverTo, key: "hover", className: "hover"}]);
+    }, [props.highlightRanges, hoverFrom, hoverTo]);
 
     const renderedContent = [];
     for (let columnIdx = 0; columnIdx < viewConfig.columns.length; ++columnIdx) {
