@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useDropzone} from "react-dropzone";
 import Alert from "react-bootstrap/Alert";
-import objstr from "./objstr";
+import objstr from "hexplore-hexview/dist/objstr";
 import Button from "react-bootstrap/Button";
 
 import "./FileOpener.css";

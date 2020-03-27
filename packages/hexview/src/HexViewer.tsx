@@ -12,7 +12,6 @@ import {
     AddressDisplayBase,
 } from "./HexViewerConfig";
 import memoize from "fast-memoize";
-import "./HexViewer.css";
 
 interface Vector2 {
     x: number;

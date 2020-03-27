@@ -1,13 +1,14 @@
 import React, {KeyboardEvent, CSSProperties} from "react";
 import ReactDOM from "react-dom";
-import {HighlightRange, Range} from "./DataGrid";
-import {HexViewer} from "./HexViewer";
-import {HexViewerConfig, defaultConfig} from "./HexViewerConfig";
+import {HighlightRange, Range} from "hexplore-hexview/dist/DataGrid";
+import {HexViewer} from "hexplore-hexview/dist/HexViewer";
+import {HexViewerConfig, defaultConfig} from "hexplore-hexview/dist/HexViewerConfig";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
+import {FileOpener} from "./FileOpener";
 
+import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FileOpener} from "./FileOpener";
 
 interface AppState {
     data?: ArrayBuffer;
@@ -59,7 +60,7 @@ class App extends React.Component<{}, AppState> {
     render() {
         if (!this.state.data) {
             return <FileOpener setData={d => this.setState({data: d})} />;
-        } else if (this.state.data) {
+        } else {
             return (
                 <div
                     onKeyPress={e => this.onKeyPress(e)}

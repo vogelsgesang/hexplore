@@ -1,0 +1,20 @@
+{
+    "private": true,
+    "name": "hexplore",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "lint": "eslint .  --ignore-path .gitignore --ext .ts,.tsx,.js --fix"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^2.24.0",
+        "@typescript-eslint/parser": "^2.24.0",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-prettier": "^3.1.2",
+        "eslint-plugin-react": "^7.19.0",
+        "eslint-plugin-react-hooks": "^2.5.1",
+        "prettier": "^1.19.1"
+    }
+  }

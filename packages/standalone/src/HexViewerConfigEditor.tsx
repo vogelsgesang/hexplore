@@ -8,7 +8,7 @@ import {
     getAlignment,
     IntegerDisplayBase,
     AddressDisplayBase,
-} from "./HexViewerConfig";
+} from "hexplore-hexview/dist/HexViewerConfig";
 import React, {useState} from "react";
 import {produce} from "immer";
 import Button from "react-bootstrap/Button";

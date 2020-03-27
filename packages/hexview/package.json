@@ -1,0 +1,37 @@
+{
+  "name": "hexplore-hexview",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "author": "Adrian Vogelsgesang",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build": "yarn run build:src && yarn run build:css",
+    "build:css": "postcss --use postcss-import -o dist/hexview.css src/index.css",
+    "build:src": "tsc --build"
+  },
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.9.1",
+    "@types/react": "^16.9.25",
+    "@types/react-dom": "^16.9.5",
+    "fast-memoize": "^2.5.2",
+    "jest": "^24.9.0",
+    "postcss-cli": "^6.1.2",
+    "postcss-import": "^12.0.1",
+    "ts-jest": "^24.3.0",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}

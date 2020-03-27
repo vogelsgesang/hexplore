@@ -1,5 +1,4 @@
 import React, {useState, CSSProperties, useRef} from "react";
-import "./DataGrid.css";
 import { assert } from "./util";
 
 export interface Range {
