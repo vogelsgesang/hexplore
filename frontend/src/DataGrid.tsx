@@ -1,5 +1,6 @@
-import React, {useState, CSSProperties} from "react";
+import React, {useState, CSSProperties, useRef} from "react";
 import "./DataGrid.css";
+import { assert } from "./util";
 
 export interface Range {
     from: number;
@@ -76,8 +77,9 @@ export function DataGrid<T>({
         ]);
     }
 
-    // Event handlers influencing the current position
-    const [selectionGestureStart, setSelectionGestureStart] = useState(0);
+    // Event handlers influencing the current position & selection
+    const mainElem = useRef<HTMLDivElement>(null);
+    const selectionGestureStart = useRef(0);
     const setSelection = (a: number, b: number) => {
         if (a < b) setSelectionRaw({from: a, to: b + 1});
         else setSelectionRaw({from: b, to: a + 1});
@@ -85,25 +87,39 @@ export function DataGrid<T>({
     const updateCursorPosition = (pos: number, select: boolean) => {
         setCursorPosition(pos);
         if (select) {
-            setSelection(selectionGestureStart, pos);
+            setSelection(selectionGestureStart.current, pos);
         } else {
-            setSelectionGestureStart(pos);
+            selectionGestureStart.current = pos;
             setSelection(pos, pos);
         }
     };
-    const getElementIdxFromMouseEvent = (e: React.MouseEvent) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const relX = e.clientX - rect.left + cellPaddingX / 2;
-        const relY = e.clientY - rect.top + cellPaddingY / 2;
-        const clickedX = Math.floor(relX / (cellWidth + cellPaddingX));
-        const clickedY = Math.floor(relY / (cellHeight + cellPaddingY));
-        return clickedY * lineWidth + clickedX;
+    const getElementIdxFromMouseEvent = (e: React.MouseEvent | MouseEvent) => {
+        assert(mainElem.current);
+        const rect = mainElem.current.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        const relY = e.clientY - rect.top;
+        const idxX = Math.floor(relX / (cellWidth + cellPaddingX));
+        const idxY = Math.floor(relY / (cellHeight + cellPaddingY));
+        const clampedCol = Math.min(Math.max(idxX, 0), lineWidth);
+        return Math.min(Math.max(idxY * lineWidth + clampedCol, 0), overallLength);
+    };
+    const docMousemove = (e : MouseEvent) => {
+        const elemIdx = getElementIdxFromMouseEvent(e);
+        updateCursorPosition(Math.min(elemIdx, overallLength - 1), true);
+    };
+    const docMouseup = (e : MouseEvent) => {
+        document.removeEventListener("mouseup", docMouseup);
+        document.removeEventListener("mousemove", docMousemove);
     };
     const mousedown = (e: React.MouseEvent) => {
-        updateCursorPosition(getElementIdxFromMouseEvent(e), e.shiftKey);
+        const elemIdx = getElementIdxFromMouseEvent(e);
+        updateCursorPosition(Math.min(elemIdx, overallLength - 1), e.shiftKey);
+        document.addEventListener("mouseup", docMouseup);
+        document.addEventListener("mousemove", docMousemove);
     };
     const mousemove = (e: React.MouseEvent) => {
-        setHoverPosition(getElementIdxFromMouseEvent(e));
+        const elemIdx = getElementIdxFromMouseEvent(e);
+        setHoverPosition(elemIdx < overallLength ? elemIdx : undefined);
     };
     const mouseleave = (_e: React.MouseEvent) => {
         setHoverPosition(undefined);
@@ -190,6 +206,7 @@ export function DataGrid<T>({
     return (
         <div
             className="data-grid"
+            ref={mainElem}
             style={wrapperStyle}
             tabIndex={0}
             onKeyDown={keyPress}
