@@ -8,7 +8,7 @@ import {
     getAlignment,
     IntegerDisplayBase,
     AddressDisplayBase,
-} from "hexplore-hexview/dist/HexViewerConfig";
+} from "hexplore-hexview";
 import React, {useState} from "react";
 import {produce} from "immer";
 import Button from "react-bootstrap/Button";
@@ -63,28 +63,28 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     function addAddressGutter() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new AddressGutterConfig(16));
+                draft.columns.push({columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig);
             }),
         );
     }
     function addIntegerColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new IntegerColumnConfig(false, 1, true, 10));
+                draft.columns.push({columnType: ColumnType.IntegerColumn, signed: false, width: 1, displayBase: 10, littleEndian: true} as IntegerColumnConfig);
             }),
         );
     }
     function addHexColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new IntegerColumnConfig(false, 1, true, 16));
+                draft.columns.push({columnType: ColumnType.IntegerColumn, signed: false, width: 1, displayBase: 16, littleEndian: true} as IntegerColumnConfig);
             }),
         );
     }
     function addAsciiColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(new AsciiColumnConfig());
+                draft.columns.push({columnType: ColumnType.AsciiColumn} as AsciiColumnConfig);
             }),
         );
     }

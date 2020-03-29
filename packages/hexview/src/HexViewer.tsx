@@ -342,7 +342,7 @@ export function HexViewer(props: HexViewerProps) {
     }
 
     return (
-        <div style={{width: "100%", height: "100%", overflow: "auto"}} ref={ref}>
+        <div style={{width: "100%", overflow: "auto"}} ref={ref}>
             <div className="hex-viewer">
                 <div className="measure-text" ref={textMeasureRef}>
                     0

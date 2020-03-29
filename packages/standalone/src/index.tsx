@@ -1,8 +1,6 @@
 import React, {KeyboardEvent, CSSProperties} from "react";
 import ReactDOM from "react-dom";
-import {HighlightRange, Range} from "hexplore-hexview/dist/DataGrid";
-import {HexViewer} from "hexplore-hexview/dist/HexViewer";
-import {HexViewerConfig, defaultConfig} from "hexplore-hexview/dist/HexViewerConfig";
+import {HighlightRange, Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
 
@@ -18,14 +16,14 @@ interface AppState {
     viewConfig: HexViewerConfig;
 }
 
-const styles: Array<CSSProperties> = [
-    {height: "1em", zIndex: -1, backgroundColor: "#fcc"},
-    {height: "1em", zIndex: -1, backgroundColor: "#cfc"},
-    {height: "1em", zIndex: -1, backgroundColor: "#ccf"},
-    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "red"},
-    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "green"},
-    {borderWidth: "2px", borderBottomStyle: "solid", borderColor: "blue"},
-];
+const styles: Array<string> = [
+    "hv-highlight-red",
+    "hv-highlight-green",
+    "hv-highlight-blue",
+    "hv-highlight-underline-red",
+    "hv-highlight-underline-green",
+    "hv-highlight-underline-blue",
+]
 
 class App extends React.Component<{}, AppState> {
     state: AppState = {
@@ -42,8 +40,8 @@ class App extends React.Component<{}, AppState> {
             if (!e.shiftKey) {
                 // Add mark
                 const key = "m" + new Date().getTime();
-                const style = styles[this.nextStyle++ % styles.length];
-                const newMark: HighlightRange = {...this.state.selection, style: style, key: key};
+                const className = styles[this.nextStyle++ % styles.length];
+                const newMark: HighlightRange = {...this.state.selection, className: className, key: key};
                 const marks = this.state.highlighted.concat([newMark]);
                 this.setState({
                     highlighted: marks,
@@ -67,7 +65,7 @@ class App extends React.Component<{}, AppState> {
                     style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}
                 >
                     <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                        <div style={{flex: 1, minWidth: 0}}>
+                        <div style={{flex: 1, minWidth: 0, display:"flex"}}>
                             <HexViewer
                                 data={this.state.data}
                                 viewConfig={this.state.viewConfig}

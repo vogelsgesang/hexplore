@@ -2,6 +2,7 @@
     color: #00a;
     white-space: nowrap;
     position: relative;
+    z-index: 0; /* need a new stacking context for the highlights */
 -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */

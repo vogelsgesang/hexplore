@@ -28,3 +28,28 @@
     background: #fff5ff;
     z-index: -1;
 }
+
+.hv-highlight-red {
+    height: 1em;
+    z-index: -1;
+    background-color: #fcc;
+}
+.hv-highlight-green {
+    height: 1em;
+    z-index: -1;
+    background-color: #cfc;
+}
+.hv-highlight-blue {
+    height: 1em;
+    z-index: -1;
+    background-color: #ccf;
+}
+.hv-highlight-underline-red {
+    border-bottom: 2px solid red;
+}
+.hv-highlight-underline-green {
+    border-bottom: 2px solid green;
+}
+.hv-highlight-underline-blue {
+    border-bottom: 2px solid blue;
+}

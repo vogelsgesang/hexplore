@@ -1,9 +1,7 @@
-import {immerable} from "immer";
-
 export enum ColumnType {
-    AddressGutter,
-    AsciiColumn,
-    IntegerColumn,
+    AddressGutter = "AddressGutter",
+    AsciiColumn = "Ascii",
+    IntegerColumn = "Integer",
 }
 
 export type AddressDisplayBase = 10 | 16;
@@ -14,26 +12,21 @@ export interface ColumnConfig {
     columnType: ColumnType;
 }
 
-export class AddressGutterConfig implements ColumnConfig {
-    [immerable] = true;
-    columnType = ColumnType.AddressGutter;
-    constructor(public displayBase: AddressDisplayBase) {}
+export interface AddressGutterConfig extends ColumnConfig {
+    columnType: ColumnType.AddressGutter;
+    displayBase: AddressDisplayBase;    
 }
 
-export class AsciiColumnConfig implements ColumnConfig {
-    [immerable] = true;
-    columnType = ColumnType.AsciiColumn;
+export interface AsciiColumnConfig extends ColumnConfig {
+    columnType: ColumnType.AsciiColumn;
 }
 
-export class IntegerColumnConfig implements ColumnConfig {
-    [immerable] = true;
-    columnType = ColumnType.IntegerColumn;
-    constructor(
-        public signed: boolean,
-        public width: 1 | 2 | 4 | 8,
-        public littleEndian: boolean,
-        public displayBase: IntegerDisplayBase,
-    ) {}
+export interface IntegerColumnConfig extends ColumnConfig {
+    columnType: ColumnType.IntegerColumn;
+    signed: boolean;
+    width: 1 | 2 | 4 | 8;
+    littleEndian: boolean;
+    displayBase: IntegerDisplayBase;
 }
 
 export interface HexViewerConfig {
@@ -43,7 +36,11 @@ export interface HexViewerConfig {
 
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
-    columns: [new AddressGutterConfig(16), new IntegerColumnConfig(false, 1, true, 16), new AsciiColumnConfig()],
+    columns: [
+        {columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig,
+        {columnType: ColumnType.IntegerColumn, signed: false, width: 1, littleEndian: true, displayBase: 16} as IntegerColumnConfig,
+        {columnType: ColumnType.AsciiColumn} as AsciiColumnConfig
+    ],
 };
 
 export function getAlignment(c: ColumnConfig) {

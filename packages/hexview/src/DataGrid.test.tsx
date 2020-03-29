@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+/*import ReactDOM from "react-dom";
 import {act} from "react-dom/test-utils";
 import {assert} from "./util";
 
@@ -29,3 +29,4 @@ describe("renders elements", () => {
         expect(addresses[addresses.length - 1].innerHTML).toBe("0x7");
     });
 });
+*/

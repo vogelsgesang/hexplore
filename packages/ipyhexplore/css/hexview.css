@@ -1,0 +1,13 @@
+.hv-widget-container {
+    border: 1px solid #ccc;
+    display: flex;
+    min-height: 2em;
+    max-height: 20em;
+}
+
+/* Top-level widget inside a linked ouput should take all available space */
+.jp-LinkedOutputView .jp-OutputArea-output > .hv-widget-container {
+    max-height: 1vh; /* for safety; allowing arbitrary height could lead to rendering MegaBytes of Hex-Data at once */
+    height: 100%;
+    border: none;
+}

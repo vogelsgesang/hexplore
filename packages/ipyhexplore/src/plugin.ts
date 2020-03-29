@@ -3,11 +3,11 @@
 
 import {
   Application, IPlugin
-} from '@phosphor/application';
+} from '@lumino/application';
 
 import {
   Widget
-} from '@phosphor/widgets';
+} from '@lumino/widgets';
 
 import {
   IJupyterWidgetRegistry
@@ -22,16 +22,16 @@ import {
 const EXTENSION_ID = 'jupyter-hexplore:plugin';
 
 /**
- * The example plugin.
+ * The HexViewer plugin.
  */
-const examplePlugin: IPlugin<Application<Widget>, void> = {
+const hexViewerPlugin: IPlugin<Application<Widget>, void> = {
   id: EXTENSION_ID,
   requires: [IJupyterWidgetRegistry],
   activate: activateWidgetExtension,
   autoStart: true
 };
 
-export default examplePlugin;
+export default hexViewerPlugin;
 
 
 /**
