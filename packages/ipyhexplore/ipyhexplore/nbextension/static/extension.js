@@ -3,15 +3,15 @@
 define(function() {
     "use strict";
 
-    window['requirejs'].config({
+    window["requirejs"].config({
         map: {
-            '*': {
-                'jupyter-hexplore': 'nbextensions/ipyhexplore/index',
+            "*": {
+                "jupyter-hexplore": "nbextensions/ipyhexplore/index",
             },
-        }
+        },
     });
     // Export the required load_ipython_extension function
     return {
-        load_ipython_extension : function() {}
+        load_ipython_extension: function() {},
     };
 });

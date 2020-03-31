@@ -23,9 +23,15 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   },
-  settings: {
-    react: {
-      version: "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+  "overrides": [{
+    "files": ["packages/ipyhexplore/**/*"],
+    "rules": {
+      "@typescript-eslint/camelcase": 0
     }
-  }
+  }, {
+    "files": ["**/*.js"],
+    "rules": {
+      "@typescript-eslint/no-var-requires": 0
+    }
+  }]
 };

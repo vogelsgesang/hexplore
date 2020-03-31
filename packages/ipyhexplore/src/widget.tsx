@@ -13,7 +13,7 @@ import {HexViewer, defaultConfig, HexViewerConfig, HighlightRange, Range} from "
 import "../css/hexview.css";
 import "hexplore-hexview/dist/hexview.css";
 
-function deserializeBytes(obj: DataView | null, _manager?: ManagerBase<any>): ArrayBuffer | null {
+function deserializeBytes(obj: DataView | null, _manager?: ManagerBase<unknown>): ArrayBuffer | null {
     if (obj == null) {
         return null;
     }
