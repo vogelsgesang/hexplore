@@ -1,4 +1,9 @@
-.hex-viewer {
+.hex-viewer-scroll {
+    width: 100%;
+    overflow: auto;
+}
+
+.hex-viewer-content {
     display: flex;
     min-height: 100%;
     font-family: monospace;

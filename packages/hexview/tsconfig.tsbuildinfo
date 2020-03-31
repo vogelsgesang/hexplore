@@ -114,7 +114,7 @@
         "signature": "1377923021927244ea19433873b997ad8585533b0a56d5de29cda497f7842756"
       },
       "./src/DataGrid.test.tsx": {
-        "version": "2385308f6ed507a81a023b78a9f0f44aa9d68a50913c4b905eb1e98e1fe9d7d1",
+        "version": "6727d6abfc2cc7e2ea703e88c38793d7604a1fea3ad51a6933d032393b88fccb",
         "signature": "8e857a75c344e537052002d7f759aba40f16db282a50b3bc2a576a6b7652b460"
       },
       "../../node_modules/@types/react/global.d.ts": {
@@ -138,7 +138,7 @@
         "signature": "129fb760f97c9365a8ff96967d0f85e5ce5c9963c408766c6931f6a4a6058dfd"
       },
       "./src/DataGrid.tsx": {
-        "version": "f797b45161468df520eec68992ff92b6219472abfaa516821333bc46a0edd987",
+        "version": "14a98932fad099ad7dad2b554986dd877a6781033b7d2e808c8acd88adfe7dcf",
         "signature": "e7ed48d5af041261fb23575672087cee70c3e077a682d1ac7719113aef000fc0"
       },
       "../../node_modules/resize-observer-polyfill/src/index.d.ts": {
@@ -146,7 +146,7 @@
         "signature": "fa568c7bfcdf1afa0682346783ad4def442ac4a0661238118423d55c28dbad81"
       },
       "./src/HexViewerConfig.tsx": {
-        "version": "f5ee93ce7d055522f714bd7637f88b5696e677b5e0f1ba52bf87867e98165451",
+        "version": "5c1594961569af70ef3603ac67fefcb1e00f14c0bc3b0ecdb89e0f5556b3e5b3",
         "signature": "c04ad15a3703ce4e99dc846e801a01c4e0dcb08b1d53c05d6c6f80979a3d0331"
       },
       "../../node_modules/fast-memoize/typings/fast-memoize.d.ts": {
@@ -154,7 +154,7 @@
         "signature": "2bc6dc0f297a4af4fb622854a82feae5746b634499d44e2232166083e57c6f8d"
       },
       "./src/HexViewer.tsx": {
-        "version": "b4a061eb044835f3f0ff9f0e986756745591915c06d191d9c71607868528d11f",
+        "version": "6504d859ff547fdedad9ce896600518eaa1eae42ee6625b92e8fcf23199b8deb",
         "signature": "84db47aefb1e941d8cf2b69b1c7b252e7a51914632b774605b2fadee88963c43"
       },
       "./src/index.ts": {
@@ -2813,15 +2813,12 @@
       "../../node_modules/typescript/lib/lib.es2018.regexp.d.ts",
       "../../node_modules/typescript/lib/lib.es2020.bigint.d.ts",
       "../../node_modules/typescript/lib/lib.esnext.intl.d.ts",
-      "./src/DataGrid.test.tsx",
       "../../node_modules/@types/react/global.d.ts",
       "../../node_modules/csstype/index.d.ts",
       "../../node_modules/@types/prop-types/index.d.ts",
       "../../node_modules/@types/react/index.d.ts",
       "./src/util.ts",
-      "./src/DataGrid.tsx",
       "../../node_modules/resize-observer-polyfill/src/index.d.ts",
-      "./src/HexViewerConfig.tsx",
       "../../node_modules/fast-memoize/typings/fast-memoize.d.ts",
       "./src/index.ts",
       "./src/objstr.ts",
@@ -2921,6 +2918,9 @@
       "../../node_modules/@types/webpack-env/index.d.ts",
       "../../node_modules/@types/yargs-parser/index.d.ts",
       "../../node_modules/@types/yargs/index.d.ts",
+      "./src/DataGrid.test.tsx",
+      "./src/DataGrid.tsx",
+      "./src/HexViewerConfig.tsx",
       "./src/HexViewer.tsx"
     ]
   },
