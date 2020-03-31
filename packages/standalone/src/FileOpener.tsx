@@ -87,7 +87,13 @@ export function FileOpener({setData}: FileOpenerProps) {
                 {renderedError}
                 <div className="caption">Which file do you want to open?</div>
                 <div className="source-alternatives">
-                    <form onSubmit={() => openURL(url)} className="source-alternative-url">
+                    <form
+                        onSubmit={e => {
+                            openURL(url);
+                            e.preventDefault();
+                        }}
+                        className="source-alternative-url"
+                    >
                         <div className="source-caption">Remote file</div>
                         <input value={url} onChange={e => setUrl(e.target.value)} />
                         <Button type="submit" size="sm" block>
