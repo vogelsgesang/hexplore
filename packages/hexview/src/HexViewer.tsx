@@ -2,16 +2,8 @@ import {assert, assertUnreachable as assertExhausted} from "./util";
 import React, {useRef, useState, useEffect, useLayoutEffect, RefObject, useMemo, useCallback} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
-import {
-    HexViewerConfig,
-    ColumnType,
-    AddressGutterConfig,
-    IntegerColumnConfig,
-    IntegerDisplayBase,
-    ColumnConfig,
-    AddressDisplayBase,
-} from "./HexViewerConfig";
-import memoize from "fast-memoize";
+import {HexViewerConfig, ColumnType, IntegerColumnConfig, ColumnConfig} from "./HexViewerConfig";
+import {createStridedRenderer} from "./ByteRenderer";
 
 interface Vector2 {
     x: number;
@@ -57,103 +49,6 @@ function useSizeAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, 
     }, [ref]);
     return [size, ref];
 }
-
-function byteAsAscii(data: DataView, idx: number) {
-    const byte = data.getUint8(idx);
-    // prettier-ignore
-    const asciiTable = [" ", "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":", ";", "<", "=", ">", "?", "@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "[", "\\", "]", "^", "_", "`", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "{", "|", "}", "~"];
-    const isPrintable = byte > 0x20 && byte < 127;
-    if (isPrintable) {
-        return asciiTable[byte - 0x20];
-    } else {
-        return ".";
-    }
-}
-
-function formatInteger(v: number, base: number, width: number, signed: boolean) {
-    let s = Math.abs(v)
-        .toString(base)
-        .padStart(width, "0");
-    if (signed) {
-        s = (v < 0 ? "-" : " ") + s;
-    }
-    return s;
-}
-
-function formatInteger64bit(low: number, high: number, base: number, width: number, signed: boolean) {
-    const bit32 = 0x100000000;
-    const negative = signed && high & 0x80000000;
-    if (negative) {
-        high = ~high;
-        low = bit32 - low;
-    }
-    let s = "";
-    while (high || low) {
-        const mod = (high % base) * bit32 + low;
-        high = Math.floor(high / base);
-        low = Math.floor(mod / base);
-        s = (mod % base).toString(base) + s;
-    }
-    s = s.padStart(width, "0");
-    if (signed) {
-        s = (negative ? "-" : " ") + s;
-    }
-    return s;
-}
-
-const createIntegerRenderer = memoize(function createIntegerRenderer(
-    width: 1 | 2 | 4 | 8,
-    signed: boolean,
-    littleEndian: boolean,
-    base: IntegerDisplayBase,
-) {
-    const strWidth = Math.ceil((Math.log(1 << 8) / Math.log(base)) * width);
-
-    return function intRenderer(data: DataView, idx: number): string {
-        idx *= width;
-        if (idx + width > data.byteLength) {
-            return ".".repeat((signed ? 1 : 0) + strWidth);
-        }
-        if (width == 1) {
-            const v = signed ? data.getInt8(idx) : data.getUint8(idx);
-            return formatInteger(v, base, strWidth, signed);
-        } else if (width == 2) {
-            const v = signed ? data.getInt16(idx, littleEndian) : data.getUint16(idx, littleEndian);
-            return formatInteger(v, base, strWidth, signed);
-        } else if (width == 4) {
-            const v = signed ? data.getInt32(idx, littleEndian) : data.getUint32(idx, littleEndian);
-            return formatInteger(v, base, strWidth, signed);
-        } else if (width == 8) {
-            let low, high;
-            if (littleEndian) {
-                low = data.getUint32(idx, true);
-                high = data.getUint32(idx + 4, true);
-            } else {
-                low = data.getUint32(idx + 4, false);
-                high = data.getUint32(idx, false);
-            }
-            return formatInteger64bit(low, high, base, strWidth, signed);
-        }
-        assertExhausted(width);
-    };
-});
-
-const createAddressGutterRenderer = memoize(function createIntegerRenderer(
-    base: AddressDisplayBase,
-    lineWidth: number,
-) {
-    return function addressRenderer(_data: DataView, idx: number): string {
-        const addr = idx * lineWidth;
-        switch (base) {
-            case 10: {
-                return addr.toString(10);
-            }
-            case 16: {
-                return "0x" + addr.toString(16);
-            }
-        }
-    };
-});
 
 interface HexViewerColumnProps {
     dataView: DataView;
@@ -219,13 +114,14 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
     const gridProps = {
         data: dataView,
         overallLength: Math.ceil(byteLength) / elementWidth,
+        renderer: useMemo(() => createStridedRenderer(columnConfig, elementWidth), [columnConfig, elementWidth]),
         cellWidth: cellWidth,
         cellHeight: cellHeight,
         cellPaddingX: cellPaddingX,
         cellPaddingY: cellPaddingY,
         lineWidth: lineWidth / elementWidth,
         renderLineStart: firstRenderedLine,
-        renderLineLimit: lastRenderedLine + 1, // TODO: pass line limits consitently
+        renderLineLimit: lastRenderedLine + 1, // TODO: pass line limits consistently
         cursorPosition: Math.floor(cursorPosition / elementWidth),
         setHoverPosition: useCallback(
             e =>
@@ -258,22 +154,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
             [highlightRanges, elementWidth],
         ),
     };
-    switch (columnConfig.columnType) {
-        case ColumnType.AddressGutter: {
-            const cc = columnConfig as AddressGutterConfig;
-            return <DataGrid {...gridProps} renderer={createAddressGutterRenderer(cc.displayBase, lineWidth)} />;
-        }
-        case ColumnType.AsciiColumn: {
-            return <DataGrid {...gridProps} renderer={byteAsAscii} />;
-        }
-        case ColumnType.IntegerColumn: {
-            const cc = columnConfig as IntegerColumnConfig;
-            const renderer = createIntegerRenderer(cc.width, cc.signed, cc.littleEndian, cc.displayBase);
-            return <DataGrid {...gridProps} renderer={renderer} />;
-        }
-        default:
-            assertExhausted(columnConfig.columnType);
-    }
+    return <DataGrid {...gridProps} />;
 });
 
 export interface HexViewerProps {
