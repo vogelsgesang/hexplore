@@ -1,4 +1,4 @@
-import React, {KeyboardEvent, CSSProperties} from "react";
+import React, {KeyboardEvent} from "react";
 import ReactDOM from "react-dom";
 import {HighlightRange, Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
@@ -23,7 +23,7 @@ const styles: Array<string> = [
     "hv-highlight-underline-red",
     "hv-highlight-underline-green",
     "hv-highlight-underline-blue",
-]
+];
 
 class App extends React.Component<{}, AppState> {
     state: AppState = {
@@ -65,7 +65,7 @@ class App extends React.Component<{}, AppState> {
                     style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}
                 >
                     <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                        <div style={{flex: 1, minWidth: 0, display:"flex"}}>
+                        <div style={{flex: 1, minWidth: 0, display: "flex"}}>
                             <HexViewer
                                 data={this.state.data}
                                 viewConfig={this.state.viewConfig}

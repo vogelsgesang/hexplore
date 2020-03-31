@@ -14,7 +14,7 @@ export interface ColumnConfig {
 
 export interface AddressGutterConfig extends ColumnConfig {
     columnType: ColumnType.AddressGutter;
-    displayBase: AddressDisplayBase;    
+    displayBase: AddressDisplayBase;
 }
 
 export interface AsciiColumnConfig extends ColumnConfig {
@@ -38,8 +38,14 @@ export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
     columns: [
         {columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig,
-        {columnType: ColumnType.IntegerColumn, signed: false, width: 1, littleEndian: true, displayBase: 16} as IntegerColumnConfig,
-        {columnType: ColumnType.AsciiColumn} as AsciiColumnConfig
+        {
+            columnType: ColumnType.IntegerColumn,
+            signed: false,
+            width: 1,
+            littleEndian: true,
+            displayBase: 16,
+        } as IntegerColumnConfig,
+        {columnType: ColumnType.AsciiColumn} as AsciiColumnConfig,
     ],
 };
 

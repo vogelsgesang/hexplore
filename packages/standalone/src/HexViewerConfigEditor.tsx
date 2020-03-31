@@ -70,14 +70,26 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     function addIntegerColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({columnType: ColumnType.IntegerColumn, signed: false, width: 1, displayBase: 10, littleEndian: true} as IntegerColumnConfig);
+                draft.columns.push({
+                    columnType: ColumnType.IntegerColumn,
+                    signed: false,
+                    width: 1,
+                    displayBase: 10,
+                    littleEndian: true,
+                } as IntegerColumnConfig);
             }),
         );
     }
     function addHexColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({columnType: ColumnType.IntegerColumn, signed: false, width: 1, displayBase: 16, littleEndian: true} as IntegerColumnConfig);
+                draft.columns.push({
+                    columnType: ColumnType.IntegerColumn,
+                    signed: false,
+                    width: 1,
+                    displayBase: 16,
+                    littleEndian: true,
+                } as IntegerColumnConfig);
             }),
         );
     }

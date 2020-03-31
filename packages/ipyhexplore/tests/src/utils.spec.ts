@@ -1,15 +1,14 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-import * as widgets from '@jupyter-widgets/base';
-import * as services from '@jupyterlab/services';
-import * as Backbone from 'backbone';
+import * as widgets from "@jupyter-widgets/base";
+import * as services from "@jupyterlab/services";
+import * as Backbone from "backbone";
 
 let numComms = 0;
 
-export
-class MockComm {
-    target_name = 'dummy';
+export class MockComm {
+    target_name = "dummy";
 
     constructor() {
         this.comm_id = `mock-comm-id-${numComms}`;
@@ -32,25 +31,24 @@ class MockComm {
         if (this._on_close) {
             this._on_close();
         }
-        return 'dummy';
+        return "dummy";
     }
     send(): string {
-        return 'dummy';
+        return "dummy";
     }
 
     open(): string {
-        return 'dummy';
+        return "dummy";
     }
     comm_id: string;
     _on_msg: Function | null = null;
     _on_close: Function | null = null;
 }
 
-export
-class DummyManager extends widgets.ManagerBase<HTMLElement> {
+export class DummyManager extends widgets.ManagerBase<HTMLElement> {
     constructor() {
         super();
-        this.el = window.document.createElement('div');
+        this.el = window.document.createElement("div");
     }
 
     display_view(msg: services.KernelMessage.IMessage, view: Backbone.View<Backbone.Model>, options: any) {
@@ -58,23 +56,23 @@ class DummyManager extends widgets.ManagerBase<HTMLElement> {
         // TODO: return an html element
         return Promise.resolve(view).then(view => {
             this.el.appendChild(view.el);
-            view.on('remove', () => console.log('view removed', view));
+            view.on("remove", () => console.log("view removed", view));
             return view.el;
         });
     }
 
     protected loadClass(className: string, moduleName: string, moduleVersion: string): Promise<any> {
-        if (moduleName === '@jupyter-widgets/base') {
+        if (moduleName === "@jupyter-widgets/base") {
             if ((widgets as any)[className]) {
                 return Promise.resolve((widgets as any)[className]);
             } else {
-                return Promise.reject(`Cannot find class ${className}`)
+                return Promise.reject(`Cannot find class ${className}`);
             }
-        } else if (moduleName === 'jupyter-datawidgets') {
+        } else if (moduleName === "jupyter-datawidgets") {
             if (this.testClasses[className]) {
                 return Promise.resolve(this.testClasses[className]);
             } else {
-                return Promise.reject(`Cannot find class ${className}`)
+                return Promise.reject(`Cannot find class ${className}`);
             }
         } else {
             return Promise.reject(`Cannot find module ${moduleName}`);
@@ -91,23 +89,20 @@ class DummyManager extends widgets.ManagerBase<HTMLElement> {
 
     el: HTMLElement;
 
-    testClasses: { [key: string]: any } = {};
+    testClasses: {[key: string]: any} = {};
 }
 
-
-export
-interface Constructor<T> {
+export interface Constructor<T> {
     new (attributes?: any, options?: any): T;
 }
 
-export
-function createTestModel<T extends widgets.WidgetModel>(constructor: Constructor<T>, attributes?: any): T {
-  let id = widgets.uuid();
-  let widget_manager = new DummyManager();
-  let modelOptions = {
-      widget_manager: widget_manager,
-      model_id: id,
-  }
+export function createTestModel<T extends widgets.WidgetModel>(constructor: Constructor<T>, attributes?: any): T {
+    const id = widgets.uuid();
+    const widget_manager = new DummyManager();
+    const modelOptions = {
+        widget_manager: widget_manager,
+        model_id: id,
+    };
 
-  return new constructor(attributes, modelOptions);
+    return new constructor(attributes, modelOptions);
 }

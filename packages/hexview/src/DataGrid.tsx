@@ -1,5 +1,5 @@
-import React, {useState, CSSProperties, useRef} from "react";
-import { assert } from "./util";
+import React, {CSSProperties, useRef} from "react";
+import {assert} from "./util";
 
 export interface Range {
     from: number;
@@ -102,11 +102,11 @@ export function DataGrid<T>({
         const clampedCol = Math.min(Math.max(idxX, 0), lineWidth);
         return Math.min(Math.max(idxY * lineWidth + clampedCol, 0), overallLength);
     };
-    const docMousemove = (e : MouseEvent) => {
+    const docMousemove = (e: MouseEvent) => {
         const elemIdx = getElementIdxFromMouseEvent(e);
         updateCursorPosition(Math.min(elemIdx, overallLength - 1), true);
     };
-    const docMouseup = (e : MouseEvent) => {
+    const docMouseup = (_e: MouseEvent) => {
         document.removeEventListener("mouseup", docMouseup);
         document.removeEventListener("mousemove", docMousemove);
     };
