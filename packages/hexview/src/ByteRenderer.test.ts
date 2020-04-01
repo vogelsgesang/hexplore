@@ -55,7 +55,7 @@ describe("The ASCII renderer", () => {
 });
 
 describe("The integer renderer", () => {
-    function createIntRendererWithDefaults(c : Partial<IntegerColumnConfig>) {
+    function createIntRendererWithDefaults(c: Partial<IntegerColumnConfig>) {
         const defaults = {
             columnType: ColumnType.IntegerColumn,
             displayBase: 16,

@@ -1,0 +1,16 @@
+.hv-data-inspector {
+    padding: .4em;
+}
+
+.hv-data-inspector-caption {
+    font-size: .8em;
+    margin-top: .6em;
+    color: #333;
+    text-align: right;
+}
+
+.hv-data-inspector-value {
+    border: 1px solid #ccc;
+    padding: .1em;
+    text-align: right;
+}

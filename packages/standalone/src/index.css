@@ -4,3 +4,23 @@ body, html, #main {
     height: 100%;
     width: 100%;
 }
+
+.sidebar-tabs {
+    width: 2em;
+    overflow: auto;
+    border-left: 1px solid #999;
+    background: #fcfcfc;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+
+.sidebar-tab {
+    writing-mode: vertical-lr;
+    border-bottom: 1px solid #999;
+    padding: .5em;
+}
+
+.sidebar-tab.selected {
+    background: #ddd;
+}

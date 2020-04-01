@@ -1,8 +1,19 @@
 import React, {KeyboardEvent} from "react";
 import ReactDOM from "react-dom";
-import {HighlightRange, Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
+import {
+    HighlightRange,
+    Range,
+    HexViewer,
+    HexViewerConfig,
+    defaultConfig,
+    ColumnConfig,
+    ColumnType,
+    IntegerColumnConfig,
+} from "hexplore-hexview";
+import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
+import {DataInspector} from "./DataInspector";
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
@@ -14,6 +25,8 @@ interface AppState {
     selection: Range;
     highlighted: Array<HighlightRange>;
     viewConfig: HexViewerConfig;
+    activeSidebar: "columnConfig" | "dataInspector";
+    dataInspectorRepresentations: ColumnConfig[];
 }
 
 const styles: Array<string> = [
@@ -25,6 +38,37 @@ const styles: Array<string> = [
     "hv-highlight-underline-blue",
 ];
 
+const defaultInspectorRepresentations: ColumnConfig[] = [
+    {
+        columnType: ColumnType.IntegerColumn,
+        signed: true,
+        width: 1,
+        littleEndian: true,
+        displayBase: 10,
+    } as IntegerColumnConfig,
+    {
+        columnType: ColumnType.IntegerColumn,
+        signed: true,
+        width: 2,
+        littleEndian: true,
+        displayBase: 10,
+    } as IntegerColumnConfig,
+    {
+        columnType: ColumnType.IntegerColumn,
+        signed: true,
+        width: 4,
+        littleEndian: true,
+        displayBase: 10,
+    } as IntegerColumnConfig,
+    {
+        columnType: ColumnType.IntegerColumn,
+        signed: true,
+        width: 8,
+        littleEndian: true,
+        displayBase: 10,
+    } as IntegerColumnConfig,
+];
+
 class App extends React.Component<{}, AppState> {
     state: AppState = {
         data: undefined,
@@ -32,6 +76,8 @@ class App extends React.Component<{}, AppState> {
         selection: {from: 0, to: 1},
         highlighted: new Array<HighlightRange>(),
         viewConfig: defaultConfig,
+        activeSidebar: "columnConfig",
+        dataInspectorRepresentations: defaultInspectorRepresentations,
     };
     nextStyle = 0;
 
@@ -59,6 +105,24 @@ class App extends React.Component<{}, AppState> {
         if (!this.state.data) {
             return <FileOpener setData={d => this.setState({data: d})} />;
         } else {
+            let sidebarContent;
+            if (this.state.activeSidebar == "columnConfig") {
+                sidebarContent = (
+                    <HexViewerConfigEditor
+                        config={this.state.viewConfig}
+                        setConfig={c => this.setState({viewConfig: c})}
+                    />
+                );
+            } else if (this.state.activeSidebar == "dataInspector") {
+                sidebarContent = (
+                    <DataInspector
+                        data={this.state.data}
+                        position={this.state.cursorPosition}
+                        representations={this.state.dataInspectorRepresentations}
+                    />
+                );
+            }
+
             return (
                 <div
                     onKeyPress={e => this.onKeyPress(e)}
@@ -79,16 +143,32 @@ class App extends React.Component<{}, AppState> {
                         <div
                             style={{
                                 width: "15em",
-                                height: "100%",
                                 overflow: "auto",
                                 borderLeft: "1px solid #999",
                                 background: "#fcfcfc",
                             }}
                         >
-                            <HexViewerConfigEditor
-                                config={this.state.viewConfig}
-                                setConfig={c => this.setState({viewConfig: c})}
-                            />
+                            {sidebarContent}
+                        </div>
+                        <div className="sidebar-tabs">
+                            <div
+                                onClick={() => this.setState({activeSidebar: "columnConfig"})}
+                                className={objstr({
+                                    "sidebar-tab": true,
+                                    selected: this.state.activeSidebar == "columnConfig",
+                                })}
+                            >
+                                Column Config
+                            </div>
+                            <div
+                                onClick={() => this.setState({activeSidebar: "dataInspector"})}
+                                className={objstr({
+                                    "sidebar-tab": true,
+                                    selected: this.state.activeSidebar == "dataInspector",
+                                })}
+                            >
+                                Data Inspector
+                            </div>
                         </div>
                     </div>
                     <div style={{flex: 0, borderTop: "1px solid #999", background: "#fcfcfc"}}>

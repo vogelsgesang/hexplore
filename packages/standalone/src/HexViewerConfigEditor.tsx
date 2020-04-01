@@ -9,6 +9,7 @@ import {
     IntegerDisplayBase,
     AddressDisplayBase,
 } from "hexplore-hexview";
+import {humanReadableColumnName} from "hexplore-hexview/dist/ByteRenderer";
 import React, {useState} from "react";
 import {produce} from "immer";
 import Button from "react-bootstrap/Button";
@@ -129,43 +130,6 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
         );
     }
 
-    function columnDescription(columnConfig: ColumnConfig) {
-        switch (columnConfig.columnType) {
-            case ColumnType.AddressGutter: {
-                return "Address Gutter";
-            }
-            case ColumnType.AsciiColumn: {
-                return "ASCII";
-            }
-            case ColumnType.IntegerColumn: {
-                const c = columnConfig as IntegerColumnConfig;
-                let d = "";
-                if (c.signed) {
-                    d += "Signed ";
-                }
-                d += c.width + "-byte ";
-                switch (c.displayBase) {
-                    case 2:
-                        d += "Binary";
-                        break;
-                    case 8:
-                        d += "Octal";
-                        break;
-                    case 10:
-                        d += "Decimal";
-                        break;
-                    case 16:
-                        d += "Hex";
-                        break;
-                }
-                if (!c.littleEndian) {
-                    d += " (BE)";
-                }
-                return d;
-            }
-        }
-    }
-
     function columnEditor(idx: number) {
         const columnConfig = config.columns[idx];
         switch (columnConfig.columnType) {
@@ -198,7 +162,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
         columnItems.push(
             <div key={i}>
                 <div className="hv-form-row">
-                    {columnDescription(config.columns[i])}
+                    {humanReadableColumnName(config.columns[i])}
                     <ButtonGroup>
                         <Button
                             disabled={isFirst}
@@ -228,7 +192,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
 
     return (
         <div className="hexviewerconfigeditor">
-            <div className="hv-linewidth-column">{lineWidthSelector}</div>
+            <div>{lineWidthSelector}</div>
             <div className="hv-column-list">{columnItems}</div>
             <div className="hv-add-column">
                 <Dropdown>

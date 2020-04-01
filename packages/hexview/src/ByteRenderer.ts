@@ -9,6 +9,43 @@ import {
     AddressDisplayBase,
 } from "./HexViewerConfig";
 
+export function humanReadableColumnName(columnConfig: ColumnConfig) {
+    switch (columnConfig.columnType) {
+        case ColumnType.AddressGutter: {
+            return "Address Gutter";
+        }
+        case ColumnType.AsciiColumn: {
+            return "ASCII";
+        }
+        case ColumnType.IntegerColumn: {
+            const c = columnConfig as IntegerColumnConfig;
+            let d = "";
+            if (c.signed) {
+                d += "Signed ";
+            }
+            d += c.width + "-byte ";
+            switch (c.displayBase) {
+                case 2:
+                    d += "Binary";
+                    break;
+                case 8:
+                    d += "Octal";
+                    break;
+                case 10:
+                    d += "Decimal";
+                    break;
+                case 16:
+                    d += "Hex";
+                    break;
+            }
+            if (!c.littleEndian) {
+                d += " (BE)";
+            }
+            return d;
+        }
+    }
+}
+
 function byteAsAscii(data: DataView, idx: number) {
     const byte = data.getUint8(idx);
     // prettier-ignore
