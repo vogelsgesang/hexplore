@@ -2,7 +2,7 @@
 
 A simple web-based Hex Viewer
 
-Available either as a [standalone web app](vogelsgesang.github.io/hexplore) or as a JupyterLab plugin.
+Available either as a [standalone web app](https://vogelsgesang.github.io/hexplore/) or as a JupyterLab plugin.
 
 ## Development
 
