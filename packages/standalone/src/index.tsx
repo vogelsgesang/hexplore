@@ -9,6 +9,7 @@ import {
     ColumnConfig,
     ColumnType,
     IntegerColumnConfig,
+    AddressGutterConfig,
 } from "hexplore-hexview";
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
@@ -39,6 +40,10 @@ const styles: Array<string> = [
 ];
 
 const defaultInspectorRepresentations: ColumnConfig[] = [
+    {
+        columnType: ColumnType.AddressGutter,
+        displayBase: 16,
+    } as AddressGutterConfig,
     {
         columnType: ColumnType.IntegerColumn,
         signed: true,

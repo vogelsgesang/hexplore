@@ -12,7 +12,7 @@ import {
 export function humanReadableColumnName(columnConfig: ColumnConfig) {
     switch (columnConfig.columnType) {
         case ColumnType.AddressGutter: {
-            return "Address Gutter";
+            return "Address";
         }
         case ColumnType.AsciiColumn: {
             return "ASCII";
