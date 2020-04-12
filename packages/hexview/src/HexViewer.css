@@ -1,6 +1,7 @@
 .hex-viewer-scroll {
     width: 100%;
     overflow: auto;
+    background: white; /* stop gap solution to render something useful also in dark JupyterLab theme */
 }
 
 .hex-viewer-content {
