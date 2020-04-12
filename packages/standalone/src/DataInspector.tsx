@@ -1,13 +1,12 @@
 import React, {useMemo} from "react";
-import {ColumnConfig} from "hexplore-hexview";
-import {createRenderer, humanReadableColumnName} from "hexplore-hexview/dist/ByteRenderer";
+import {createRenderer, humanReadableRendererName, RendererConfig} from "hexplore-hexview/dist/ByteRenderer";
 
 import "./DataInspector.css";
 
 interface DataInspectorProps {
     data: ArrayBuffer;
     position: number;
-    representations: ColumnConfig[];
+    representations: RendererConfig[];
 }
 
 export function DataInspector({data, position, representations}: DataInspectorProps) {
@@ -24,14 +23,14 @@ export function DataInspector({data, position, representations}: DataInspectorPr
 interface DataInspectorCellProps {
     data: DataView;
     position: number;
-    representation: ColumnConfig;
+    representation: RendererConfig;
 }
 
 function DataInspectorCell({data, position, representation}: DataInspectorCellProps) {
     const renderer = useMemo(() => createRenderer(representation), [representation]);
     return (
         <React.Fragment>
-            <div className="hv-data-inspector-caption">{humanReadableColumnName(representation)}</div>
+            <div className="hv-data-inspector-caption">{humanReadableRendererName(representation)}</div>
             <div className="hv-data-inspector-value">{renderer(data, position)}</div>
         </React.Fragment>
     );

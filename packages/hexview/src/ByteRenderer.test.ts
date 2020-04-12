@@ -1,5 +1,4 @@
-import {createRenderer, createStridedRenderer} from "./ByteRenderer";
-import {ColumnType, AddressGutterConfig, AsciiColumnConfig, IntegerColumnConfig} from "./HexViewerConfig";
+import {createRenderer, createStridedRenderer, createIntegerRendererConfig, createAddressRendererConfig, IntegerRendererConfig, createAsciiRendererConfig} from "./ByteRenderer";
 
 function constView(bytes: number[]) {
     const buf = new ArrayBuffer(bytes.length);
@@ -13,7 +12,7 @@ function constView(bytes: number[]) {
 describe("The Address renderer", () => {
     const dummyView = constView([]);
     test("supports decimal", () => {
-        const addressColumnType = {columnType: ColumnType.AddressGutter, displayBase: 10} as AddressGutterConfig;
+        const addressColumnType = createAddressRendererConfig({displayBase: 10});
         const renderer = createRenderer(addressColumnType);
         expect(renderer(dummyView, 0)).toBe("0");
         expect(renderer(dummyView, 10)).toBe("10");
@@ -22,7 +21,7 @@ describe("The Address renderer", () => {
         expect(renderer(dummyView, 100)).toBe("100");
     });
     test("supports hexadecimal", () => {
-        const addressColumnType = {columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig;
+        const addressColumnType = createAddressRendererConfig({displayBase: 16});
         const renderer = createRenderer(addressColumnType);
         expect(renderer(dummyView, 0)).toBe("0x0");
         expect(renderer(dummyView, 10)).toBe("0xa");
@@ -34,7 +33,7 @@ describe("The Address renderer", () => {
 });
 
 describe("The ASCII renderer", () => {
-    const addressColumnType = {columnType: ColumnType.AsciiColumn} as AsciiColumnConfig;
+    const addressColumnType = createAsciiRendererConfig();
     const renderer = createRenderer(addressColumnType);
     test("renders ASCII characters", () => {
         expect(renderer(constView([32]), 0)).toBe(" ");
@@ -55,19 +54,12 @@ describe("The ASCII renderer", () => {
 });
 
 describe("The integer renderer", () => {
-    function createIntRendererWithDefaults(c: Partial<IntegerColumnConfig>) {
-        const defaults = {
-            columnType: ColumnType.IntegerColumn,
-            displayBase: 16,
-            width: 1,
-            signed: false,
-            littleEndian: true,
-        } as IntegerColumnConfig;
-        return createRenderer({...defaults, ...c});
+    function createIntRenderer(c: Partial<IntegerRendererConfig>) {
+        return createRenderer(createIntegerRendererConfig(c));
     }
 
     describe("supports binary formatting", () => {
-        const renderer = createIntRendererWithDefaults({displayBase: 2});
+        const renderer = createIntRenderer({displayBase: 2});
         expect(renderer(constView([0]), 0)).toBe("00000000");
         expect(renderer(constView([1]), 0)).toBe("00000001");
         expect(renderer(constView([78]), 0)).toBe("01001110");
@@ -75,7 +67,7 @@ describe("The integer renderer", () => {
         expect(renderer(constView([255]), 0)).toBe("11111111");
     });
     describe("supports octal formatting", () => {
-        const renderer = createIntRendererWithDefaults({displayBase: 8});
+        const renderer = createIntRenderer({displayBase: 8});
         expect(renderer(constView([0]), 0)).toBe("000");
         expect(renderer(constView([1]), 0)).toBe("001");
         expect(renderer(constView([78]), 0)).toBe("116");
@@ -83,7 +75,7 @@ describe("The integer renderer", () => {
         expect(renderer(constView([255]), 0)).toBe("377");
     });
     describe("supports decimal formatting", () => {
-        const renderer = createIntRendererWithDefaults({displayBase: 10});
+        const renderer = createIntRenderer({displayBase: 10});
         expect(renderer(constView([0]), 0)).toBe("000");
         expect(renderer(constView([1]), 0)).toBe("001");
         expect(renderer(constView([78]), 0)).toBe("078");
@@ -91,7 +83,7 @@ describe("The integer renderer", () => {
         expect(renderer(constView([255]), 0)).toBe("255");
     });
     describe("supports hexadecimal formatting", () => {
-        const renderer = createIntRendererWithDefaults({displayBase: 16});
+        const renderer = createIntRenderer({displayBase: 16});
         expect(renderer(constView([0]), 0)).toBe("00");
         expect(renderer(constView([1]), 0)).toBe("01");
         expect(renderer(constView([78]), 0)).toBe("4e");
@@ -99,7 +91,7 @@ describe("The integer renderer", () => {
         expect(renderer(constView([255]), 0)).toBe("ff");
     });
     describe("supports signed integers, also non-decimal", () => {
-        const renderer = createIntRendererWithDefaults({displayBase: 16, signed: true});
+        const renderer = createIntRenderer({displayBase: 16, signed: true});
         expect(renderer(constView([0]), 0)).toBe(" 00");
         expect(renderer(constView([1]), 0)).toBe(" 01");
         expect(renderer(constView([78]), 0)).toBe(" 4e");
@@ -107,28 +99,28 @@ describe("The integer renderer", () => {
         expect(renderer(constView([255]), 0)).toBe("-01");
     });
     describe("supports multi-byte integers", () => {
-        const renderer = createIntRendererWithDefaults({width: 2});
+        const renderer = createIntRenderer({width: 2});
         expect(renderer(constView([0, 1]), 0)).toBe("0100");
         expect(renderer(constView([1, 255]), 0)).toBe("ff01");
         expect(renderer(constView([255, 1]), 0)).toBe("01ff");
         expect(renderer(constView([178, 3]), 0)).toBe("03b2");
     });
     describe("supports big-endian", () => {
-        const renderer = createIntRendererWithDefaults({width: 2, littleEndian: false});
+        const renderer = createIntRenderer({width: 2, littleEndian: false});
         expect(renderer(constView([0, 1]), 0)).toBe("0001");
         expect(renderer(constView([1, 255]), 0)).toBe("01ff");
         expect(renderer(constView([255, 1]), 0)).toBe("ff01");
         expect(renderer(constView([178, 3]), 0)).toBe("b203");
     });
     describe("handles truncated values", () => {
-        const renderer = createIntRendererWithDefaults({width: 2});
+        const renderer = createIntRenderer({width: 2});
         expect(renderer(constView([0, 1, 2]), 0)).toBe("0100");
         expect(renderer(constView([0, 1, 2]), 1)).toBe("0201");
         expect(renderer(constView([0, 1, 2]), 2)).toBe("....");
     });
     describe("supports 64-bit integers", () => {
-        const renderer = createIntRendererWithDefaults({width: 8});
-        const rendererDec = createIntRendererWithDefaults({width: 8, displayBase: 10});
+        const renderer = createIntRenderer({width: 8});
+        const rendererDec = createIntRenderer({width: 8, displayBase: 10});
         expect(renderer(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("070605ff80020100");
         expect(rendererDec(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("00506098603048173824");
     });
@@ -137,7 +129,7 @@ describe("The integer renderer", () => {
 describe("createStridedRenderer", () => {
     test("works for Adress columns", () => {
         const dummyView = constView([]);
-        const addressColumnType = {columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig;
+        const addressColumnType = createAddressRendererConfig();
         const renderer = createStridedRenderer(addressColumnType, 32);
         expect(renderer(dummyView, 0)).toBe("0x0");
         expect(renderer(dummyView, 1)).toBe("0x20");
@@ -145,13 +137,7 @@ describe("createStridedRenderer", () => {
     });
     test("works for integer columns", () => {
         const data = constView([1, 2, 0xff, 0xcc]);
-        const columnType = {
-            columnType: ColumnType.IntegerColumn,
-            displayBase: 16,
-            width: 2,
-            signed: false,
-            littleEndian: true,
-        } as IntegerColumnConfig;
+        const columnType = createIntegerRendererConfig({width: 2});
         const renderer = createStridedRenderer(columnType, 2);
         expect(renderer(data, 0)).toBe("0201");
         expect(renderer(data, 1)).toBe("ccff");

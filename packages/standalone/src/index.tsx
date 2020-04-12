@@ -5,11 +5,7 @@ import {
     Range,
     HexViewer,
     HexViewerConfig,
-    defaultConfig,
-    ColumnConfig,
-    ColumnType,
-    IntegerColumnConfig,
-    AddressGutterConfig,
+    defaultConfig
 } from "hexplore-hexview";
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
@@ -19,6 +15,7 @@ import {DataInspector} from "./DataInspector";
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { RendererConfig, createAddressRendererConfig, createIntegerRendererConfig } from "hexplore-hexview/dist/ByteRenderer";
 
 interface AppState {
     data?: ArrayBuffer;
@@ -27,7 +24,7 @@ interface AppState {
     highlighted: Array<HighlightRange>;
     viewConfig: HexViewerConfig;
     activeSidebar: "columnConfig" | "dataInspector";
-    dataInspectorRepresentations: ColumnConfig[];
+    dataInspectorRepresentations: RendererConfig[];
 }
 
 const styles: Array<string> = [
@@ -39,39 +36,12 @@ const styles: Array<string> = [
     "hv-highlight-underline-blue",
 ];
 
-const defaultInspectorRepresentations: ColumnConfig[] = [
-    {
-        columnType: ColumnType.AddressGutter,
-        displayBase: 16,
-    } as AddressGutterConfig,
-    {
-        columnType: ColumnType.IntegerColumn,
-        signed: true,
-        width: 1,
-        littleEndian: true,
-        displayBase: 10,
-    } as IntegerColumnConfig,
-    {
-        columnType: ColumnType.IntegerColumn,
-        signed: true,
-        width: 2,
-        littleEndian: true,
-        displayBase: 10,
-    } as IntegerColumnConfig,
-    {
-        columnType: ColumnType.IntegerColumn,
-        signed: true,
-        width: 4,
-        littleEndian: true,
-        displayBase: 10,
-    } as IntegerColumnConfig,
-    {
-        columnType: ColumnType.IntegerColumn,
-        signed: true,
-        width: 8,
-        littleEndian: true,
-        displayBase: 10,
-    } as IntegerColumnConfig,
+const defaultInspectorRepresentations: RendererConfig[] = [
+    createAddressRendererConfig(),
+    createIntegerRendererConfig({displayBase: 10, width: 1, signed: true}),
+    createIntegerRendererConfig({displayBase: 10, width: 2, signed: true}),
+    createIntegerRendererConfig({displayBase: 10, width: 4, signed: true}),
+    createIntegerRendererConfig({displayBase: 10, width: 8, signed: true}),
 ];
 
 class App extends React.Component<{}, AppState> {

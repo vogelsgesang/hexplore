@@ -12,9 +12,9 @@ def bytes_to_json(value, widget):
     return memoryview(value)
 
 default_columns = [
-    {"columnType": "AddressGutter", "displayBase": 16},
-    {"columnType": "Integer", "signed": False, "width": 1, "littleEndian": True, "displayBase": 16},
-    {"columnType": "Ascii"},
+    {"rendererType": "Address", "displayBase": 16},
+    {"rendererType": "Integer", "signed": False, "width": 1, "littleEndian": True, "displayBase": 16},
+    {"rendererType": "Ascii"},
 ]
 
 class HexViewer(DOMWidget):
@@ -59,15 +59,15 @@ class HexViewer(DOMWidget):
     def _valid_columns(self, proposal):
         linewidth = self.linewidth
         for i, c in enumerate(proposal['value']):
-            if "columnType" not in c:
+            if "rendererType" not in c:
                 raise TraitError(f'column {str(i)}: missing column type')
-            if c["columnType"] == "AddressGutter":
+            if c["rendererType"] == "Address":
                 expected_props = {"displayBase": [10, 16]}
                 alignment = 1
-            elif c["columnType"] == "Ascii":
+            elif c["rendererType"] == "Ascii":
                 expected_props = {}
                 alignment = 1
-            elif c["columnType"] == "Integer":
+            elif c["rendererType"] == "Integer":
                 expected_props = {
                     "signed": [True, False],
                     "width": [1, 2, 4, 8],
@@ -78,7 +78,7 @@ class HexViewer(DOMWidget):
             else:
                 raise TraitError(f'column {str(i)}: invalid column type')
             actual_keys = set(c.keys())
-            expected_keys = set(expected_props.keys()).union(set(["columnType"]))
+            expected_keys = set(expected_props.keys()).union(set(["rendererType"]))
             missing_keys = expected_keys - actual_keys
             unexpected_keys = actual_keys - expected_keys
             if len(missing_keys):

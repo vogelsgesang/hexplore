@@ -1,14 +1,28 @@
 import {assert, assertUnreachable as assertExhausted} from "./util";
 import React, {useRef, useState, useEffect, useLayoutEffect, RefObject, useMemo, useCallback} from "react";
 import ResizeObserver from "resize-observer-polyfill";
+import { RendererConfig, createAddressRendererConfig, createIntegerRendererConfig, createAsciiRendererConfig, RendererType, IntegerRendererConfig } from "./ByteRenderer";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
-import {HexViewerConfig, ColumnType, IntegerColumnConfig, ColumnConfig} from "./HexViewerConfig";
 import {createStridedRenderer} from "./ByteRenderer";
 
 interface Vector2 {
     x: number;
     y: number;
 }
+
+export interface HexViewerConfig {
+    lineWidth: number;
+    columns: RendererConfig[];
+}
+
+export const defaultConfig: HexViewerConfig = {
+    lineWidth: 16,
+    columns: [
+        createAddressRendererConfig(),
+        createIntegerRendererConfig(),
+        createAsciiRendererConfig(),
+    ],
+};
 
 function useScrollAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, RefObject<T>] {
     const ref = prevRef ?? useRef<T>(null);
@@ -52,7 +66,7 @@ function useSizeAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, 
 
 interface HexViewerColumnProps {
     dataView: DataView;
-    columnConfig: ColumnConfig;
+    columnConfig: RendererConfig;
     lineWidth: number;
     charWidth: number;
     cellHeight: number;
@@ -87,19 +101,19 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
     let elementWidth: number;
     let cellWidth: number;
     let cellPaddingX: number;
-    switch (columnConfig.columnType) {
-        case ColumnType.AddressGutter:
+    switch (columnConfig.rendererType) {
+        case RendererType.Address:
             elementWidth = lineWidth;
             cellWidth = 10 * charWidth;
             cellPaddingX = 0;
             break;
-        case ColumnType.AsciiColumn:
+        case RendererType.Ascii:
             elementWidth = 1;
             cellWidth = charWidth;
             cellPaddingX = 0;
             break;
-        case ColumnType.IntegerColumn: {
-            const cc = columnConfig as IntegerColumnConfig;
+        case RendererType.Integer: {
+            const cc = columnConfig as IntegerRendererConfig;
             elementWidth = cc.width;
             let strLen = Math.ceil((Math.log(1 << 8) / Math.log(cc.displayBase)) * cc.width);
             strLen += cc.signed ? 1 : 0;
@@ -108,7 +122,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
             break;
         }
         default:
-            assertExhausted(columnConfig.columnType);
+            assertExhausted(columnConfig.rendererType);
     }
 
     const gridProps = {

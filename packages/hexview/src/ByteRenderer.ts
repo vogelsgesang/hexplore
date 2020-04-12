@@ -1,24 +1,77 @@
 import {assertUnreachable as assertExhausted} from "./util";
 
-import {
-    ColumnType,
-    AddressGutterConfig,
-    IntegerColumnConfig,
-    IntegerDisplayBase,
-    ColumnConfig,
-    AddressDisplayBase,
-} from "./HexViewerConfig";
 
-export function humanReadableColumnName(columnConfig: ColumnConfig) {
-    switch (columnConfig.columnType) {
-        case ColumnType.AddressGutter: {
+export enum RendererType {
+    Address = "Address",
+    Ascii = "Ascii",
+    Integer = "Integer",
+}
+
+export type AddressDisplayBase = 10 | 16;
+
+export type IntegerDisplayBase = 2 | 8 | 10 | 16;
+
+export interface RendererConfig {
+    rendererType: RendererType;
+}
+
+export interface AddressRendererConfig extends RendererConfig {
+    rendererType: RendererType.Address;
+    displayBase: AddressDisplayBase;
+}
+
+export interface AsciiRendererConfig extends RendererConfig {
+    rendererType: RendererType.Ascii;
+}
+
+export interface IntegerRendererConfig extends RendererConfig {
+    rendererType: RendererType.Integer;
+    signed: boolean;
+    width: 1 | 2 | 4 | 8;
+    littleEndian: boolean;
+    displayBase: IntegerDisplayBase;
+}
+
+export function createAddressRendererConfig(c: Partial<AddressRendererConfig> = {}) : AddressRendererConfig {
+    const defaults = {
+        rendererType: RendererType.Address,
+        displayBase: 16,
+    } as AddressRendererConfig;
+    return {...defaults, ...c};
+}
+
+export function createAsciiRendererConfig(c: Partial<AsciiRendererConfig> = {}) : AsciiRendererConfig {
+    const defaults = {
+        rendererType: RendererType.Ascii,
+    } as AsciiRendererConfig;
+    return {...defaults, ...c};
+}
+
+export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = {}) :IntegerRendererConfig {
+    const defaults = {
+        rendererType: RendererType.Integer,
+        displayBase: 16,
+        width: 1,
+        signed: false,
+        littleEndian: true,
+    } as IntegerRendererConfig;
+    return {...defaults, ...c};
+}
+
+
+/**
+ * Provides a human-redable name for the given renderer
+ */
+export function humanReadableRendererName(rendererConfig: RendererConfig) {
+    switch (rendererConfig.rendererType) {
+        case RendererType.Address: {
             return "Address";
         }
-        case ColumnType.AsciiColumn: {
+        case RendererType.Ascii: {
             return "ASCII";
         }
-        case ColumnType.IntegerColumn: {
-            const c = columnConfig as IntegerColumnConfig;
+        case RendererType.Integer: {
+            const c = rendererConfig as IntegerRendererConfig;
             let d = "";
             if (c.signed) {
                 d += "Signed ";
@@ -43,6 +96,17 @@ export function humanReadableColumnName(columnConfig: ColumnConfig) {
             }
             return d;
         }
+    }
+}
+
+export function getAlignment(c: RendererConfig) {
+    switch (c.rendererType) {
+        case RendererType.Address:
+            return 1;
+        case RendererType.Ascii:
+            return 1;
+        case RendererType.Integer:
+            return (c as IntegerRendererConfig).width;
     }
 }
 
@@ -133,25 +197,25 @@ function createAddressRenderer(base: AddressDisplayBase) {
     };
 }
 
-export function createRenderer(columnConfig: ColumnConfig) {
-    switch (columnConfig.columnType) {
-        case ColumnType.AddressGutter: {
-            const cc = columnConfig as AddressGutterConfig;
+export function createRenderer(config: RendererConfig) {
+    switch (config.rendererType) {
+        case RendererType.Address: {
+            const cc = config as AddressRendererConfig;
             return createAddressRenderer(cc.displayBase);
         }
-        case ColumnType.AsciiColumn: {
+        case RendererType.Ascii: {
             return byteAsAscii;
         }
-        case ColumnType.IntegerColumn: {
-            const cc = columnConfig as IntegerColumnConfig;
+        case RendererType.Integer: {
+            const cc = config as IntegerRendererConfig;
             return createIntegerRenderer(cc.width, cc.signed, cc.littleEndian, cc.displayBase);
         }
         default:
-            assertExhausted(columnConfig.columnType);
+            assertExhausted(config.rendererType);
     }
 }
 
-export function createStridedRenderer(columnConfig: ColumnConfig, strideSize: number) {
-    const renderer = createRenderer(columnConfig);
+export function createStridedRenderer(config: RendererConfig, strideSize: number) {
+    const renderer = createRenderer(config);
     return (data: DataView, idx: number) => renderer(data, idx * strideSize);
 }

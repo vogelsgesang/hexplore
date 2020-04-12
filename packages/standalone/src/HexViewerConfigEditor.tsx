@@ -1,15 +1,19 @@
 import {
     HexViewerConfig,
-    ColumnConfig,
-    ColumnType,
-    AddressGutterConfig,
-    AsciiColumnConfig,
-    IntegerColumnConfig,
-    getAlignment,
+} from "hexplore-hexview";
+import {
+    humanReadableRendererName, 
     IntegerDisplayBase,
     AddressDisplayBase,
-} from "hexplore-hexview";
-import {humanReadableColumnName} from "hexplore-hexview/dist/ByteRenderer";
+    getAlignment,
+    RendererType,
+    createAddressRendererConfig,
+    createIntegerRendererConfig,
+    createAsciiRendererConfig,
+    AddressRendererConfig,
+    IntegerRendererConfig,
+    RendererConfig,
+} from "hexplore-hexview/dist/ByteRenderer";
 import React, {useState} from "react";
 import {produce} from "immer";
 import Button from "react-bootstrap/Button";
@@ -64,40 +68,28 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     function addAddressGutter() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({columnType: ColumnType.AddressGutter, displayBase: 16} as AddressGutterConfig);
+                draft.columns.push(createAddressRendererConfig());
             }),
         );
     }
     function addIntegerColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({
-                    columnType: ColumnType.IntegerColumn,
-                    signed: false,
-                    width: 1,
-                    displayBase: 10,
-                    littleEndian: true,
-                } as IntegerColumnConfig);
+                draft.columns.push(createIntegerRendererConfig({displayBase: 10}));
             }),
         );
     }
     function addHexColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({
-                    columnType: ColumnType.IntegerColumn,
-                    signed: false,
-                    width: 1,
-                    displayBase: 16,
-                    littleEndian: true,
-                } as IntegerColumnConfig);
+                draft.columns.push(createIntegerRendererConfig({displayBase: 16}));
             }),
         );
     }
     function addAsciiColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push({columnType: ColumnType.AsciiColumn} as AsciiColumnConfig);
+                draft.columns.push(createAsciiRendererConfig());
             }),
         );
     }
@@ -120,7 +112,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
             }),
         );
     }
-    function setColumnConfig(pos: number, columnConfig: ColumnConfig) {
+    function setColumnConfig(pos: number, columnConfig: RendererConfig) {
         setConfig(
             produce(config, draft => {
                 draft.columns.splice(pos, 1, columnConfig);
@@ -132,22 +124,22 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
 
     function columnEditor(idx: number) {
         const columnConfig = config.columns[idx];
-        switch (columnConfig.columnType) {
-            case ColumnType.AddressGutter: {
+        switch (columnConfig.rendererType) {
+            case RendererType.Address: {
                 return (
                     <AddressGutterConfigEditor
-                        columnConfig={columnConfig as AddressGutterConfig}
+                        columnConfig={columnConfig as AddressRendererConfig}
                         setColumnConfig={setColumnConfig.bind(undefined, idx)}
                     />
                 );
             }
-            case ColumnType.AsciiColumn: {
+            case RendererType.Ascii: {
                 return <React.Fragment></React.Fragment>;
             }
-            case ColumnType.IntegerColumn: {
+            case RendererType.Integer: {
                 return (
                     <IntegerColumnConfigEditor
-                        columnConfig={columnConfig as IntegerColumnConfig}
+                        columnConfig={columnConfig as IntegerRendererConfig}
                         setColumnConfig={setColumnConfig.bind(undefined, idx)}
                     />
                 );
@@ -162,7 +154,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
         columnItems.push(
             <div key={i}>
                 <div className="hv-form-row">
-                    {humanReadableColumnName(config.columns[i])}
+                    {humanReadableRendererName(config.columns[i])}
                     <ButtonGroup>
                         <Button
                             disabled={isFirst}
@@ -213,8 +205,8 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
 }
 
 interface AddressGutterConfigEditorProps {
-    columnConfig: AddressGutterConfig;
-    setColumnConfig: (columnConfig: AddressGutterConfig) => void;
+    columnConfig: AddressRendererConfig;
+    setColumnConfig: (columnConfig: AddressRendererConfig) => void;
 }
 
 function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
@@ -246,8 +238,8 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutte
 }
 
 interface IntegerColumnConfigEditorProps {
-    columnConfig: IntegerColumnConfig;
-    setColumnConfig: (columnConfig: IntegerColumnConfig) => void;
+    columnConfig: IntegerRendererConfig;
+    setColumnConfig: (columnConfig: IntegerRendererConfig) => void;
 }
 
 function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColumnConfigEditorProps) {

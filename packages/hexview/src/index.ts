@@ -1,3 +1,2 @@
 export {Range, HighlightRange} from "./DataGrid";
-export {HexViewer} from "./HexViewer";
-export * from "./HexViewerConfig";
+export {HexViewer, HexViewerConfig, HexViewerProps, defaultConfig} from "./HexViewer";
