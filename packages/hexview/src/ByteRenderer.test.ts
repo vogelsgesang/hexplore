@@ -126,6 +126,12 @@ describe("The integer renderer", () => {
         expect(renderer(constView([0, 1, 2]), 1)).toBe("0201");
         expect(renderer(constView([0, 1, 2]), 2)).toBe("....");
     });
+    describe("supports 64-bit integers", () => {
+        const renderer = createIntRendererWithDefaults({width: 8});
+        const rendererDec = createIntRendererWithDefaults({width: 8, displayBase: 10});
+        expect(renderer(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("070605ff80020100");
+        expect(rendererDec(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("00506098603048173824");
+    });
 });
 
 describe("createStridedRenderer", () => {
