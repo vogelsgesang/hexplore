@@ -140,7 +140,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         setHoverPosition: useCallback(
             e =>
                 setHoverRange
-                    ? setHoverRange(e ? {from: e * elementWidth, to: (e + 1) * elementWidth} : undefined)
+                    ? setHoverRange(e !== undefined ? {from: e * elementWidth, to: (e + 1) * elementWidth} : undefined)
                     : undefined,
             [setHoverRange, elementWidth],
         ),
