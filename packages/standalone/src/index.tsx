@@ -38,10 +38,10 @@ const styles: Array<string> = [
 
 const defaultInspectorRepresentations: RendererConfig[] = [
     createAddressRendererConfig(),
-    createIntegerRendererConfig({displayBase: 10, width: 1, signed: true}),
-    createIntegerRendererConfig({displayBase: 10, width: 2, signed: true}),
-    createIntegerRendererConfig({displayBase: 10, width: 4, signed: true}),
-    createIntegerRendererConfig({displayBase: 10, width: 8, signed: true}),
+    createIntegerRendererConfig({displayBase: 10, width: 1, signed: true, fixedWidth: false}),
+    createIntegerRendererConfig({displayBase: 10, width: 2, signed: true, fixedWidth: false}),
+    createIntegerRendererConfig({displayBase: 10, width: 4, signed: true, fixedWidth: false}),
+    createIntegerRendererConfig({displayBase: 10, width: 8, signed: true, fixedWidth: false}),
 ];
 
 class App extends React.Component<{}, AppState> {

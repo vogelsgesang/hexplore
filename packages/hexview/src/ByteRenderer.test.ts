@@ -124,6 +124,11 @@ describe("The integer renderer", () => {
         expect(renderer(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("070605ff80020100");
         expect(rendererDec(constView([0, 1, 2, 128, 255, 5, 6, 7]), 0)).toBe("00506098603048173824");
     });
+    describe("supports variable-width rendering", () => {
+        const renderer = createIntRenderer({width: 2, fixedWidth: false});
+        expect(renderer(constView([0, 1]), 0)).toBe("100");
+        expect(renderer(constView([13, 0]), 0)).toBe("d");
+    });
 });
 
 describe("createStridedRenderer", () => {

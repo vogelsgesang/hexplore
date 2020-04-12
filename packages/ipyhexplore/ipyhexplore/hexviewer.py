@@ -13,7 +13,7 @@ def bytes_to_json(value, widget):
 
 default_columns = [
     {"rendererType": "Address", "displayBase": 16},
-    {"rendererType": "Integer", "signed": False, "width": 1, "littleEndian": True, "displayBase": 16},
+    {"rendererType": "Integer", "signed": False, "width": 1, "littleEndian": True, "displayBase": 16, "fixedWidth": True},
     {"rendererType": "Ascii"},
 ]
 
@@ -73,6 +73,7 @@ class HexViewer(DOMWidget):
                     "width": [1, 2, 4, 8],
                     "littleEndian": [True, False],
                     "displayBase": [2, 8, 10, 16],
+                    "fixedWidth": [True, False],
                 }
                 alignment = c.get("width")
             else:

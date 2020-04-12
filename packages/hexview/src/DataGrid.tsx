@@ -164,7 +164,7 @@ export function DataGrid<T>({
                 <span
                     className="grid-cell"
                     key={idx}
-                    style={{position: "absolute", top: `${positionTop}px`, left: `${positionLeft}px`}}
+                    style={{position: "absolute", top: `${positionTop}px`, left: `${positionLeft}px`, width: `${cellWidth}px`}}
                     data-idx={idx}
                 >
                     {renderer(data, idx)}

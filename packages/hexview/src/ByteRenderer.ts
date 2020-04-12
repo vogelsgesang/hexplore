@@ -29,6 +29,7 @@ export interface IntegerRendererConfig extends RendererConfig {
     signed: boolean;
     width: 1 | 2 | 4 | 8;
     littleEndian: boolean;
+    fixedWidth: boolean;
     displayBase: IntegerDisplayBase;
 }
 
@@ -53,6 +54,7 @@ export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = 
         displayBase: 16,
         width: 1,
         signed: false,
+        fixedWidth: true,
         littleEndian: true,
     } as IntegerRendererConfig;
     return {...defaults, ...c};
@@ -153,22 +155,25 @@ function formatInteger64bit(low: number, high: number, base: number, width: numb
     return s;
 }
 
-function createIntegerRenderer(width: 1 | 2 | 4 | 8, signed: boolean, littleEndian: boolean, base: IntegerDisplayBase) {
-    const strWidth = Math.ceil((Math.log(1 << 8) / Math.log(base)) * width);
+function createIntegerRenderer({width, signed, littleEndian, displayBase, fixedWidth} : IntegerRendererConfig) {
+    let padWidth = 0;
+    if (fixedWidth) {
+        padWidth = Math.ceil((Math.log(1 << 8) / Math.log(displayBase)) * width);
+    }
 
     return function intRenderer(data: DataView, idx: number): string {
         if (idx + width > data.byteLength) {
-            return ".".repeat((signed ? 1 : 0) + strWidth);
+            return ".".repeat((signed ? 1 : 0) + padWidth);
         }
         if (width == 1) {
             const v = signed ? data.getInt8(idx) : data.getUint8(idx);
-            return formatInteger(v, base, strWidth, signed);
+            return formatInteger(v, displayBase, padWidth, signed);
         } else if (width == 2) {
             const v = signed ? data.getInt16(idx, littleEndian) : data.getUint16(idx, littleEndian);
-            return formatInteger(v, base, strWidth, signed);
+            return formatInteger(v, displayBase, padWidth, signed);
         } else if (width == 4) {
             const v = signed ? data.getInt32(idx, littleEndian) : data.getUint32(idx, littleEndian);
-            return formatInteger(v, base, strWidth, signed);
+            return formatInteger(v, displayBase, padWidth, signed);
         } else if (width == 8) {
             let low, high;
             if (littleEndian) {
@@ -178,7 +183,7 @@ function createIntegerRenderer(width: 1 | 2 | 4 | 8, signed: boolean, littleEndi
                 low = data.getUint32(idx + 4, false);
                 high = data.getUint32(idx, false);
             }
-            return formatInteger64bit(low, high, base, strWidth, signed);
+            return formatInteger64bit(low, high, displayBase, padWidth, signed);
         }
         assertExhausted(width);
     };
@@ -207,8 +212,7 @@ export function createRenderer(config: RendererConfig) {
             return byteAsAscii;
         }
         case RendererType.Integer: {
-            const cc = config as IntegerRendererConfig;
-            return createIntegerRenderer(cc.width, cc.signed, cc.littleEndian, cc.displayBase);
+            return createIntegerRenderer(config as IntegerRendererConfig);
         }
         default:
             assertExhausted(config.rendererType);

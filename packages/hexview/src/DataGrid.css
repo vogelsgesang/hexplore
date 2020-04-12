@@ -1,7 +1,8 @@
 .data-grid {
     color: #00a;
-    white-space: nowrap;
     position: relative;
+    white-space: nowrap;
+    text-align: right;
     z-index: 0; /* need a new stacking context for the highlights */
 -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

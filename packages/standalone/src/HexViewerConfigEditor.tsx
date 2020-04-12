@@ -272,6 +272,13 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
             }),
         );
     };
+    const changeFixedWidth = (v: boolean) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.fixedWidth = v;
+            }),
+        );
+    };
     return (
         <React.Fragment>
             <div className="hv-form-row">
@@ -318,7 +325,7 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <span />
+                <Form.Label>Sign</Form.Label>
                 <ToggleButtonGroup
                     type="radio"
                     name={"s" + id}
@@ -328,6 +335,19 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 >
                     <ToggleButton value={true}>Signed</ToggleButton>
                     <ToggleButton value={false}>Unsigned</ToggleButton>
+                </ToggleButtonGroup>
+            </div>
+            <div className="hv-form-row">
+                <Form.Label>Fixed width</Form.Label>
+                <ToggleButtonGroup
+                    type="radio"
+                    name={"fw" + id}
+                    value={columnConfig.fixedWidth}
+                    onChange={changeFixedWidth}
+                    size="sm"
+                >
+                    <ToggleButton value={true}>Yes</ToggleButton>
+                    <ToggleButton value={false}>No</ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>
