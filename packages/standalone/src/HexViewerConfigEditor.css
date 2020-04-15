@@ -4,7 +4,7 @@
     height: 100%;
 }
 
-.hexviewerconfigeditor > .hv-column-list {
+.hexviewerconfigeditor > .hv-renderer-list {
     flex-shrink: 1;
     min-height: 10em;
     overflow: auto;
@@ -12,7 +12,7 @@
     border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 
-.hexviewerconfigeditor > .hv-add-column {
+.hexviewerconfigeditor > .hv-add-renderer {
     margin: .4em;
 }
 
@@ -23,7 +23,7 @@
     margin: .4em;
 }
 
-.hexviewerconfigeditor .hv-column-details {
+.hexviewerconfigeditor .hv-renderer-details {
     margin-left: 1em;
     border-left: .2em solid rgba(0,0,0,0.25);
 }

@@ -14,9 +14,11 @@
     "*.css"
   ],
   "devDependencies": {
+    "@testing-library/react": "^10.0.2",
     "@types/jest": "^24.9.1",
     "@types/react": "^16.9.25",
     "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
     "bootstrap": "^4.4.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.0",
@@ -28,6 +30,7 @@
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.1",
+    "react-test-renderer": "^16.13.1",
     "resize-observer-polyfill": "^1.5.1",
     "style-loader": "^1.1.3",
     "ts-jest": "^24.3.0",

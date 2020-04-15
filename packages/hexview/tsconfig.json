@@ -3,7 +3,7 @@
     "extends": "../../tsconfigbase",
     "compilerOptions": {
       "target": "es5",
-      "module": "es6",
+      "module": "CommonJS",
       "lib": ["dom", "es5"],
       "jsx": "react",
       "rootDir": "src",

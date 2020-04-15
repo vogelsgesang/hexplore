@@ -1,8 +1,6 @@
+import {HexViewerConfig} from "hexplore-hexview";
 import {
-    HexViewerConfig,
-} from "hexplore-hexview";
-import {
-    humanReadableRendererName, 
+    humanReadableRendererName,
     IntegerDisplayBase,
     AddressDisplayBase,
     getAlignment,
@@ -122,12 +120,13 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
         );
     }
 
-    function columnEditor(idx: number) {
+    function columnEditor(idx: number, childId: string) {
         const columnConfig = config.columns[idx];
         switch (columnConfig.rendererType) {
             case RendererType.Address: {
                 return (
                     <AddressGutterConfigEditor
+                        id={childId}
                         columnConfig={columnConfig as AddressRendererConfig}
                         setColumnConfig={setColumnConfig.bind(undefined, idx)}
                     />
@@ -139,6 +138,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
             case RendererType.Integer: {
                 return (
                     <IntegerColumnConfigEditor
+                        id={childId}
                         columnConfig={columnConfig as IntegerRendererConfig}
                         setColumnConfig={setColumnConfig.bind(undefined, idx)}
                     />
@@ -151,13 +151,15 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     for (let i = 0; i < config.columns.length; ++i) {
         const isFirst = i == 0;
         const isLast = i == config.columns.length - 1;
+        const childId = uniqueId + "-" + i;
         columnItems.push(
-            <div key={i}>
+            <div key={i} role="group" aria-labelledby={childId + "-caption"}>
                 <div className="hv-form-row">
-                    {humanReadableRendererName(config.columns[i])}
+                    <span id={childId + "-caption"}>{humanReadableRendererName(config.columns[i])}</span>
                     <ButtonGroup>
                         <Button
                             disabled={isFirst}
+                            title="Move up"
                             onClick={moveUp.bind(undefined, i)}
                             size="sm"
                             variant="outline-secondary"
@@ -166,18 +168,24 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                         </Button>
                         <Button
                             disabled={isLast}
+                            title="Move down"
                             onClick={moveDown.bind(undefined, i)}
                             size="sm"
                             variant="outline-secondary"
                         >
                             ⮟
                         </Button>
-                        <Button onClick={removeColumn.bind(undefined, i)} size="sm" variant="outline-danger">
+                        <Button
+                            title="Remove"
+                            onClick={removeColumn.bind(undefined, i)}
+                            size="sm"
+                            variant="outline-danger"
+                        >
                             X
                         </Button>
                     </ButtonGroup>
                 </div>
-                <div className="hv-column-details">{columnEditor(i)}</div>
+                <div className="hv-renderer-details">{columnEditor(i, childId)}</div>
             </div>,
         );
     }
@@ -185,8 +193,8 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     return (
         <div className="hexviewerconfigeditor">
             <div>{lineWidthSelector}</div>
-            <div className="hv-column-list">{columnItems}</div>
-            <div className="hv-add-column">
+            <div className="hv-renderer-list">{columnItems}</div>
+            <div className="hv-add-renderer">
                 <Dropdown>
                     <Dropdown.Toggle variant="primary" block size="sm" id={"dropdown-" + uniqueId}>
                         Add column
@@ -205,12 +213,12 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
 }
 
 interface AddressGutterConfigEditorProps {
+    id: string;
     columnConfig: AddressRendererConfig;
     setColumnConfig: (columnConfig: AddressRendererConfig) => void;
 }
 
-function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
-    const id = useUniqueId();
+function AddressGutterConfigEditor({id, columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
     const changeBase = (v: AddressDisplayBase) => {
         setColumnConfig(
             produce(columnConfig, draft => {
@@ -221,10 +229,11 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutte
     return (
         <React.Fragment>
             <div className="hv-form-row">
-                Base
+                <Form.Label id={id + "-base"}>Base</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-base"}
                     type="radio"
-                    name={"b" + id}
+                    name={id + "-base"}
                     value={columnConfig.displayBase}
                     onChange={changeBase}
                     size="sm"
@@ -238,12 +247,12 @@ function AddressGutterConfigEditor({columnConfig, setColumnConfig}: AddressGutte
 }
 
 interface IntegerColumnConfigEditorProps {
+    id: string;
     columnConfig: IntegerRendererConfig;
     setColumnConfig: (columnConfig: IntegerRendererConfig) => void;
 }
 
-function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColumnConfigEditorProps) {
-    const id = useUniqueId();
+function IntegerColumnConfigEditor({id, columnConfig, setColumnConfig}: IntegerColumnConfigEditorProps) {
     const changeWidth = (v: 1 | 2 | 4 | 8) => {
         setColumnConfig(
             produce(columnConfig, draft => {
@@ -282,10 +291,11 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
     return (
         <React.Fragment>
             <div className="hv-form-row">
-                Width
+                <Form.Label id={id + "-width"}>Width</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-width"}
                     type="radio"
-                    name={"w" + id}
+                    name={id + "-width"}
                     value={columnConfig.width}
                     onChange={changeWidth}
                     size="sm"
@@ -297,10 +307,11 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <Form.Label>Base</Form.Label>
+                <Form.Label id={id + "-base"}>Base</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-base"}
                     type="radio"
-                    name={"b" + id}
+                    name={id + "-base"}
                     value={columnConfig.displayBase}
                     onChange={changeBase}
                     size="sm"
@@ -312,10 +323,11 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <Form.Label>Endianess</Form.Label>
+                <Form.Label id={id + "-endianess"}>Endianess</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-endianess"}
                     type="radio"
-                    name={"e" + id}
+                    name={id + "-endianess"}
                     value={columnConfig.littleEndian}
                     onChange={changeLE}
                     size="sm"
@@ -325,10 +337,11 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <Form.Label>Sign</Form.Label>
+                <Form.Label id={id + "-sign"}>Sign</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-sign"}
                     type="radio"
-                    name={"s" + id}
+                    name={id + "-sign"}
                     value={columnConfig.signed}
                     onChange={changeSigned}
                     size="sm"
@@ -338,10 +351,11 @@ function IntegerColumnConfigEditor({columnConfig, setColumnConfig}: IntegerColum
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
-                <Form.Label>Fixed width</Form.Label>
+                <Form.Label id={id + "-fw"}>Fixed width</Form.Label>
                 <ToggleButtonGroup
+                    aria-labelledby={id + "-fw"}
                     type="radio"
-                    name={"fw" + id}
+                    name={id + "-fw"}
                     value={columnConfig.fixedWidth}
                     onChange={changeFixedWidth}
                     size="sm"
