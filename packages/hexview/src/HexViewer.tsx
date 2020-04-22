@@ -1,7 +1,14 @@
 import {assert, assertUnreachable as assertExhausted} from "./util";
 import React, {useRef, useState, useEffect, useLayoutEffect, RefObject, useMemo, useCallback} from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import { RendererConfig, createAddressRendererConfig, createIntegerRendererConfig, createAsciiRendererConfig, RendererType, IntegerRendererConfig } from "./ByteRenderer";
+import {
+    RendererConfig,
+    createAddressRendererConfig,
+    createIntegerRendererConfig,
+    createAsciiRendererConfig,
+    RendererType,
+    IntegerRendererConfig,
+} from "./ByteRenderer";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
 import {createStridedRenderer} from "./ByteRenderer";
 
@@ -17,11 +24,7 @@ export interface HexViewerConfig {
 
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
-    columns: [
-        createAddressRendererConfig(),
-        createIntegerRendererConfig(),
-        createAsciiRendererConfig(),
-    ],
+    columns: [createAddressRendererConfig(), createIntegerRendererConfig(), createAsciiRendererConfig()],
 };
 
 function useScrollAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, RefObject<T>] {

@@ -1,4 +1,11 @@
-import {createRenderer, createStridedRenderer, createIntegerRendererConfig, createAddressRendererConfig, IntegerRendererConfig, createAsciiRendererConfig} from "./ByteRenderer";
+import {
+    createRenderer,
+    createStridedRenderer,
+    createIntegerRendererConfig,
+    createAddressRendererConfig,
+    IntegerRendererConfig,
+    createAsciiRendererConfig,
+} from "./ByteRenderer";
 
 function constView(bytes: number[]) {
     const buf = new ArrayBuffer(bytes.length);

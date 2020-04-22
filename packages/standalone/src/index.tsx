@@ -1,12 +1,6 @@
 import React, {KeyboardEvent} from "react";
 import ReactDOM from "react-dom";
-import {
-    HighlightRange,
-    Range,
-    HexViewer,
-    HexViewerConfig,
-    defaultConfig
-} from "hexplore-hexview";
+import {HighlightRange, Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
@@ -15,7 +9,11 @@ import {DataInspector} from "./DataInspector";
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { RendererConfig, createAddressRendererConfig, createIntegerRendererConfig } from "hexplore-hexview/dist/ByteRenderer";
+import {
+    RendererConfig,
+    createAddressRendererConfig,
+    createIntegerRendererConfig,
+} from "hexplore-hexview/dist/ByteRenderer";
 
 interface AppState {
     data?: ArrayBuffer;

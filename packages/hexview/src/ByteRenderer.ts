@@ -1,6 +1,5 @@
 import {assertUnreachable as assertExhausted} from "./util";
 
-
 export enum RendererType {
     Address = "Address",
     Ascii = "Ascii",
@@ -33,7 +32,7 @@ export interface IntegerRendererConfig extends RendererConfig {
     displayBase: IntegerDisplayBase;
 }
 
-export function createAddressRendererConfig(c: Partial<AddressRendererConfig> = {}) : AddressRendererConfig {
+export function createAddressRendererConfig(c: Partial<AddressRendererConfig> = {}): AddressRendererConfig {
     const defaults = {
         rendererType: RendererType.Address,
         displayBase: 16,
@@ -41,14 +40,14 @@ export function createAddressRendererConfig(c: Partial<AddressRendererConfig> = 
     return {...defaults, ...c};
 }
 
-export function createAsciiRendererConfig(c: Partial<AsciiRendererConfig> = {}) : AsciiRendererConfig {
+export function createAsciiRendererConfig(c: Partial<AsciiRendererConfig> = {}): AsciiRendererConfig {
     const defaults = {
         rendererType: RendererType.Ascii,
     } as AsciiRendererConfig;
     return {...defaults, ...c};
 }
 
-export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = {}) :IntegerRendererConfig {
+export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = {}): IntegerRendererConfig {
     const defaults = {
         rendererType: RendererType.Integer,
         displayBase: 16,
@@ -59,7 +58,6 @@ export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = 
     } as IntegerRendererConfig;
     return {...defaults, ...c};
 }
-
 
 /**
  * Provides a human-redable name for the given renderer
@@ -155,7 +153,7 @@ function formatInteger64bit(low: number, high: number, base: number, width: numb
     return s;
 }
 
-function createIntegerRenderer({width, signed, littleEndian, displayBase, fixedWidth} : IntegerRendererConfig) {
+function createIntegerRenderer({width, signed, littleEndian, displayBase, fixedWidth}: IntegerRendererConfig) {
     let padWidth = 0;
     if (fixedWidth) {
         padWidth = Math.ceil((Math.log(1 << 8) / Math.log(displayBase)) * width);
