@@ -1,10 +1,10 @@
 /// <reference types="react" />
-import { ColumnConfig } from "hexplore-hexview";
+import { RendererConfig } from "hexplore-hexview/dist/ByteRenderer";
 import "./DataInspector.css";
 interface DataInspectorProps {
     data: ArrayBuffer;
     position: number;
-    representations: ColumnConfig[];
+    representations: RendererConfig[];
 }
 export declare function DataInspector({ data, position, representations }: DataInspectorProps): JSX.Element;
 export {};
