@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+# Install yarn
+wget https://yarnpkg.com/downloads/1.22.4/yarn-v1.22.4.tar.gz
+tar zvxf yarn-v1.22.4.tar.gz
+
+# Install JupyterLab extension
+yarn-v1.22.4/bin/yarn install && yarn-v1.22.4/bin/yarn cache clean
+yarn-v1.22.4/bin/yarn run --cwd=packages/hexview build
+jupyter labextension link packages/hexview --no-build
+jupyter labextension install @jupyter-widgets/jupyterlab-manager packages/ipyhexplore
+
+# Import the workspace into JupyterLab
+jupyter lab workspaces import binder/workspace.json
+
+# Remove temporary yarn
+rm -r yarn-v1.22.4
+rm yarn-v1.22.4.tar.gz
