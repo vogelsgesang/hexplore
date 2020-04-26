@@ -1,6 +1,6 @@
-import {assert, assertUnreachable as assertExhausted} from "./util";
-import React, {useRef, useState, useEffect, useLayoutEffect, RefObject, useMemo, useCallback} from "react";
-import ResizeObserver from "resize-observer-polyfill";
+import {assertUnreachable as assertExhausted} from "./util";
+import React, {useRef, useState, useMemo, useCallback} from "react";
+import {useVirtualScroll, useSizeAware} from './RepresentationHooks'
 import {
     RendererConfig,
     createAddressRendererConfig,
@@ -12,11 +12,6 @@ import {
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
 import {createStridedRenderer} from "./ByteRenderer";
 
-interface Vector2 {
-    x: number;
-    y: number;
-}
-
 export interface HexViewerConfig {
     lineWidth: number;
     columns: RendererConfig[];
@@ -27,46 +22,6 @@ export const defaultConfig: HexViewerConfig = {
     columns: [createAddressRendererConfig(), createIntegerRendererConfig(), createAsciiRendererConfig()],
 };
 
-function useScrollAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, RefObject<T>] {
-    const ref = prevRef ?? useRef<T>(null);
-    const [scrollPos, setScrollPos] = useState<Vector2>({x: 0, y: 0});
-
-    function onScroll(e: Event) {
-        setScrollPos({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
-    }
-
-    useEffect(() => {
-        const scrollElem = ref.current;
-        assert(scrollElem);
-        setScrollPos({x: scrollElem.scrollLeft, y: scrollElem.scrollTop});
-        scrollElem.addEventListener("scroll", onScroll);
-        return () => scrollElem.removeEventListener("scroll", onScroll);
-    }, [ref]);
-
-    return [scrollPos, ref];
-}
-
-function useSizeAware<T extends HTMLElement>(prevRef?: RefObject<T>): [Vector2, RefObject<T>] {
-    const ref = prevRef ?? useRef<T>(null);
-    const [size, setSize] = useState<Vector2>({x: 0, y: 0});
-
-    useLayoutEffect(() => {
-        const elem = ref.current;
-        assert(elem);
-        const ro = new ResizeObserver(entries => {
-            assert(entries.length === 1);
-            const entry = entries[0];
-            const {width, height} = entry.contentRect;
-            setSize({x: width, y: height});
-        });
-        const {width, height} = elem.getBoundingClientRect();
-        setSize({x: width, y: height});
-        ro.observe(elem);
-        return () => ro.disconnect();
-    }, [ref]);
-    return [size, ref];
-}
-
 interface HexViewerColumnProps {
     dataView: DataView;
     columnConfig: RendererConfig;
@@ -74,8 +29,8 @@ interface HexViewerColumnProps {
     charWidth: number;
     cellHeight: number;
     cellPaddingY: number;
-    firstRenderedLine: number;
-    lastRenderedLine: number;
+    renderLineStart: number;
+    renderLineLimit: number;
     highlightRanges: HighlightRange[];
     setHoverRange?: (pos: Range | undefined) => void;
     cursorPosition: number;
@@ -88,8 +43,8 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
     dataView,
     columnConfig,
     lineWidth,
-    firstRenderedLine,
-    lastRenderedLine,
+    renderLineStart,
+    renderLineLimit,
     charWidth,
     cellHeight,
     cellPaddingY,
@@ -137,8 +92,8 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         cellPaddingX: cellPaddingX,
         cellPaddingY: cellPaddingY,
         lineWidth: lineWidth / elementWidth,
-        renderLineStart: firstRenderedLine,
-        renderLineLimit: lastRenderedLine + 1, // TODO: pass line limits consistently
+        renderLineStart: renderLineStart,
+        renderLineLimit: renderLineLimit,
         cursorPosition: Math.floor(cursorPosition / elementWidth),
         setHoverPosition: useCallback(
             e =>
@@ -188,24 +143,21 @@ export function HexViewer(props: HexViewerProps) {
     const viewConfig = props.viewConfig;
     const lineWidth = viewConfig.lineWidth;
     const byteLength = props.data.byteLength;
-    const [scrollPos, ref1] = useScrollAware<HTMLDivElement>();
-    const [size, ref] = useSizeAware<HTMLDivElement>(ref1);
-    const [textSize, textMeasureRef] = useSizeAware<HTMLDivElement>();
-    const [hoverRange, setHoverRange] = useState<Range | undefined>(undefined);
 
+    const textMeasureRef = useRef(null);
+    const textSize = useSizeAware(textMeasureRef);
     const cellHeight = textSize.y;
     const cellPaddingY = 0.05 * cellHeight;
 
-    const listLength = Math.ceil(byteLength / lineWidth);
-    const viewportHeight = size.y;
-    const elementHeight = cellHeight + cellPaddingY;
-    const paddingSize = 0.5 * viewportHeight;
-    const scrollY = scrollPos.y;
-    const firstRenderedLine = Math.max(Math.floor((scrollY - paddingSize) / elementHeight), 0);
-    const lastRenderedLine = Math.min(Math.ceil((scrollY + viewportHeight + paddingSize) / elementHeight), listLength);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const {lineStart, lineLimit} = useVirtualScroll(scrollAreaRef, {
+        elementSize: cellHeight + cellPaddingY,
+        elementCount: Math.ceil(byteLength / lineWidth),
+    });
 
     const dataView = useMemo(() => new DataView(props.data), [props.data]);
 
+    const [hoverRange, setHoverRange] = useState<Range | undefined>(undefined);
     const hoverFrom = hoverRange?.from;
     const hoverTo = hoverRange?.to;
     const highlightRanges = useMemo(() => {
@@ -223,8 +175,8 @@ export function HexViewer(props: HexViewerProps) {
                     dataView={dataView}
                     columnConfig={columnConfig}
                     lineWidth={lineWidth}
-                    firstRenderedLine={firstRenderedLine}
-                    lastRenderedLine={lastRenderedLine}
+                    renderLineStart={lineStart}
+                    renderLineLimit={lineLimit}
                     charWidth={textSize.x}
                     cellHeight={cellHeight}
                     cellPaddingY={cellPaddingY}
@@ -240,7 +192,7 @@ export function HexViewer(props: HexViewerProps) {
     }
 
     return (
-        <div className="hex-viewer-scroll" ref={ref}>
+        <div className="hex-viewer-scroll" ref={scrollAreaRef}>
             <div className="hex-viewer-content">
                 <div className="measure-text" ref={textMeasureRef}>
                     0
