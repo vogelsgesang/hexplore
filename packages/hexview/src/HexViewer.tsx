@@ -130,7 +130,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
 
     const gridProps = {
         data: dataView,
-        overallLength: Math.ceil(byteLength) / elementWidth,
+        overallLength: Math.ceil(byteLength / elementWidth),
         renderer: useMemo(() => createStridedRenderer(columnConfig, elementWidth), [columnConfig, elementWidth]),
         cellWidth: cellWidth,
         cellHeight: cellHeight,
