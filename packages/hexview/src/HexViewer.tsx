@@ -1,6 +1,6 @@
 import {assertUnreachable as assertExhausted} from "./util";
 import React, {useRef, useState, useMemo, useCallback} from "react";
-import {useVirtualScroll, useSizeAware} from './RepresentationHooks'
+import {useSizeAware, useInfiniteScroll} from "./RepresentationHooks";
 import {
     RendererConfig,
     createAddressRendererConfig,
@@ -31,6 +31,8 @@ interface HexViewerColumnProps {
     cellPaddingY: number;
     renderLineStart: number;
     renderLineLimit: number;
+    maxOverallHeight: number;
+    viewOffset: number;
     highlightRanges: HighlightRange[];
     setHoverRange?: (pos: Range | undefined) => void;
     cursorPosition: number;
@@ -45,6 +47,8 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
     lineWidth,
     renderLineStart,
     renderLineLimit,
+    maxOverallHeight,
+    viewOffset,
     charWidth,
     cellHeight,
     cellPaddingY,
@@ -94,6 +98,8 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         lineWidth: lineWidth / elementWidth,
         renderLineStart: renderLineStart,
         renderLineLimit: renderLineLimit,
+        maxOverallHeight: maxOverallHeight,
+        viewOffsetY: viewOffset,
         cursorPosition: Math.floor(cursorPosition / elementWidth),
         setHoverPosition: useCallback(
             e =>
@@ -148,11 +154,14 @@ export function HexViewer(props: HexViewerProps) {
     const textSize = useSizeAware(textMeasureRef);
     const cellHeight = textSize.y;
     const cellPaddingY = 0.05 * cellHeight;
+    const contentMargin = Math.round(0.3 * textSize.y);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const {lineStart, lineLimit} = useVirtualScroll(scrollAreaRef, {
+    const {lineStart, lineLimit, physicalScrollSize, viewOffset} = useInfiniteScroll({
+        ref: scrollAreaRef,
         elementSize: cellHeight + cellPaddingY,
         elementCount: Math.ceil(byteLength / lineWidth),
+        margin: contentMargin,
     });
 
     const dataView = useMemo(() => new DataView(props.data), [props.data]);
@@ -170,13 +179,19 @@ export function HexViewer(props: HexViewerProps) {
     for (let columnIdx = 0; columnIdx < viewConfig.columns.length; ++columnIdx) {
         const columnConfig = viewConfig.columns[columnIdx];
         renderedContent.push(
-            <div key={"c" + columnIdx} className="hex-viewer-column">
+            <div
+                key={"c" + columnIdx}
+                className="hex-viewer-column"
+                style={{padding: contentMargin + "px"}}
+            >
                 <HexViewerColumn
                     dataView={dataView}
                     columnConfig={columnConfig}
                     lineWidth={lineWidth}
                     renderLineStart={lineStart}
                     renderLineLimit={lineLimit}
+                    viewOffset={viewOffset}
+                    maxOverallHeight={physicalScrollSize}
                     charWidth={textSize.x}
                     cellHeight={cellHeight}
                     cellPaddingY={cellPaddingY}

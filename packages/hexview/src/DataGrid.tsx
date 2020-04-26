@@ -26,6 +26,8 @@ interface DataGridProperties<T> {
     cellHeight: number;
     cellPaddingX: number;
     cellPaddingY: number;
+    maxOverallHeight?: number
+    viewOffsetY?: number;
     // Rendered part (for virtual scrolling)
     renderLineStart: number;
     renderLineLimit: number;
@@ -52,6 +54,8 @@ export function DataGrid<T>({
     cellHeight,
     cellPaddingX,
     cellPaddingY,
+    viewOffsetY = 0,
+    maxOverallHeight,
     renderLineStart,
     renderLineLimit,
     setHoverPosition = () => {},
@@ -96,7 +100,7 @@ export function DataGrid<T>({
         assert(mainElem.current);
         const rect = mainElem.current.getBoundingClientRect();
         const relX = e.clientX - rect.left;
-        const relY = e.clientY - rect.top;
+        const relY = e.clientY - rect.top + viewOffsetY;
         const idxX = Math.floor(relX / (cellWidth + cellPaddingX));
         const idxY = Math.floor(relY / (cellHeight + cellPaddingY));
         const clampedCol = Math.min(Math.max(idxX, 0), lineWidth);
@@ -154,7 +158,7 @@ export function DataGrid<T>({
     for (let lineNr = renderLineStart; lineNr < lineLimit; ++lineNr) {
         const cellStart = lineNr * lineWidth;
         const cellLimit = Math.min(cellStart + lineWidth, overallLength);
-        const positionTop = lineNr * (cellHeight + cellPaddingY);
+        const positionTop = lineNr * (cellHeight + cellPaddingY) - viewOffsetY;
         // Render the actual content
         const cells = [];
         for (let idx = cellStart; idx < cellLimit; ++idx) {
@@ -170,7 +174,7 @@ export function DataGrid<T>({
                         left: `${positionLeft}px`,
                         width: `${cellWidth}px`,
                     }}
-                    data-idx={idx}
+                    data-idx={idx} // TODO: still needed?
                 >
                     {renderer(data, idx)}
                 </span>,
@@ -202,9 +206,10 @@ export function DataGrid<T>({
         );
     }
 
+    let height = Math.min(computeSizeWithPadding(Math.ceil(overallLength / lineWidth), cellHeight, cellPaddingY), maxOverallHeight ?? 1e50);
     const wrapperStyle = {
-        height: `${computeSizeWithPadding(Math.ceil(overallLength / lineWidth), cellHeight, cellPaddingY)}px`,
-        width: `${computeSizeWithPadding(lineWidth, cellWidth, cellPaddingX)}px`,
+        height: height + "px",
+        width: computeSizeWithPadding(lineWidth, cellWidth, cellPaddingX) + "px"
     };
 
     return (
