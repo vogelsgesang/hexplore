@@ -1,5 +1,5 @@
 import {assert} from "./util";
-import {useEffect, useLayoutEffect, RefObject} from 'react';
+import {useEffect, useLayoutEffect, RefObject, useState} from 'react';
 import ResizeObserver from "resize-observer-polyfill";
 
 interface Vector2 {
