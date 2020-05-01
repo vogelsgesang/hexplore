@@ -1,5 +1,5 @@
 import {assert} from "./util";
-import {useEffect, useLayoutEffect, RefObject, useState, useRef} from "react";
+import {useLayoutEffect, RefObject, useState, useRef} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 interface Vector2 {
@@ -14,7 +14,7 @@ export function useScrollAware<T extends HTMLElement>(ref: RefObject<T>): Vector
         setScrollPos({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const scrollElem = ref.current;
         assert(scrollElem);
         setScrollPos({x: scrollElem.scrollLeft, y: scrollElem.scrollTop});
