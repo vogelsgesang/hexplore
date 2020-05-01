@@ -1,5 +1,5 @@
 import {assertUnreachable as assertExhausted} from "./util";
-import React, {useRef, useState, useMemo, useCallback} from "react";
+import React, {useRef, useState, useMemo, useCallback, forwardRef, useImperativeHandle} from "react";
 import {useSizeAware, useInfiniteScroll} from "./RepresentationHooks";
 import {
     RendererConfig,
@@ -145,7 +145,7 @@ export interface HexViewerProps {
     setSelection?: (r: Range) => void;
 }
 
-export function HexViewer(props: HexViewerProps) {
+export const HexViewer = forwardRef(function HexViewer(props: HexViewerProps, ref) {
     const viewConfig = props.viewConfig;
     const lineWidth = viewConfig.lineWidth;
     const byteLength = props.data.byteLength;
@@ -157,7 +157,7 @@ export function HexViewer(props: HexViewerProps) {
     const contentMargin = Math.round(0.3 * textSize.y);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const {lineStart, lineLimit, physicalScrollSize, viewOffset} = useInfiniteScroll({
+    const {lineStart, lineLimit, physicalScrollSize, viewOffset, scrollIntoView} = useInfiniteScroll({
         ref: scrollAreaRef,
         elementSize: cellHeight + cellPaddingY,
         elementCount: Math.ceil(byteLength / lineWidth),
@@ -175,15 +175,28 @@ export function HexViewer(props: HexViewerProps) {
         return r.concat([{from: hoverFrom, to: hoverTo, key: "hover", className: "hover"}]);
     }, [props.highlightRanges, hoverFrom, hoverTo]);
 
+    const goto = useCallback(
+        (pos: number) => {
+            if (props.setCursorPosition) props.setCursorPosition(pos);
+            if (props.setSelection) props.setSelection({from: pos, to: pos + 1});
+            scrollIntoView(Math.floor(pos / props.viewConfig.lineWidth));
+        },
+        [scrollIntoView, props],
+    );
+
+    useImperativeHandle(
+        ref,
+        () => ({
+            goto: goto,
+        }),
+        [goto],
+    );
+
     const renderedContent = [];
     for (let columnIdx = 0; columnIdx < viewConfig.columns.length; ++columnIdx) {
         const columnConfig = viewConfig.columns[columnIdx];
         renderedContent.push(
-            <div
-                key={"c" + columnIdx}
-                className="hex-viewer-column"
-                style={{padding: contentMargin + "px"}}
-            >
+            <div key={"c" + columnIdx} className="hex-viewer-column" style={{padding: contentMargin + "px"}}>
                 <HexViewerColumn
                     dataView={dataView}
                     columnConfig={columnConfig}
@@ -216,4 +229,4 @@ export function HexViewer(props: HexViewerProps) {
             </div>
         </div>
     );
-}
+});

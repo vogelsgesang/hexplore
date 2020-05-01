@@ -1,5 +1,5 @@
 import {assert} from "./util";
-import {useLayoutEffect, RefObject, useState, useRef} from "react";
+import {useLayoutEffect, RefObject, useState, useRef, useCallback, useReducer} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 interface Vector2 {
@@ -45,6 +45,11 @@ export function useSizeAware<T extends HTMLElement>(ref: RefObject<T>): Vector2 
     return size;
 }
 
+export function useForceRedraw() {
+    const [, forceRedraw] = useReducer(() => ({}), {});
+    return forceRedraw;
+}
+
 export function useVirtualScroll<T extends HTMLElement>({
     elementSize,
     elementCount,
@@ -84,6 +89,7 @@ export function useInfiniteScroll<T extends HTMLElement>({
     const scrollPos = useScrollAware(ref).y;
     const prevScrollPos = useRef(0);
     const virtualScrollPos = useRef(0);
+    const forceRedraw = useForceRedraw();
     const viewportSize = useSizeAware(ref).y;
 
     // Compute sizes
@@ -152,10 +158,23 @@ export function useInfiniteScroll<T extends HTMLElement>({
         [physicalScrollPos, ref],
     );
 
+    const scrollIntoView = useCallback(
+        (pos: number) => {
+            const topPos = Math.min(margin + pos * elementSize, virtualSize);
+            const bottomPos = Math.max(margin + pos * elementSize - viewportSize + elementSize, 0);
+            const middlePos = Math.max(margin + pos * elementSize - viewportSize / 2 + elementSize / 2, 0);
+            if (virtualScrollPos.current > topPos || virtualScrollPos.current < bottomPos) {
+                virtualScrollPos.current = middlePos;
+                forceRedraw();
+            }
+        },
+        [virtualScrollPos, margin, elementSize, forceRedraw, viewportSize, virtualSize],
+    );
+
     // Compute the parameters for rendering
     const viewOffset = virtualScrollPos.current - physicalScrollPos;
     const start = Math.max(Math.floor((virtualScrollPos.current - viewportSize - margin) / elementSize), 0);
     const end = Math.min(Math.ceil((virtualScrollPos.current - margin + 2 * viewportSize) / elementSize), elementCount);
 
-    return {lineStart: start, lineLimit: end, physicalScrollSize, viewOffset};
+    return {lineStart: start, lineLimit: end, physicalScrollSize, viewOffset, scrollIntoView};
 }

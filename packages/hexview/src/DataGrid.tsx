@@ -26,7 +26,7 @@ interface DataGridProperties<T> {
     cellHeight: number;
     cellPaddingX: number;
     cellPaddingY: number;
-    maxOverallHeight?: number
+    maxOverallHeight?: number;
     viewOffsetY?: number;
     // Rendered part (for virtual scrolling)
     renderLineStart: number;
@@ -159,7 +159,8 @@ export function DataGrid<T>({
     const renderedData = [];
     for (let chunkStart = firstChunkStart; chunkStart < lastChunkLimit; chunkStart += chunkSize) {
         const chunkLimit = Math.min(chunkStart + chunkSize, overallLength);
-        renderedData.push(<DataGridChunkMemo
+        renderedData.push(
+            <DataGridChunkMemo
                 key={chunkStart}
                 data={data}
                 overallLength={overallLength}
@@ -172,7 +173,8 @@ export function DataGrid<T>({
                 viewOffsetY={viewOffsetY}
                 renderLineStart={chunkStart}
                 renderLineLimit={chunkLimit}
-            />)
+            />,
+        );
     }
 
     // Render the highlights
@@ -199,10 +201,13 @@ export function DataGrid<T>({
         }
     }
 
-    let height = Math.min(computeSizeWithPadding(Math.ceil(overallLength / lineWidth), cellHeight, cellPaddingY), maxOverallHeight ?? 1e50);
+    const height = Math.min(
+        computeSizeWithPadding(Math.ceil(overallLength / lineWidth), cellHeight, cellPaddingY),
+        maxOverallHeight ?? 1e50,
+    );
     const wrapperStyle = {
         height: height + "px",
-        width: computeSizeWithPadding(lineWidth, cellWidth, cellPaddingX) + "px"
+        width: computeSizeWithPadding(lineWidth, cellWidth, cellPaddingX) + "px",
     };
 
     return (
@@ -237,10 +242,10 @@ interface DataGridChunkProperties<T> {
     viewOffsetY: number;
     // Rendered part (for virtual scrolling)
     renderLineStart: number;
-    renderLineLimit: number;    
+    renderLineLimit: number;
 }
 
-function DataGridChunk<T> ({
+function DataGridChunk<T>({
     data,
     overallLength,
     renderer,
@@ -251,8 +256,8 @@ function DataGridChunk<T> ({
     cellPaddingY,
     viewOffsetY,
     renderLineStart,
-    renderLineLimit,    
-} : DataGridChunkProperties<T>) {
+    renderLineLimit,
+}: DataGridChunkProperties<T>) {
     // Render the lines
     const lines = [];
     for (let lineNr = renderLineStart; lineNr < renderLineLimit; ++lineNr) {
