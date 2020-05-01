@@ -140,11 +140,10 @@ export function useInfiniteScroll<T extends HTMLElement>({
             currPage * (pageSize - pageOverlap) +
             (virtualScrollPos.current - currPage * pageSize);
     }
-    physicalScrollPos = Math.round(physicalScrollPos);
 
     useLayoutEffect(
         function() {
-            if (ref.current && physicalScrollPos != ref.current.scrollTop) {
+            if (ref.current && Math.abs(physicalScrollPos - ref.current.scrollTop) > 0) {
                 // This introduces a small jump in the scroll bar, but I don't know how else to build infite scrolling
                 ref.current.scrollTop = physicalScrollPos;
                 prevScrollPos.current = physicalScrollPos;

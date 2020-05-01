@@ -152,36 +152,36 @@ export function DataGrid<T>({
         }
     };
 
-    // Render the lines
-    const lines = [];
-    const lineLimit = Math.min(renderLineLimit, overallLength);
-    for (let lineNr = renderLineStart; lineNr < lineLimit; ++lineNr) {
+    // Render the lines, in separately cached chunks
+    const chunkSize = 8;
+    const firstChunkStart = Math.floor(renderLineStart / chunkSize) * chunkSize;
+    const lastChunkLimit = Math.min(Math.ceil(renderLineLimit / chunkSize) * chunkSize, renderLineLimit);
+    const renderedData = [];
+    for (let chunkStart = firstChunkStart; chunkStart < lastChunkLimit; chunkStart += chunkSize) {
+        const chunkLimit = Math.min(chunkStart + chunkSize, overallLength);
+        renderedData.push(<DataGridChunkMemo
+                key={chunkStart}
+                data={data}
+                overallLength={overallLength}
+                renderer={renderer}
+                lineWidth={lineWidth}
+                cellWidth={cellWidth}
+                cellHeight={cellHeight}
+                cellPaddingX={cellPaddingX}
+                cellPaddingY={cellPaddingY}
+                viewOffsetY={viewOffsetY}
+                renderLineStart={chunkStart}
+                renderLineLimit={chunkLimit}
+            />)
+    }
+
+    // Render the highlights
+    const highlightDivs = [];
+    for (let lineNr = renderLineStart; lineNr < renderLineLimit; ++lineNr) {
         const cellStart = lineNr * lineWidth;
         const cellLimit = Math.min(cellStart + lineWidth, overallLength);
         const positionTop = lineNr * (cellHeight + cellPaddingY) - viewOffsetY;
-        // Render the actual content
-        const cells = [];
-        for (let idx = cellStart; idx < cellLimit; ++idx) {
-            const cellNr = idx - cellStart;
-            const positionLeft = cellNr * (cellWidth + cellPaddingX);
-            cells.push(
-                <span
-                    className="grid-cell"
-                    key={idx}
-                    style={{
-                        position: "absolute",
-                        top: `${positionTop}px`,
-                        left: `${positionLeft}px`,
-                        width: `${cellWidth}px`,
-                    }}
-                    data-idx={idx} // TODO: still needed?
-                >
-                    {renderer(data, idx)}
-                </span>,
-            );
-        }
         // Render the highlights
-        const highlightDivs = [];
         for (const h of highlightRanges) {
             if (h.from < cellLimit && h.to > cellStart) {
                 const localFrom = Math.max(h.from - cellStart, 0);
@@ -194,16 +194,9 @@ export function DataGrid<T>({
                     width: `${computeSizeWithPadding(localTo - localFrom, cellWidth, cellPaddingX)}px`,
                     height: cellHeight,
                 };
-                highlightDivs.push(<div key={"h" + h.key} className={h.className} style={style} />);
+                highlightDivs.push(<div key={"h" + h.key + "_" + lineNr} className={h.className} style={style} />);
             }
         }
-
-        lines.push(
-            <React.Fragment key={"l" + cellStart}>
-                {cells}
-                {highlightDivs}
-            </React.Fragment>,
-        );
     }
 
     let height = Math.min(computeSizeWithPadding(Math.ceil(overallLength / lineWidth), cellHeight, cellPaddingY), maxOverallHeight ?? 1e50);
@@ -223,7 +216,70 @@ export function DataGrid<T>({
             onMouseMove={mousemove}
             onMouseLeave={mouseleave}
         >
-            {lines}
+            {renderedData}
+            {highlightDivs}
         </div>
     );
 }
+
+interface DataGridChunkProperties<T> {
+    // Data and how to render it
+    data: T;
+    overallLength: number;
+    renderer: (x: T, idx: number) => string;
+    // How many cell per line?
+    lineWidth: number;
+    // Visual properties of the cells
+    cellWidth: number;
+    cellHeight: number;
+    cellPaddingX: number;
+    cellPaddingY: number;
+    viewOffsetY: number;
+    // Rendered part (for virtual scrolling)
+    renderLineStart: number;
+    renderLineLimit: number;    
+}
+
+function DataGridChunk<T> ({
+    data,
+    overallLength,
+    renderer,
+    lineWidth,
+    cellWidth,
+    cellHeight,
+    cellPaddingX,
+    cellPaddingY,
+    viewOffsetY,
+    renderLineStart,
+    renderLineLimit,    
+} : DataGridChunkProperties<T>) {
+    // Render the lines
+    const lines = [];
+    for (let lineNr = renderLineStart; lineNr < renderLineLimit; ++lineNr) {
+        const cellStart = lineNr * lineWidth;
+        const cellLimit = Math.min(cellStart + lineWidth, overallLength);
+        const positionTop = lineNr * (cellHeight + cellPaddingY) - viewOffsetY;
+        // Render the actual content
+        for (let idx = cellStart; idx < cellLimit; ++idx) {
+            const cellNr = idx - cellStart;
+            const positionLeft = cellNr * (cellWidth + cellPaddingX);
+            lines.push(
+                <span
+                    className="grid-cell"
+                    key={idx}
+                    style={{
+                        position: "absolute",
+                        top: `${positionTop}px`,
+                        left: `${positionLeft}px`,
+                        width: `${cellWidth}px`,
+                    }}
+                >
+                    {renderer(data, idx)}
+                </span>,
+            );
+        }
+    }
+    return <React.Fragment>{lines}</React.Fragment>;
+}
+
+const DataGridChunkMemo = React.memo(DataGridChunk) as typeof DataGridChunk;
