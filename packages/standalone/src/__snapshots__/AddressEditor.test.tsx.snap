@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`displays the address correctly for address 0 1`] = `
+<input
+  className="hv-address-editor"
+  onBlur={[Function]}
+  onChange={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  type="text"
+  value="0x0"
+  width={16}
+/>
+`;
+
+exports[`displays the address correctly for address 33 1`] = `
+<input
+  className="hv-address-editor"
+  onBlur={[Function]}
+  onChange={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  type="text"
+  value="0x21"
+  width={16}
+/>
+`;

@@ -64,7 +64,7 @@ export const AddressEditor = forwardRef(function AddressEditor({address, setAddr
             ref={inputRef}
             value={displayedValue}
             onFocus={onFocus}
-            onChange={e => setDraft(e.currentTarget.value)}
+            onChange={e => setDraft(e.target.value)}
             onKeyDown={onKeyDown}
             onBlur={() => setDraft(undefined)}
             width={16}
