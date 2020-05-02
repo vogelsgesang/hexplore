@@ -14,7 +14,7 @@ def bytes_to_json(value, widget):
 default_columns = [
     {"rendererType": "Address", "displayBase": 16},
     {"rendererType": "Integer", "signed": False, "width": 1, "littleEndian": True, "displayBase": 16, "fixedWidth": True},
-    {"rendererType": "Ascii"},
+    {"rendererType": "Text", "encoding": "ascii"},
 ]
 
 class HexViewer(DOMWidget):
@@ -64,8 +64,10 @@ class HexViewer(DOMWidget):
             if c["rendererType"] == "Address":
                 expected_props = {"displayBase": [10, 16]}
                 alignment = 1
-            elif c["rendererType"] == "Ascii":
-                expected_props = {}
+            elif c["rendererType"] == "Text":
+                expected_props = {
+                    "encoding": ["ascii", "utf8", "utf16le", "utf16be", "utf32le", "utf32be"]
+                }
                 alignment = 1
             elif c["rendererType"] == "Integer":
                 expected_props = {

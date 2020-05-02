@@ -44,52 +44,52 @@ def test_linewidth():
 
 def test_linewidth_unaligned():
     w = HexViewer()
-    w.columns = [{"columnType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
+    w.columns = [{"rendererType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
     with pytest.raises(TraitError) as e:
         w.linewidth = 9
     assert "linewidth must be aligned with all column widths" in str(e.value)
 
 def test_column_default_config():
     w = HexViewer()
-    assert [c["columnType"] for c in w.columns] == ["AddressGutter", "Integer", "Ascii"]
+    assert [c["rendererType"] for c in w.columns] == ["AddressGutter", "Integer", "Text"]
 
 def test_column_invalid_type():
     w = HexViewer()
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "Unsupported"}]
+        w.columns = [{"rendererType": "Unsupported"}]
     assert "invalid column type" in str(e.value)
 
 def test_column_missing_entries():
     w = HexViewer()
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "Integer"}]
+        w.columns = [{"rendererType": "Integer"}]
     assert "missing keys" in str(e.value)
 
 def test_column_unexpected_entries():
     w = HexViewer()
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "Ascii", "unknown": True}]
+        w.columns = [{"rendererType": "Ascii", "unknown": True}]
     assert "unexpected keys" in str(e.value)
 
 def test_column_address_gutter():
     w = HexViewer()
-    w.columns = [{"columnType": "AddressGutter", "displayBase": 10}]
+    w.columns = [{"rendererType": "AddressGutter", "displayBase": 10}]
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "AddressGutter", "displayBase": 9}]
+        w.columns = [{"rendererType": "AddressGutter", "displayBase": 9}]
     assert "unsupported value for displayBase. Supported values are 10, 16" in str(e.value)
 
 def test_column_integer():
     w = HexViewer()
-    w.columns = [{"columnType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
+    w.columns = [{"rendererType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "Integer", "displayBase": 9, "littleEndian": True, "signed": False, "width": 2}]
+        w.columns = [{"rendererType": "Integer", "displayBase": 9, "littleEndian": True, "signed": False, "width": 2}]
     assert "unsupported value for displayBase. Supported values are 2, 8, 10, 16" in str(e.value)
 
 def test_column_integer_unaligned():
     w = HexViewer()
     w.linewidth = 9
     with pytest.raises(TraitError) as e:
-        w.columns = [{"columnType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
+        w.columns = [{"rendererType": "Integer", "displayBase": 10, "littleEndian": True, "signed": False, "width": 2}]
     assert "must be aligned with the line width" in str(e.value)
 
 def test_highlight_ranges():
