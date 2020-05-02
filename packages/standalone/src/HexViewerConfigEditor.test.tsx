@@ -189,7 +189,7 @@ describe("linewidth", () => {
                 }}
             />,
         );
-        const buttonGroup = getByLabelText(screen.getByLabelText(/1-byte Hex/i), /Width/i);
+        const buttonGroup = getByLabelText(screen.getByLabelText(/1-byte Hex/i), /^Width$/i);
         fireEvent.click(getByLabelText(buttonGroup, "4"));
         expect(cfgRef.current.lineWidth).toBe(8);
     });
