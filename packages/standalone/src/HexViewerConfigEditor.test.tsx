@@ -4,7 +4,7 @@ import {render, fireEvent, screen, getByTitle, queryByText, getByLabelText} from
 import {defaultConfig, HexViewerConfig} from "hexplore-hexview";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {
-    createAsciiRendererConfig,
+    createTextRendererConfig,
     createAddressRendererConfig,
     createIntegerRendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
@@ -20,7 +20,7 @@ describe("displays the config correctly", () => {
         testConfigRendering({lineWidth: 1, columns: [createAddressRendererConfig()]});
     });
     test("config with a text column", () => {
-        testConfigRendering({lineWidth: 1, columns: [createAsciiRendererConfig()]});
+        testConfigRendering({lineWidth: 1, columns: [createTextRendererConfig()]});
     });
     test("config with a 1-byte column", () => {
         testConfigRendering({lineWidth: 1, columns: [createIntegerRendererConfig()]});
@@ -55,7 +55,7 @@ describe("can add columns", () => {
     });
     test("an ASCII renderer", () => {
         const newConfig = testAddConfig({lineWidth: 1, columns: []}, "ASCII");
-        expect(newConfig.columns).toEqual([createAsciiRendererConfig()]);
+        expect(newConfig.columns).toEqual([createTextRendererConfig()]);
     });
     test("an integer renderer", () => {
         const newConfig = testAddConfig({lineWidth: 1, columns: []}, "Integer");

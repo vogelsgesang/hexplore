@@ -4,7 +4,7 @@ import {
     createIntegerRendererConfig,
     createAddressRendererConfig,
     IntegerRendererConfig,
-    createAsciiRendererConfig,
+    createTextRendererConfig,
 } from "./ByteRenderer";
 
 function constView(bytes: number[]) {
@@ -40,8 +40,8 @@ describe("The Address renderer", () => {
 });
 
 describe("The ASCII renderer", () => {
-    const addressColumnType = createAsciiRendererConfig();
-    const renderer = createRenderer(addressColumnType);
+    const textRendererConfig = createTextRendererConfig({encoding: "ascii"});
+    const renderer = createRenderer(textRendererConfig);
     test("renders ASCII characters", () => {
         expect(renderer(constView([32]), 0)).toBe(" ");
         expect(renderer(constView([49]), 0)).toBe("1");
@@ -57,6 +57,168 @@ describe("The ASCII renderer", () => {
     test("renders invalid characters as dot", () => {
         expect(renderer(constView([134]), 0)).toBe(".");
         expect(renderer(constView([255]), 0)).toBe(".");
+    });
+});
+
+describe("The UTF-8 renderer", () => {
+    const textRendererConfig = createTextRendererConfig({encoding: "utf8"});
+    const renderer = createRenderer(textRendererConfig);
+    test("renders ASCII characters", () => {
+        expect(renderer(constView([32]), 0)).toBe(" ");
+        expect(renderer(constView([49]), 0)).toBe("1");
+        expect(renderer(constView([64]), 0)).toBe("@");
+        expect(renderer(constView([109]), 0)).toBe("m");
+        expect(renderer(constView([126]), 0)).toBe("~");
+    });
+    test("renders control characters as dot", () => {
+        expect(renderer(constView([134]), 0)).toBe(".");
+        expect(renderer(constView([255]), 0)).toBe(".");
+    });
+    test("renders 2-byte encoded characters", () => {
+        expect(renderer(constView([194, 187]), 0)).toBe("»");
+        expect(renderer(constView([210, 150]), 0)).toBe("Җ");
+        expect(renderer(constView([195, 183]), 0)).toBe("÷");
+    });
+    test("renders 3-byte encoded characters", () => {
+        expect(renderer(constView([226, 128, 158]), 0)).toBe("„");
+        expect(renderer(constView([226, 157, 175]), 0)).toBe("❯");
+        expect(renderer(constView([225, 142, 175]), 0)).toBe("Ꭿ");
+        expect(renderer(constView([226, 130, 179]), 0)).toBe("₳");
+        expect(renderer(constView([225, 151, 169]), 0)).toBe("ᗩ");
+        expect(renderer(constView([225, 131, 179]), 0)).toBe("ჳ");
+        expect(renderer(constView([226, 152, 168]), 0)).toBe("☨");
+        expect(renderer(constView([226, 153, 176]), 0)).toBe("♰");
+        expect(renderer(constView([226, 156, 153]), 0)).toBe("✙");
+        expect(renderer(constView([226, 157, 150]), 0)).toBe("❖");
+        expect(renderer(constView([226, 168, 179]), 0)).toBe("⨳");
+        expect(renderer(constView([226, 157, 130]), 0)).toBe("❂");
+        expect(renderer(constView([226, 168, 187]), 0)).toBe("⨻");
+        expect(renderer(constView([226, 153, 187]), 0)).toBe("♻");
+        expect(renderer(constView([226, 153, 152]), 0)).toBe("♘");
+        expect(renderer(constView([226, 154, 156]), 0)).toBe("⚜");
+    });
+    test("renders 4-byte encoded characters", () => {
+        expect(renderer(constView([240, 159, 152, 130]), 0)).toBe("😂");
+        expect(renderer(constView([240, 159, 152, 129]), 0)).toBe("😁");
+        expect(renderer(constView([240, 159, 140, 185]), 0)).toBe("🌹");
+        expect(renderer(constView([240, 159, 140, 187]), 0)).toBe("🌻");
+    });
+    test("renders continuation chars as dot", () => {
+        // low continuation point (0xD801)
+        expect(renderer(constView([0xed, 0xa0, 0x81]), 0)).toBe(".");
+        // high continuation point (0xDC00)
+        expect(renderer(constView([0xed, 0xb0, 0x80]), 0)).toBe(".");
+    });
+    test("renders truncated characters as dot", () => {
+        // A single continuation byte
+        expect(renderer(constView([194]), 0)).toBe(".");
+        // Should be 2 bytes, but is only 1
+        expect(renderer(constView([129]), 0)).toBe(".");
+        // should be 3 bytes, but is only 2
+        expect(renderer(constView([226, 128]), 0)).toBe(".");
+        // should be 4 bytes, but is only 3
+        expect(renderer(constView([240, 159, 152]), 0)).toBe(".");
+    });
+});
+
+describe("The UTF-16 renderer", () => {
+    const rendererLE = createRenderer(createTextRendererConfig({encoding: "utf16le"}));
+    const rendererBE = createRenderer(createTextRendererConfig({encoding: "utf16be"}));
+    test("renders ASCII characters", () => {
+        expect(rendererLE(constView([32, 0]), 0)).toBe(" ");
+        expect(rendererLE(constView([49, 0]), 0)).toBe("1");
+        expect(rendererLE(constView([64, 0]), 0)).toBe("@");
+        expect(rendererLE(constView([109, 0]), 0)).toBe("m");
+        expect(rendererLE(constView([126, 0]), 0)).toBe("~");
+    });
+    test("renders characters from Extended-A", () => {
+        // It would be tempting to rejet those characters, as they are not valid in ASCII, but they are in UTF-16
+        expect(rendererLE(constView([169, 0]), 0)).toBe("©");
+        expect(rendererLE(constView([191, 0]), 0)).toBe("¿");
+    });
+    test("renders single char-code", () => {
+        expect(rendererLE(constView([187, 0]), 0)).toBe("»");
+        expect(rendererLE(constView([150, 4]), 0)).toBe("Җ");
+        expect(rendererLE(constView([247, 0]), 0)).toBe("÷");
+        expect(rendererLE(constView([111, 39]), 0)).toBe("❯");
+        expect(rendererLE(constView([51, 42]), 0)).toBe("⨳");
+        expect(rendererLE(constView([3, 34]), 0)).toBe("∃");
+        expect(rendererLE(constView([0, 34]), 0)).toBe("∀");
+        expect(rendererLE(constView([88, 38]), 0)).toBe("♘");
+    });
+    test("renders combined characters", () => {
+        expect(rendererLE(constView([61, 216, 1, 222]), 0)).toBe("😁");
+        expect(rendererLE(constView([60, 216, 57, 223]), 0)).toBe("🌹");
+        expect(rendererLE(constView([60, 216, 59, 223]), 0)).toBe("🌻");
+    });
+    test("renders continuation chars as dot", () => {
+        // low continuation point
+        expect(rendererLE(constView([61, 216]), 0)).toBe(".");
+        // high continuation point
+        expect(rendererLE(constView([1, 222]), 0)).toBe(".");
+    });
+    test("renders truncated characters as dot", () => {
+        // Incomplete 16-Byte
+        expect(rendererLE(constView([61]), 0)).toBe(".");
+        // Starts with continuation, but continuation is truncated
+        expect(rendererLE(constView([61, 216, 1]), 0)).toBe(".");
+        // Starts with continuation, but followed by normal character is
+        expect(rendererLE(constView([61, 216, 88, 38]), 0)).toBe(".");
+    });
+    test("can also render big-endian", () => {
+        expect(rendererBE(constView([0, 64]), 0)).toBe("@");
+        expect(rendererBE(constView([38, 88]), 0)).toBe("♘");
+        expect(rendererBE(constView([216, 60, 223, 57]), 0)).toBe("🌹");
+        expect(rendererBE(constView([216, 60, 223, 59]), 0)).toBe("🌻");
+    });
+});
+
+describe("The UTF-32 renderer", () => {
+    const rendererLE = createRenderer(createTextRendererConfig({encoding: "utf32le"}));
+    const rendererBE = createRenderer(createTextRendererConfig({encoding: "utf32be"}));
+    test("renders ASCII characters", () => {
+        expect(rendererLE(constView([32, 0, 0, 0]), 0)).toBe(" ");
+        expect(rendererLE(constView([49, 0, 0, 0]), 0)).toBe("1");
+        expect(rendererLE(constView([64, 0, 0, 0]), 0)).toBe("@");
+        expect(rendererLE(constView([109, 0, 0, 0]), 0)).toBe("m");
+        expect(rendererLE(constView([126, 0, 0, 0]), 0)).toBe("~");
+    });
+    test("renders characters from Extended-A", () => {
+        // It would be tempting to rejet those characters, as they are not valid in ASCII, but they are in UTF-16
+        expect(rendererLE(constView([169, 0, 0, 0]), 0)).toBe("©");
+        expect(rendererLE(constView([191, 0, 0, 0]), 0)).toBe("¿");
+    });
+    test("renders single char-code", () => {
+        expect(rendererLE(constView([187, 0, 0, 0]), 0)).toBe("»");
+        expect(rendererLE(constView([150, 4, 0, 0]), 0)).toBe("Җ");
+        expect(rendererLE(constView([247, 0, 0, 0]), 0)).toBe("÷");
+        expect(rendererLE(constView([111, 39, 0, 0]), 0)).toBe("❯");
+        expect(rendererLE(constView([51, 42, 0, 0]), 0)).toBe("⨳");
+        expect(rendererLE(constView([3, 34, 0, 0]), 0)).toBe("∃");
+        expect(rendererLE(constView([0, 34, 0, 0]), 0)).toBe("∀");
+        expect(rendererLE(constView([88, 38, 0, 0]), 0)).toBe("♘");
+    });
+    test("renders 3-byte characters", () => {
+        expect(rendererLE(constView([1, 246, 1, 0]), 0)).toBe("😁");
+        expect(rendererLE(constView([57, 243, 1, 0]), 0)).toBe("🌹");
+        expect(rendererLE(constView([59, 243, 1, 0]), 0)).toBe("🌻");
+    });
+    test("renders continuation chars as dot", () => {
+        // low continuation point
+        expect(rendererLE(constView([61, 216, 0, 0]), 0)).toBe(".");
+        // high continuation point
+        expect(rendererLE(constView([1, 222, 0, 0]), 0)).toBe(".");
+    });
+    test("renders truncated characters as dot", () => {
+        expect(rendererLE(constView([88]), 0)).toBe(".");
+        expect(rendererLE(constView([88, 38]), 0)).toBe(".");
+        expect(rendererLE(constView([88, 38, 0]), 0)).toBe(".");
+    });
+    test("can also render big-endian", () => {
+        expect(rendererBE(constView([0, 0, 0, 64]), 0)).toBe("@");
+        expect(rendererBE(constView([0, 0, 38, 88]), 0)).toBe("♘");
+        expect(rendererBE(constView([0, 1, 57, 243]), 0)).toBe("🌹");
+        expect(rendererBE(constView([0, 1, 59, 243]), 0)).toBe("🌻");
     });
 });
 

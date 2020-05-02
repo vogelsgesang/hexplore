@@ -5,9 +5,10 @@ import {
     RendererConfig,
     createAddressRendererConfig,
     createIntegerRendererConfig,
-    createAsciiRendererConfig,
+    createTextRendererConfig,
     RendererType,
     IntegerRendererConfig,
+    getAlignment,
 } from "./ByteRenderer";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
 import {createStridedRenderer} from "./ByteRenderer";
@@ -19,7 +20,7 @@ export interface HexViewerConfig {
 
 export const defaultConfig: HexViewerConfig = {
     lineWidth: 16,
-    columns: [createAddressRendererConfig(), createIntegerRendererConfig(), createAsciiRendererConfig()],
+    columns: [createAddressRendererConfig(), createIntegerRendererConfig(), createTextRendererConfig()],
 };
 
 interface HexViewerColumnProps {
@@ -69,8 +70,8 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
             cellWidth = 10 * charWidth;
             cellPaddingX = 0;
             break;
-        case RendererType.Ascii:
-            elementWidth = 1;
+        case RendererType.Text:
+            elementWidth = getAlignment(columnConfig);
             cellWidth = charWidth;
             cellPaddingX = 0;
             break;

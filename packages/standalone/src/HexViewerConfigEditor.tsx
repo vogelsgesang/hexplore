@@ -3,11 +3,12 @@ import {
     humanReadableRendererName,
     IntegerDisplayBase,
     AddressDisplayBase,
+    TextRendererConfig,
     getAlignment,
     RendererType,
     createAddressRendererConfig,
     createIntegerRendererConfig,
-    createAsciiRendererConfig,
+    createTextRendererConfig,
     AddressRendererConfig,
     IntegerRendererConfig,
     RendererConfig,
@@ -84,10 +85,10 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
             }),
         );
     }
-    function addAsciiColumn() {
+    function addTextColumn() {
         setConfig(
             produce(config, draft => {
-                draft.columns.push(createAsciiRendererConfig());
+                draft.columns.push(createTextRendererConfig());
             }),
         );
     }
@@ -132,8 +133,14 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                     />
                 );
             }
-            case RendererType.Ascii: {
-                return <React.Fragment></React.Fragment>;
+            case RendererType.Text: {
+                return (
+                    <TextColumnConfigEditor
+                        id={childId}
+                        columnConfig={columnConfig as TextRendererConfig}
+                        setColumnConfig={setColumnConfig.bind(undefined, idx)}
+                    />
+                );
             }
             case RendererType.Integer: {
                 return (
@@ -204,7 +211,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                         <Dropdown.Item onClick={addAddressGutter}>Add Address Gutter</Dropdown.Item>
                         <Dropdown.Item onClick={addIntegerColumn}>Add Integer Column</Dropdown.Item>
                         <Dropdown.Item onClick={addHexColumn}>Add Hex Column</Dropdown.Item>
-                        <Dropdown.Item onClick={addAsciiColumn}>Add ASCII Column</Dropdown.Item>
+                        <Dropdown.Item onClick={addTextColumn}>Add Text Column</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
@@ -212,13 +219,17 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     );
 }
 
-interface AddressGutterConfigEditorProps {
+interface ColumnConfigEditorProps<T> {
     id: string;
-    columnConfig: AddressRendererConfig;
-    setColumnConfig: (columnConfig: AddressRendererConfig) => void;
+    columnConfig: T;
+    setColumnConfig: (columnConfig: T) => void;
 }
 
-function AddressGutterConfigEditor({id, columnConfig, setColumnConfig}: AddressGutterConfigEditorProps) {
+function AddressGutterConfigEditor({
+    id,
+    columnConfig,
+    setColumnConfig,
+}: ColumnConfigEditorProps<AddressRendererConfig>) {
     const changeBase = (v: AddressDisplayBase) => {
         setColumnConfig(
             produce(columnConfig, draft => {
@@ -246,13 +257,35 @@ function AddressGutterConfigEditor({id, columnConfig, setColumnConfig}: AddressG
     );
 }
 
-interface IntegerColumnConfigEditorProps {
-    id: string;
-    columnConfig: IntegerRendererConfig;
-    setColumnConfig: (columnConfig: IntegerRendererConfig) => void;
+function TextColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConfigEditorProps<TextRendererConfig>) {
+    return (
+        <React.Fragment>
+            <div className="hv-form-row">
+                <Form.Label id={id + "-encoding"}>Encoding</Form.Label>
+                <select
+                    id={id + "-encoding"}
+                    value={columnConfig.encoding}
+                    onChange={e =>
+                        setColumnConfig({...columnConfig, encoding: e.target.value as typeof columnConfig.encoding})
+                    }
+                >
+                    <option value="ascii">ASCII</option>
+                    <option value="utf8">UTF-8</option>
+                    <option value="utf16le">UTF-16 (LE)</option>
+                    <option value="utf16be">UTF-16 (BE)</option>
+                    <option value="utf32le">UTF-32 (LE)</option>
+                    <option value="utf32be">UTF-32 (BE)</option>
+                </select>
+            </div>
+        </React.Fragment>
+    );
 }
 
-function IntegerColumnConfigEditor({id, columnConfig, setColumnConfig}: IntegerColumnConfigEditorProps) {
+function IntegerColumnConfigEditor({
+    id,
+    columnConfig,
+    setColumnConfig,
+}: ColumnConfigEditorProps<IntegerRendererConfig>) {
     const changeWidth = (v: 1 | 2 | 4 | 8) => {
         setColumnConfig(
             produce(columnConfig, draft => {
