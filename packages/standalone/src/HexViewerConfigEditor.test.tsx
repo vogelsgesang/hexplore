@@ -54,7 +54,7 @@ describe("can add columns", () => {
         expect(newConfig.columns).toEqual([createAddressRendererConfig()]);
     });
     test("an ASCII renderer", () => {
-        const newConfig = testAddConfig({lineWidth: 1, columns: []}, "ASCII");
+        const newConfig = testAddConfig({lineWidth: 1, columns: []}, "Text");
         expect(newConfig.columns).toEqual([createTextRendererConfig()]);
     });
     test("an integer renderer", () => {

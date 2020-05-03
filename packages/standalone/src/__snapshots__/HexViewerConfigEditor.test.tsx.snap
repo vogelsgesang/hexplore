@@ -2263,7 +2263,54 @@ exports[`displays the config correctly config with a text column 1`] = `
       </div>
       <div
         className="hv-renderer-details"
-      />
+      >
+        <div
+          className="hv-form-row"
+        >
+          <label
+            className="form-label"
+            id="id-2-0-encoding"
+          >
+            Encoding
+          </label>
+          <select
+            id="id-2-0-encoding"
+            onChange={[Function]}
+            value="ascii"
+          >
+            <option
+              value="ascii"
+            >
+              ASCII
+            </option>
+            <option
+              value="utf8"
+            >
+              UTF-8
+            </option>
+            <option
+              value="utf16le"
+            >
+              UTF-16 (LE)
+            </option>
+            <option
+              value="utf16be"
+            >
+              UTF-16 (BE)
+            </option>
+            <option
+              value="utf32le"
+            >
+              UTF-32 (LE)
+            </option>
+            <option
+              value="utf32be"
+            >
+              UTF-32 (BE)
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
   <div
@@ -4256,7 +4303,54 @@ exports[`displays the config correctly the default config 1`] = `
       </div>
       <div
         className="hv-renderer-details"
-      />
+      >
+        <div
+          className="hv-form-row"
+        >
+          <label
+            className="form-label"
+            id="id-5-2-encoding"
+          >
+            Encoding
+          </label>
+          <select
+            id="id-5-2-encoding"
+            onChange={[Function]}
+            value="ascii"
+          >
+            <option
+              value="ascii"
+            >
+              ASCII
+            </option>
+            <option
+              value="utf8"
+            >
+              UTF-8
+            </option>
+            <option
+              value="utf16le"
+            >
+              UTF-16 (LE)
+            </option>
+            <option
+              value="utf16be"
+            >
+              UTF-16 (BE)
+            </option>
+            <option
+              value="utf32le"
+            >
+              UTF-32 (LE)
+            </option>
+            <option
+              value="utf32be"
+            >
+              UTF-32 (BE)
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
   <div
