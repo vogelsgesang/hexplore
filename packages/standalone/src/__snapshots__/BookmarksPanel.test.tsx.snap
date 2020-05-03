@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`displays a bookmark list correctly 1`] = `
+<div
+  className="hv-bookmarks-panel"
+>
+  <div
+    className="hv-bookmarks-list"
+  >
+    <div
+      aria-label="Bookmark 1"
+      className="hv-bookmarks-list-entry"
+      role="group"
+    >
+      <input
+        aria-label="Bookmark name"
+        className="hv-stealth-input hv-bookmarks-list-name"
+        onChange={[Function]}
+        type="text"
+        value="Bookmark 1"
+      />
+      <div
+        className="btn-group"
+        role="group"
+      >
+        <button
+          className="btn btn-outline-primary btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Go to
+        </button>
+        <button
+          className="btn btn-outline-danger btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          title="Remove"
+          type="button"
+        >
+          X
+        </button>
+      </div>
+    </div>
+    <div
+      aria-label="My 2nd bookmark"
+      className="hv-bookmarks-list-entry"
+      role="group"
+    >
+      <input
+        aria-label="Bookmark name"
+        className="hv-stealth-input hv-bookmarks-list-name"
+        onChange={[Function]}
+        type="text"
+        value="My 2nd bookmark"
+      />
+      <div
+        className="btn-group"
+        role="group"
+      >
+        <button
+          className="btn btn-outline-primary btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Go to
+        </button>
+        <button
+          className="btn btn-outline-danger btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          title="Remove"
+          type="button"
+        >
+          X
+        </button>
+      </div>
+    </div>
+    <div
+      aria-label="Numero tres"
+      className="hv-bookmarks-list-entry"
+      role="group"
+    >
+      <input
+        aria-label="Bookmark name"
+        className="hv-stealth-input hv-bookmarks-list-name"
+        onChange={[Function]}
+        type="text"
+        value="Numero tres"
+      />
+      <div
+        className="btn-group"
+        role="group"
+      >
+        <button
+          className="btn btn-outline-primary btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Go to
+        </button>
+        <button
+          className="btn btn-outline-danger btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          title="Remove"
+          type="button"
+        >
+          X
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    className="hv-bookmarks-hint"
+  >
+    Press 'm' to create a bookmark for the currently selected range
+  </div>
+</div>
+`;
+
+exports[`displays an empty list correctly 1`] = `
+<div
+  className="hv-bookmarks-panel"
+>
+  <div
+    className="hv-bookmarks-empty-placeholder"
+  >
+    No bookmarks, yet.
+  </div>
+  <div
+    className="hv-bookmarks-hint"
+  >
+    Press 'm' to create a bookmark for the currently selected range
+  </div>
+</div>
+`;

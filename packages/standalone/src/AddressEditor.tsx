@@ -1,7 +1,5 @@
 import React, {useState, useRef, forwardRef, useImperativeHandle, useCallback} from "react";
 
-import "./AddressEditor.css";
-
 interface AdressEditorProperties {
     address: number;
     setAddress: (a: number) => void;
@@ -59,7 +57,7 @@ export const AddressEditor = forwardRef(function AddressEditor({address, setAddr
 
     return (
         <input
-            className="hv-address-editor"
+            className="hv-stealth-input"
             type="text"
             ref={inputRef}
             value={displayedValue}

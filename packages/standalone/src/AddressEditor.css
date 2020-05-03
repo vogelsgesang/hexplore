@@ -1,9 +1,0 @@
-.hv-address-editor {
-    border: 1px solid transparent;
-    background: transparent;
-}
-
-.hv-address-editor:focus, .hv-address-editor:hover {
-    border-color: #ccc;
-    background: white;
-}

@@ -24,3 +24,13 @@ body, html, #main {
 .sidebar-tab.selected {
     background: #ddd;
 }
+
+.hv-stealth-input {
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+.hv-stealth-input:focus, .hv-stealth-input:hover {
+    border-color: #333;
+    background: white;
+}

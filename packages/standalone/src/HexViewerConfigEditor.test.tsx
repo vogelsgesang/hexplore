@@ -7,7 +7,6 @@ import {
     getByTitle,
     queryByText,
     getByLabelText,
-    findAllByRole,
     getAllByRole,
     getNodeText,
 } from "@testing-library/react";

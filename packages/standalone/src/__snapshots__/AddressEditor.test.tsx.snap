@@ -2,7 +2,7 @@
 
 exports[`displays the address correctly for address 0 1`] = `
 <input
-  className="hv-address-editor"
+  className="hv-stealth-input"
   onBlur={[Function]}
   onChange={[Function]}
   onFocus={[Function]}
@@ -15,7 +15,7 @@ exports[`displays the address correctly for address 0 1`] = `
 
 exports[`displays the address correctly for address 33 1`] = `
 <input
-  className="hv-address-editor"
+  className="hv-stealth-input"
   onBlur={[Function]}
   onChange={[Function]}
   onFocus={[Function]}

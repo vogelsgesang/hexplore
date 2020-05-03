@@ -1,6 +1,6 @@
 import React, {useRef, useState, useEffect, useCallback} from "react";
 import ReactDOM from "react-dom";
-import {HighlightRange, Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
+import {Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
@@ -11,6 +11,7 @@ import {
     createAddressRendererConfig,
     createIntegerRendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
+import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
@@ -37,10 +38,10 @@ function App() {
     const [data, setData] = useState<ArrayBuffer | undefined>(undefined);
     const [cursorPosition, setCursorPosition] = useState(0);
     const [selection, setSelection] = useState<Range>({from: 0, to: 1});
-    const [highlighted, setHighlighted] = useState<Array<HighlightRange>>([]);
+    const [bookmarks, setBookmarks] = useState<Array<Bookmark>>([]);
     const [viewConfig, setViewConfig] = useState<HexViewerConfig>(defaultConfig);
-    const [activeSidebar, setActiveSidebar] = useState<"columnConfig" | "dataInspector">("columnConfig");
-    const nextStyle = useRef(0);
+    const [activeSidebar, setActiveSidebar] = useState<"columnConfig" | "dataInspector" | "bookmarks">("columnConfig");
+    const bookmarkCnt = useRef(0);
     const addressEditorRef = useRef<any>();
     const hexViewerRef = useRef<any>();
 
@@ -51,26 +52,25 @@ function App() {
                 if (e.key == "g" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
                     addressEditorRef.current?.focus();
                     e.preventDefault();
-                } else if (e.key.toLowerCase() == "m" && !e.ctrlKey && !e.altKey && !e.metaKey) {
-                    if (!e.shiftKey) {
-                        // Add mark
-                        const key = "m" + new Date().getTime();
-                        const className = styles[nextStyle.current++ % styles.length];
-                        const newMark: HighlightRange = {...selection, className: className, key: key};
-                        setHighlighted(highlighted.concat([newMark]));
-                        setSelection({from: cursorPosition, to: cursorPosition + 1});
-                    } else if (e.shiftKey) {
-                        // Remove all marks
-                        setHighlighted([]);
-                        nextStyle.current = 0;
-                    }
+                } else if (e.key.toLowerCase() == "m" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+                    // Add mark
+                    const key = "m" + new Date().getTime();
+                    const className = styles[bookmarkCnt.current++ % styles.length];
+                    const newMark: Bookmark = {
+                        ...selection,
+                        className: className,
+                        key: key,
+                        name: "mark " + bookmarkCnt.current,
+                    };
+                    setBookmarks(bookmarks.concat([newMark]));
+                    setSelection({from: cursorPosition, to: cursorPosition + 1});
                     e.preventDefault();
                 }
             }
             window.addEventListener("keydown", onKeyDown);
             return () => window.removeEventListener("keydown", onKeyDown);
         },
-        [addressEditorRef, data, cursorPosition, highlighted, setSelection, selection],
+        [addressEditorRef, data, cursorPosition, setBookmarks, bookmarks, setSelection, selection],
     );
 
     const goto = useCallback(
@@ -80,6 +80,12 @@ function App() {
             }
         },
         [hexViewerRef],
+    );
+    const gotoBookmark = useCallback(
+        (b: Bookmark) => {
+            goto(b.from);
+        },
+        [goto],
     );
 
     if (!data) {
@@ -96,6 +102,8 @@ function App() {
                     representations={defaultInspectorRepresentations}
                 />
             );
+        } else if (activeSidebar == "bookmarks") {
+            sidebarContent = <BookmarksPanel bookmarks={bookmarks} setBookmarks={setBookmarks} goto={gotoBookmark} />;
         }
 
         return (
@@ -110,7 +118,7 @@ function App() {
                             setCursorPosition={setCursorPosition}
                             selection={selection}
                             setSelection={setSelection}
-                            highlightRanges={highlighted}
+                            highlightRanges={bookmarks}
                         />
                     </div>
                     <div
@@ -141,6 +149,15 @@ function App() {
                             })}
                         >
                             Data Inspector
+                        </div>
+                        <div
+                            onClick={() => setActiveSidebar("bookmarks")}
+                            className={objstr({
+                                "sidebar-tab": true,
+                                selected: activeSidebar == "bookmarks",
+                            })}
+                        >
+                            Bookmarks
                         </div>
                     </div>
                 </div>

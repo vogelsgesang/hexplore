@@ -1,0 +1,61 @@
+.hv-bookmarks-panel {
+    padding: .4em;
+}
+.hv-bookmarks-list {
+    margin: .2em 0;
+}
+
+.hv-bookmarks-empty-placeholder {
+    color: #555;
+    text-align: center;
+    margin: .5em 0;
+}
+
+.hv-bookmarks-list-entry {
+    display: flex;
+    margin: .2em 0;
+}
+
+.hv-bookmarks-list-name {
+    flex: 1;
+    min-width: 5em;
+    margin-right: .2em;
+}
+
+.hv-bookmarks-hint {
+    color: #555;
+    text-align: center;
+    border-top: 1px solid #dddd;
+}
+
+/*
+.hexviewerconfigeditor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.hexviewerconfigeditor > .hv-renderer-list {
+    flex-shrink: 1;
+    min-height: 10em;
+    overflow: auto;
+    border-top: 1px solid rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+}
+
+.hexviewerconfigeditor > .hv-add-renderer {
+    margin: .4em;
+}
+
+.hexviewerconfigeditor .hv-form-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: .4em;
+}
+
+.hexviewerconfigeditor .hv-renderer-details {
+    margin-left: 1em;
+    border-left: .2em solid rgba(0,0,0,0.25);
+}
+*/
