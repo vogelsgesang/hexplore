@@ -1,5 +1,4 @@
 import React from "react";
-import "./AddressEditor.css";
 interface AdressEditorProperties {
     address: number;
     setAddress: (a: number) => void;
