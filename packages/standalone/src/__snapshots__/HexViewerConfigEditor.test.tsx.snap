@@ -2274,7 +2274,7 @@ exports[`displays the config correctly config with a text column 1`] = `
             Encoding
           </label>
           <select
-            id="id-2-0-encoding"
+            aria-labelledby="id-2-0-encoding"
             onChange={[Function]}
             value="ascii"
           >
@@ -4314,7 +4314,7 @@ exports[`displays the config correctly the default config 1`] = `
             Encoding
           </label>
           <select
-            id="id-5-2-encoding"
+            aria-labelledby="id-5-2-encoding"
             onChange={[Function]}
             value="ascii"
           >

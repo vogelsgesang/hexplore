@@ -1,12 +1,25 @@
 import React from "react";
 import snapshotRenderer from "react-test-renderer";
-import {render, fireEvent, screen, getByTitle, queryByText, getByLabelText} from "@testing-library/react";
+import {
+    render,
+    fireEvent,
+    screen,
+    getByTitle,
+    queryByText,
+    getByLabelText,
+    findAllByRole,
+    getAllByRole,
+    getNodeText,
+} from "@testing-library/react";
 import {defaultConfig, HexViewerConfig} from "hexplore-hexview";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {
     createTextRendererConfig,
     createAddressRendererConfig,
     createIntegerRendererConfig,
+    AddressRendererConfig,
+    IntegerRendererConfig,
+    TextRendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
 
 describe("displays the config correctly", () => {
@@ -192,5 +205,113 @@ describe("linewidth", () => {
         const buttonGroup = getByLabelText(screen.getByLabelText(/1-byte Hex/i), /^Width$/i);
         fireEvent.click(getByLabelText(buttonGroup, "4"));
         expect(cfgRef.current.lineWidth).toBe(8);
+    });
+});
+
+function getLabel(e: HTMLInputElement) {
+    if (e.labels == null) return "";
+    if (e.labels.length != 1) return "";
+    return getNodeText(e.labels[0]);
+}
+
+describe("can change AddressGutter config", () => {
+    test("can change base for displayed addresses", () => {
+        const initialCfg: HexViewerConfig = {lineWidth: 1, columns: [createAddressRendererConfig()]};
+        const cfgRef = {current: initialCfg};
+        render(
+            <HexViewerConfigEditor
+                config={initialCfg}
+                setConfig={cfg => {
+                    cfgRef.current = cfg;
+                }}
+            />,
+        );
+        const group = screen.getByLabelText(/Base/i);
+        // Check that all options are available
+        const options = getAllByRole(group, "radio") as HTMLInputElement[];
+        expect(options.map(getLabel)).toEqual(["10", "16"]);
+        // Check that a change is propagated
+        expect((cfgRef.current.columns[0] as AddressRendererConfig).displayBase).not.toBe(10);
+        fireEvent.click(getByLabelText(group, "10"));
+        expect((cfgRef.current.columns[0] as AddressRendererConfig).displayBase).toBe(10);
+    });
+});
+
+describe("can change Integer config", () => {
+    function interactToggleButton(
+        groupLabel: RegExp,
+        expectedOptions: string[],
+        optionLabel: string,
+        k: keyof IntegerRendererConfig,
+    ) {
+        const initialCfg: HexViewerConfig = {lineWidth: 1, columns: [createIntegerRendererConfig()]};
+        const cfgRef = {current: initialCfg};
+        render(
+            <HexViewerConfigEditor
+                config={initialCfg}
+                setConfig={cfg => {
+                    cfgRef.current = cfg;
+                }}
+            />,
+        );
+        const group = screen.getByLabelText(groupLabel);
+        // Check that all options are available
+        const options = getAllByRole(group, "radio") as HTMLInputElement[];
+        expect(options.map(getLabel)).toEqual(expectedOptions);
+        // Check that a change is propagated
+        const beforeValue = (cfgRef.current.columns[0] as IntegerRendererConfig)[k];
+        fireEvent.click(getByLabelText(group, optionLabel));
+        const afterValue = (cfgRef.current.columns[0] as IntegerRendererConfig)[k];
+        expect(afterValue).not.toBe(beforeValue);
+        return afterValue;
+    }
+    test("can change width", () => {
+        const resultState = interactToggleButton(/^width/i, ["1", "2", "4", "8"], "4", "width");
+        expect(resultState).toBe(4);
+    });
+    test("can change display base", () => {
+        const resultState = interactToggleButton(/base/i, ["2", "8", "10", "16"], "8", "displayBase");
+        expect(resultState).toBe(8);
+    });
+    test("can change endianess", () => {
+        const resultState = interactToggleButton(/endianess/i, ["Little", "Big"], "Big", "littleEndian");
+        expect(resultState).toBe(false);
+    });
+    test("can change signedness", () => {
+        const resultState = interactToggleButton(/^sign$/i, ["Signed", "Unsigned"], "Signed", "signed");
+        expect(resultState).toBe(true);
+    });
+    test("can change fixedWidth", () => {
+        const resultState = interactToggleButton(/fixed width/i, ["Yes", "No"], "No", "fixedWidth");
+        expect(resultState).toBe(false);
+    });
+});
+
+describe("can change Text config", () => {
+    test("can change encoding", () => {
+        const initialCfg: HexViewerConfig = {lineWidth: 1, columns: [createTextRendererConfig()]};
+        const cfgRef = {current: initialCfg};
+        render(
+            <HexViewerConfigEditor
+                config={initialCfg}
+                setConfig={cfg => {
+                    cfgRef.current = cfg;
+                }}
+            />,
+        );
+        const select = screen.getByLabelText(/Encoding/i) as HTMLSelectElement;
+        // Check that all options are available
+        expect(Array.from(select.options).map(e => e.value)).toEqual([
+            "ascii",
+            "utf8",
+            "utf16le",
+            "utf16be",
+            "utf32le",
+            "utf32be",
+        ]);
+        // Check that a change is propagated
+        expect((cfgRef.current.columns[0] as TextRendererConfig).encoding).not.toBe("utf8");
+        fireEvent.change(select, {target: {value: "utf8"}});
+        expect((cfgRef.current.columns[0] as TextRendererConfig).encoding).toBe("utf8");
     });
 });

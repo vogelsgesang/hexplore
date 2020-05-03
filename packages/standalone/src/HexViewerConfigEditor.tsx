@@ -263,7 +263,7 @@ function TextColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConfi
             <div className="hv-form-row">
                 <Form.Label id={id + "-encoding"}>Encoding</Form.Label>
                 <select
-                    id={id + "-encoding"}
+                    aria-labelledby={id + "-encoding"}
                     value={columnConfig.encoding}
                     onChange={e =>
                         setColumnConfig({...columnConfig, encoding: e.target.value as typeof columnConfig.encoding})
