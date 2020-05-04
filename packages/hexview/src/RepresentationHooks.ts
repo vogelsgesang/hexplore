@@ -133,7 +133,8 @@ export function useInfiniteScroll<T extends HTMLElement>({
         }
         prevScrollPos.current = scrollPos;
     }
-    // Renormalize the scroll position. This should only trigger on page changes
+    // From the virtual position, compute the physical one.
+    // This should agree with the physical scroll position, except if we just switched the page
     let physicalScrollPos: number;
     if (virtualScrollPos.current <= edgeMargin) {
         physicalScrollPos = virtualScrollPos.current;
@@ -149,7 +150,9 @@ export function useInfiniteScroll<T extends HTMLElement>({
 
     useLayoutEffect(
         function() {
-            if (ref.current && Math.abs(physicalScrollPos - ref.current.scrollTop) > 0) {
+            // It's important that we don't set the scroll position, if we are already close by ~1px.
+            // Otherwise, we might enten an endless scrolling loop due to rounding issues (observed in Firefox)
+            if (ref.current && Math.abs(physicalScrollPos - ref.current.scrollTop) >= 1) {
                 // This introduces a small jump in the scroll bar, but I don't know how else to build infite scrolling
                 ref.current.scrollTop = physicalScrollPos;
                 prevScrollPos.current = physicalScrollPos;
