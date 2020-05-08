@@ -1,19 +1,19 @@
 .hex-viewer-scroll {
     width: 100%;
     overflow: auto;
-    background: white; /* stop gap solution to render something useful also in dark JupyterLab theme */
-}
-
-.hex-viewer-content {
-    display: flex;
-    min-height: 100%;
+    background: var(--hx-bg-color, white);
+    color: var(--hx-fg-color, #00a);
     font-family: monospace;
-    color: #00a;
     white-space: nowrap;
 }
 
+.hex-viewer-content-wrapper {
+    display: flex;
+    min-height: 100%;
+}
+
 .hex-viewer-column {
-    border-right: 1px solid red;
+    border-right: 1px solid var(--hx-column-border-color, red);
 }
 
 .hex-viewer-column:last-child {
@@ -29,25 +29,24 @@
 }
 
 .hex-viewer-column .data-grid .hover {
-    border: 1px solid #bbe;
-    background: #fff5ff;
+    background: var(--hx-hover-bg, #fff5ff);
     z-index: -1;
 }
 
 .hv-highlight-red {
     height: 1em;
-    z-index: -1;
-    background-color: #fcc;
+    z-index: -3;
+    background-color: hsl(0, var(--hx-highlight-hsl-sl));
 }
 .hv-highlight-green {
     height: 1em;
-    z-index: -1;
-    background-color: #cfc;
+    z-index: -3;
+    background-color: hsl(120, var(--hx-highlight-hsl-sl));
 }
 .hv-highlight-blue {
     height: 1em;
-    z-index: -1;
-    background-color: #ccf;
+    z-index: -3;
+    background-color: hsl(240, var(--hx-highlight-hsl-sl));
 }
 .hv-highlight-underline-red {
     border-bottom: 2px solid red;

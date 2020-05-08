@@ -222,7 +222,7 @@ export const HexViewer = forwardRef(function HexViewer(props: HexViewerProps, re
 
     return (
         <div className="hex-viewer-scroll" ref={scrollAreaRef}>
-            <div className="hex-viewer-content">
+            <div className="hex-viewer-content-wrapper">
                 <div className="measure-text" ref={textMeasureRef}>
                     0
                 </div>

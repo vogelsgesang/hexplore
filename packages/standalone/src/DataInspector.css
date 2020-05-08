@@ -5,12 +5,12 @@
 .hv-data-inspector-caption {
     font-size: .8em;
     margin-top: .6em;
-    color: #333;
+    color: var(--secondary-placeholder-fg-color);
     text-align: right;
 }
 
 .hv-data-inspector-value {
-    border: 1px solid #ccc;
+    border: 1px solid var(--secondary-border-color);
     padding: .1em;
     text-align: right;
 }

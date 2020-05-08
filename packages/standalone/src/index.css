@@ -1,15 +1,61 @@
+.light-theme {
+    /* Colors for the main-area, i.e. the HexView panel */
+    --hx-bg-color: white;
+    --hx-fg-color: #006;
+    --hx-column-border-color: #f00;
+    --hx-cursor-border-color: #555;
+    --hx-selection-color: #ddf;
+    --hx-hover-bg: #ddd;
+    --hx-highlight-hsl-sl: 100%, 90%;
+    /* Secondary colors used for sidebars etc */
+    --secondary-bg-color: #fcfcfc;
+    --secondary-fg-color-rgb: 0,0,0;
+    --secondary-fg-color: rgb(var(--secondary-fg-color-rgb));
+    --secondary-select-bg-color: #ddd;
+    --secondary-border-color: #999;
+    --secondary-placeholder-fg-color: #555;
+}
+
+.dark-theme {
+    /* Colors for the main-area, i.e. the HexView panel */
+    --hx-bg-color: #0a0a0a;
+    --hx-fg-color: #aaf;
+    --hx-column-border-color: #c00;
+    --hx-cursor-border-color: #bbb;
+    --hx-selection-color: #3a3a3a;
+    --hx-hover-bg: #446;
+    --hx-highlight-hsl-sl: 90%, 20%;
+    /* Secondary colors used for sidebars etc */
+    --secondary-bg-color: #222;
+    --secondary-fg-color-rgb: 204, 204, 204;
+    --secondary-fg-color: rgb(var(--secondary-fg-color-rgb));
+    --secondary-select-bg-color: #444;
+    --secondary-border-color: #666;
+    --secondary-placeholder-fg-color: #aaa;
+}
+
 body, html, #main {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
+    background: var(--secondary-bg-color);
+}
+
+.sidebar {
+    width: 15em;
+    overflow: auto;
+    background: var(--secondary-bg-color);
+    color: var(--secondary-fg-color);
+    border-left: 1px solid var(--secondary-border-color);
 }
 
 .sidebar-tabs {
     width: 2em;
     overflow: auto;
-    border-left: 1px solid #999;
-    background: #fcfcfc;
+    border-left: 1px solid var(--secondary-border-color);
+    background: var(--secondary-bg-color);
+    color: var(--secondary-fg-color);
     display: flex;
     flex-direction: column;
     user-select: none;
@@ -17,20 +63,27 @@ body, html, #main {
 
 .sidebar-tab {
     writing-mode: vertical-lr;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid var(--secondary-border-color);
     padding: .5em;
 }
 
 .sidebar-tab.selected {
-    background: #ddd;
+    background: var(--secondary-select-bg-color);
+}
+
+.statusbar {
+    background: var(--secondary-bg-color);
+    border-top: 1px solid var(--secondary-border-color);
+    color: var(--secondary-fg-color);
 }
 
 .hv-stealth-input {
     border: 1px solid transparent;
     background: transparent;
+    color: inherit;
 }
 
 .hv-stealth-input:focus, .hv-stealth-input:hover {
-    border-color: #333;
-    background: white;
+    border-color: var(--secondary-border-color);
+    background: var(--secondary-select-bg-color);
 }

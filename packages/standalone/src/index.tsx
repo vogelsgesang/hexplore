@@ -16,6 +16,7 @@ import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Button from "react-bootstrap/Button";
 
 const styles: Array<string> = [
     "hv-highlight-red",
@@ -34,6 +35,41 @@ const defaultInspectorRepresentations: RendererConfig[] = [
     createIntegerRendererConfig({displayBase: 10, width: 8, signed: true, fixedWidth: false}),
 ];
 
+function usePersistedURLState<T>(key: string, initialValue: T): [T, (v: T) => void] {
+    const [v, setRaw] = useState<T>(() => {
+        const params = new URLSearchParams(window.location.search);
+        const urlParam = params.get(key);
+        if (urlParam !== null) {
+            return urlParam;
+        }
+        if (localStorage) {
+            const storedState = localStorage.getItem(key);
+            if (storedState != null) {
+                try {
+                    return JSON.parse(storedState);
+                } catch (e) {
+                    console.log("deleting invalid localStorage state", {key, storedState});
+                    localStorage.removeItem(key);
+                }
+            }
+        }
+        return initialValue;
+    });
+    function set(v: T) {
+        if (localStorage) {
+            localStorage.setItem(key, JSON.stringify(v));
+        }
+        const params = new URLSearchParams(window.location.search);
+        if (params.has(key)) {
+            params.delete(key);
+            console.log("change", params.toString());
+            window.history.replaceState(null, "", "?" + params.toString());
+        }
+        setRaw(v);
+    }
+    return [v, set];
+}
+
 function App() {
     const [data, setData] = useState<ArrayBuffer | undefined>(undefined);
     const [cursorPosition, setCursorPosition] = useState(0);
@@ -44,6 +80,18 @@ function App() {
     const bookmarkCnt = useRef(0);
     const addressEditorRef = useRef<any>();
     const hexViewerRef = useRef<any>();
+
+    const [theme, setTheme] = usePersistedURLState("theme", "light");
+    const toggleTheme = () => {
+        if (theme == "dark") setTheme("light");
+        else if (theme == "light") setTheme("dark");
+    };
+    useEffect(() => {
+        const cl = document.body.classList;
+        cl.remove("dark-theme");
+        cl.remove("light-theme");
+        cl.add(theme + "-theme");
+    }, [theme]);
 
     useEffect(
         function() {
@@ -121,16 +169,7 @@ function App() {
                             highlightRanges={bookmarks}
                         />
                     </div>
-                    <div
-                        style={{
-                            width: "15em",
-                            overflow: "auto",
-                            borderLeft: "1px solid #999",
-                            background: "#fcfcfc",
-                        }}
-                    >
-                        {sidebarContent}
-                    </div>
+                    <div className="sidebar">{sidebarContent}</div>
                     <div className="sidebar-tabs">
                         <div
                             onClick={() => setActiveSidebar("columnConfig")}
@@ -161,10 +200,16 @@ function App() {
                         </div>
                     </div>
                 </div>
-                <div style={{flex: 0, borderTop: "1px solid #999", background: "#fcfcfc"}}>
+                <div className="statusbar" style={{flex: 0, display: "flex"}}>
                     <span style={{padding: ".2em", display: "inline-block"}}>
                         Position:
                         <AddressEditor ref={addressEditorRef} address={cursorPosition} setAddress={goto} />
+                    </span>
+                    <span style={{flex: 1}} />
+                    <span>
+                        <Button onClick={toggleTheme} size="sm">
+                            Switch theme
+                        </Button>
                     </span>
                 </div>
             </div>

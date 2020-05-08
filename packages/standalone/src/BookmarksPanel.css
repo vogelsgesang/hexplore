@@ -6,7 +6,7 @@
 }
 
 .hv-bookmarks-empty-placeholder {
-    color: #555;
+    color: var(--secondary-placeholder-fg-color);
     text-align: center;
     margin: .5em 0;
 }
@@ -23,39 +23,7 @@
 }
 
 .hv-bookmarks-hint {
-    color: #555;
+    color: var(--secondary-placeholder-fg-color);
     text-align: center;
-    border-top: 1px solid #dddd;
+    border-top: 1px solid var(--secondary-border-color);
 }
-
-/*
-.hexviewerconfigeditor {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.hexviewerconfigeditor > .hv-renderer-list {
-    flex-shrink: 1;
-    min-height: 10em;
-    overflow: auto;
-    border-top: 1px solid rgba(0,0,0,0.25);
-    border-bottom: 1px solid rgba(0,0,0,0.25);
-}
-
-.hexviewerconfigeditor > .hv-add-renderer {
-    margin: .4em;
-}
-
-.hexviewerconfigeditor .hv-form-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: .4em;
-}
-
-.hexviewerconfigeditor .hv-renderer-details {
-    margin-left: 1em;
-    border-left: .2em solid rgba(0,0,0,0.25);
-}
-*/

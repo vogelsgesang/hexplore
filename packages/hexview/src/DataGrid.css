@@ -1,5 +1,4 @@
 .data-grid {
-    color: #00a;
     position: relative;
     white-space: nowrap;
     text-align: right;
@@ -21,17 +20,18 @@
 }
 
 .data-grid .cursor {
-    border: 1px solid #bbe;
+    border: 1px solid var(--hx-cursor-border-color, #bbe);
+    z-index: -1;
 }
 .data-grid:focus .cursor {
-    border: 1px solid green;
-    background: rgba(136, 255, 195, 0.4)
+    background: var(--hx-selection-color, #bbe);
 }
 
 .data-grid .selection {
-    background: #eef;
-    z-index: -1;
+    background: var(--hx-selection-color, #eef);
+    opacity: 0.4;
+    z-index: -2;
 }
 .data-grid:focus .selection {
-    background: #ddf;
+    opacity: 1;
 }
