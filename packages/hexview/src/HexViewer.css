@@ -1,8 +1,8 @@
 .hex-viewer-scroll {
     width: 100%;
     overflow: auto;
-    background: var(--hx-bg-color, white);
-    color: var(--hx-fg-color, #00a);
+    background: var(--hx-bg-color);
+    color: var(--hx-fg-color);
     font-family: monospace;
     white-space: nowrap;
 }
@@ -13,7 +13,7 @@
 }
 
 .hex-viewer-column {
-    border-right: 1px solid var(--hx-column-border-color, red);
+    border-right: 1px solid var(--hx-column-border-color);
 }
 
 .hex-viewer-column:last-child {
@@ -29,7 +29,7 @@
 }
 
 .hex-viewer-column .data-grid .hover {
-    background: var(--hx-hover-bg, #fff5ff);
+    background: var(--hx-hover-bg);
     z-index: -1;
 }
 

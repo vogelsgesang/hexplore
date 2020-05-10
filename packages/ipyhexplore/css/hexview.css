@@ -1,8 +1,20 @@
 .hv-widget-container {
-    border: 1px solid #ccc;
+    border: 1px solid var(--jp-border-color1);
     display: flex;
     min-height: 2em;
     max-height: 20em;
+    /* Match HexViewer theme with theme of JupyterLab */
+    --hx-bg-color: var(--jp-layout-color1);
+    --hx-fg-color: var(--jp-content-font-color1);
+    --hx-column-border-color: var(--jp-border-color1);
+    --hx-cursor-border-color: var(--jp-editor-cursor-color);
+    --hx-selection-color: var(--jp-editor-selected-background);
+    --hx-hover-bg: var(--jp-accent-color1);
+    --hx-highlight-hsl-sl: 100%, 90%;
+}
+
+body[data-jp-theme-light="false"] .hv-widget-container {
+    --hx-highlight-hsl-sl: 90%, 30%;
 }
 
 /* Top-level widget inside a linked ouput should take all available space */

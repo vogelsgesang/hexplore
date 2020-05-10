@@ -20,15 +20,15 @@
 }
 
 .data-grid .cursor {
-    border: 1px solid var(--hx-cursor-border-color, #bbe);
+    border: 1px solid var(--hx-cursor-border-color);
     z-index: -1;
 }
 .data-grid:focus .cursor {
-    background: var(--hx-selection-color, #bbe);
+    background: var(--hx-selection-color);
 }
 
 .data-grid .selection {
-    background: var(--hx-selection-color, #eef);
+    background: var(--hx-selection-color);
     opacity: 0.4;
     z-index: -2;
 }
