@@ -95,7 +95,7 @@ export function FileOpener({setData}: FileOpenerProps) {
                         className="source-alternative-url"
                     >
                         <div className="source-caption">Remote file</div>
-                        <input value={url} onChange={e => setUrl(e.target.value)} />
+                        <input aria-label="URL" value={url} onChange={e => setUrl(e.target.value)} />
                         <Button type="submit" size="sm" block>
                             Open URL
                         </Button>
