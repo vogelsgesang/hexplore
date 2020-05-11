@@ -16,6 +16,7 @@ module.exports = {
       jsx: true // Allows for the parsing of JSX
     }
   },
+  ignorePatterns: ["packages/standalone/src/formats/katai/**"],
   rules: {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-empty-function": "off",
