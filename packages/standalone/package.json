@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "dev-server": "webpack-dev-server"
+    "dev-server": "webpack-dev-server",
+    "prod-server": "http-server -p 8080 dist"
   },
   "author": "Adrian Vogelsgesang",
   "license": "MIT",
