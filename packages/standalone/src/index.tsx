@@ -12,11 +12,16 @@ import {
     createIntegerRendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
 import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
+import Button from "react-bootstrap/Button";
+//@ts-ignore
+import WindowsMinidump from "./WindowsMiniDump"
+//@ts-ignore
+import KaitaiStream from "./KaitaiStream"
+
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
 
 const styles: Array<string> = [
     "hv-highlight-red",
@@ -153,8 +158,40 @@ function App() {
         [data],
     );
 
+    function setDataWrapped(data : ArrayBuffer) {
+        setData(data);
+        try {
+            let parsedMinidump = new WindowsMinidump(new KaitaiStream(data));
+            var bookmarks : Bookmark[] = [];
+            console.log(parsedMinidump.streams);
+            bookmarks.push({
+                from: parsedMinidump.ofsStreams as number,
+                to: (parsedMinidump.ofsStreams + parsedMinidump.numStreams * 12) as number,
+                key: "mdmp_dir",
+                className: "hv-highlight-blue",
+                name: "Directory",
+            });
+            for (let stream of parsedMinidump.streams) {
+                let name = "";
+                if (WindowsMinidump.StreamTypes.hasOwnProperty(stream.streamType)) {
+                    name = WindowsMinidump.StreamTypes[stream.streamType];
+                } else {
+                    name = "stream " + stream.streamType;
+                }
+                bookmarks.push({
+                    from: stream.ofsData as number,
+                    to: (stream.ofsData + stream.lenData) as number,
+                    key: "mdmp_stream_" + stream.streamType,
+                    className: "hv-highlight-red",
+                    name: name,
+                });
+            }
+            setBookmarks(bookmarks);
+        } catch {}
+    }
+
     if (!data) {
-        return <FileOpener setData={setData} />;
+        return <FileOpener setData={setDataWrapped} />;
     } else {
         let sidebarContent;
         if (activeSidebar == "columnConfig") {
