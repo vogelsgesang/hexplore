@@ -218,8 +218,8 @@ describe("The UTF-32 renderer", () => {
     test("can also render big-endian", () => {
         expect(rendererBE(constView([0, 0, 0, 64]), 0)).toBe("@");
         expect(rendererBE(constView([0, 0, 38, 88]), 0)).toBe("♘");
-        expect(rendererBE(constView([0, 1, 57, 243]), 0)).toBe("🌹");
-        expect(rendererBE(constView([0, 1, 59, 243]), 0)).toBe("🌻");
+        expect(rendererBE(constView([0, 1, 243, 57]), 0)).toBe("🌹");
+        expect(rendererBE(constView([0, 1, 243, 59]), 0)).toBe("🌻");
     });
 });
 
