@@ -9,6 +9,7 @@ import {
     RendererType,
     IntegerRendererConfig,
     getAlignment,
+    FloatRendererConfig,
 } from "./ByteRenderer";
 import {DataGrid, HighlightRange, Range} from "./DataGrid";
 import {createStridedRenderer} from "./ByteRenderer";
@@ -80,6 +81,24 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
             elementWidth = cc.width;
             let strLen = Math.ceil((Math.log(1 << 8) / Math.log(cc.displayBase)) * cc.width);
             strLen += cc.signed ? 1 : 0;
+            cellWidth = strLen * charWidth;
+            cellPaddingX = 0.8 * charWidth;
+            break;
+        }
+        case RendererType.Float: {
+            const cc = columnConfig as FloatRendererConfig;
+            elementWidth = cc.width;
+            let strLen;
+            switch (cc.width) {
+                case 4:
+                    strLen = 10;
+                    break;
+                case 8:
+                    strLen = 18;
+                    break;
+                default:
+                    assertExhausted(cc.width);
+            }
             cellWidth = strLen * charWidth;
             cellPaddingX = 0.8 * charWidth;
             break;

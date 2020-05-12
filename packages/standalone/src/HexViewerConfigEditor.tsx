@@ -9,8 +9,10 @@ import {
     createAddressRendererConfig,
     createIntegerRendererConfig,
     createTextRendererConfig,
+    createFloatRendererConfig,
     AddressRendererConfig,
     IntegerRendererConfig,
+    FloatRendererConfig,
     RendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
 import React, {useState} from "react";
@@ -85,6 +87,13 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
             }),
         );
     }
+    function addFloatColumn() {
+        setConfig(
+            produce(config, draft => {
+                draft.columns.push(createFloatRendererConfig({width: 4}));
+            }),
+        );
+    }
     function addTextColumn() {
         setConfig(
             produce(config, draft => {
@@ -151,6 +160,15 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                     />
                 );
             }
+            case RendererType.Float: {
+                return (
+                    <FloatColumnConfigEditor
+                        id={childId}
+                        columnConfig={columnConfig as FloatRendererConfig}
+                        setColumnConfig={setColumnConfig.bind(undefined, idx)}
+                    />
+                );
+            }
         }
     }
 
@@ -211,6 +229,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                         <Dropdown.Item onClick={addAddressGutter}>Add Address Gutter</Dropdown.Item>
                         <Dropdown.Item onClick={addIntegerColumn}>Add Integer Column</Dropdown.Item>
                         <Dropdown.Item onClick={addHexColumn}>Add Hex Column</Dropdown.Item>
+                        <Dropdown.Item onClick={addFloatColumn}>Add Float Column</Dropdown.Item>
                         <Dropdown.Item onClick={addTextColumn}>Add Text Column</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -395,6 +414,55 @@ function IntegerColumnConfigEditor({
                 >
                     <ToggleButton value={true}>Yes</ToggleButton>
                     <ToggleButton value={false}>No</ToggleButton>
+                </ToggleButtonGroup>
+            </div>
+        </React.Fragment>
+    );
+}
+
+function FloatColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConfigEditorProps<FloatRendererConfig>) {
+    const changeWidth = (v: 4 | 8) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.width = v;
+            }),
+        );
+    };
+    const changeLE = (v: boolean) => {
+        setColumnConfig(
+            produce(columnConfig, draft => {
+                draft.littleEndian = v;
+            }),
+        );
+    };
+    return (
+        <React.Fragment>
+            <div className="hv-form-row">
+                <Form.Label id={id + "-width"}>Width</Form.Label>
+                <ToggleButtonGroup
+                    aria-labelledby={id + "-width"}
+                    type="radio"
+                    name={id + "-width"}
+                    value={columnConfig.width}
+                    onChange={changeWidth}
+                    size="sm"
+                >
+                    <ToggleButton value={4}>4</ToggleButton>
+                    <ToggleButton value={8}>8</ToggleButton>
+                </ToggleButtonGroup>
+            </div>
+            <div className="hv-form-row">
+                <Form.Label id={id + "-endianess"}>Endianess</Form.Label>
+                <ToggleButtonGroup
+                    aria-labelledby={id + "-endianess"}
+                    type="radio"
+                    name={id + "-endianess"}
+                    value={columnConfig.littleEndian}
+                    onChange={changeLE}
+                    size="sm"
+                >
+                    <ToggleButton value={true}>Little</ToggleButton>
+                    <ToggleButton value={false}>Big</ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>

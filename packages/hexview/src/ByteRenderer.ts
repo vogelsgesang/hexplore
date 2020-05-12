@@ -4,6 +4,7 @@ export enum RendererType {
     Address = "Address",
     Text = "Text",
     Integer = "Integer",
+    Float = "Float",
 }
 
 export type AddressDisplayBase = 10 | 16;
@@ -33,6 +34,12 @@ export interface IntegerRendererConfig extends RendererConfig {
     displayBase: IntegerDisplayBase;
 }
 
+export interface FloatRendererConfig extends RendererConfig {
+    rendererType: RendererType.Float;
+    width: 4 | 8;
+    littleEndian: boolean;
+}
+
 export function createAddressRendererConfig(c: Partial<AddressRendererConfig> = {}): AddressRendererConfig {
     const defaults = {
         rendererType: RendererType.Address,
@@ -55,9 +62,18 @@ export function createIntegerRendererConfig(c: Partial<IntegerRendererConfig> = 
         displayBase: 16,
         width: 1,
         signed: false,
-        fixedWidth: true,
         littleEndian: true,
+        fixedWidth: true,
     } as IntegerRendererConfig;
+    return {...defaults, ...c};
+}
+
+export function createFloatRendererConfig(c: Partial<FloatRendererConfig> = {}): FloatRendererConfig {
+    const defaults = {
+        rendererType: RendererType.Float,
+        width: 4,
+        littleEndian: true,
+    } as FloatRendererConfig;
     return {...defaults, ...c};
 }
 
@@ -112,6 +128,15 @@ export function humanReadableRendererName(rendererConfig: RendererConfig): strin
             }
             return d;
         }
+        case RendererType.Float: {
+            const c = rendererConfig as FloatRendererConfig;
+            switch (c.width) {
+                case 4:
+                    return "Float";
+                case 8:
+                    return "Double";
+            }
+        }
     }
 }
 
@@ -137,6 +162,8 @@ export function getAlignment(c: RendererConfig) {
             }
         case RendererType.Integer:
             return (c as IntegerRendererConfig).width;
+        case RendererType.Float:
+            return (c as FloatRendererConfig).width;
     }
 }
 
@@ -314,6 +341,100 @@ function createIntegerRenderer({width, signed, littleEndian, displayBase, fixedW
     };
 }
 
+function createFloatRenderer({width, littleEndian}: FloatRendererConfig) {
+    let maxStrWidth: number;
+    switch (width) {
+        case 4:
+            maxStrWidth = 10;
+            break;
+        case 8:
+            maxStrWidth = 18;
+            break;
+        default:
+            assertExhausted(width);
+    }
+
+    return function floatRenderer(data: DataView, idx: number) {
+        if (idx + width > data.byteLength) {
+            return ".".repeat(maxStrWidth);
+        }
+        // Read the parts of the float
+        let sign: boolean;
+        let exponent: number;
+        let mantissa: number;
+        if (width === 4) {
+            const raw = data.getUint32(idx, littleEndian);
+            sign = raw >>> 31 == 1;
+            const exponentRaw = (raw >>> 23) & 0xff;
+            const fraction = raw & 0x7fffff;
+            if (exponentRaw == 0xff) {
+                if (fraction == 0) {
+                    return sign ? "-Inf" : "+Inf";
+                } else if (fraction & 0x400000) {
+                    return "qNaN";
+                } else {
+                    return "sNaN";
+                }
+            } else if (exponentRaw == 0) {
+                // Subnormal or zero
+                const fractionLeadingZeros = Math.clz32(fraction) - 9;
+                exponent = -127 - fractionLeadingZeros;
+                mantissa = fraction * Math.pow(2, -22 + fractionLeadingZeros);
+            } else {
+                // Normal valuee
+                exponent = exponentRaw - 127;
+                mantissa = (fraction | 0x800000) * Math.pow(2, -23);
+            }
+        } else if (width === 8) {
+            let raw1, raw2;
+            if (littleEndian) {
+                raw1 = data.getUint32(idx + 4, littleEndian);
+                raw2 = data.getUint32(idx, littleEndian);
+            } else {
+                raw1 = data.getUint32(idx, littleEndian);
+                raw2 = data.getUint32(idx + 4, littleEndian);
+            }
+            sign = raw1 >>> 31 == 1;
+            const exponentRaw = (raw1 >>> 20) & 0x7ff;
+            const fractionPart1 = raw1 & 0xfffff;
+            const fraction = fractionPart1 * 0x100000000 + raw2;
+            if (exponentRaw == 0x7ff) {
+                if (fraction == 0) {
+                    return sign ? "-Inf" : "+Inf";
+                } else if (fractionPart1 & 0x80000) {
+                    return "qNaN";
+                } else {
+                    return "sNaN";
+                }
+            } else if (exponentRaw == 0) {
+                // Subnormal or zero
+                let fractionLeadingZeros = Math.clz32(fractionPart1) - 12;
+                if (fractionLeadingZeros == 20) {
+                    fractionLeadingZeros += Math.clz32(raw2);
+                }
+                exponent = -1023 - fractionLeadingZeros;
+                mantissa = fraction * Math.pow(2, -51 + fractionLeadingZeros);
+            } else {
+                // Normal valuee
+                exponent = exponentRaw - 1023;
+                mantissa = (fraction + 0x10000000000000) * Math.pow(2, -52);
+            }
+        } else {
+            assertExhausted(width);
+        }
+        // Format the float value
+        if (mantissa == 0) {
+            return (sign ? "-0." : "+0.").padEnd(maxStrWidth, "0");
+        }
+        const exponent10Raw = (exponent * Math.LOG10E) / Math.LOG2E;
+        const exponent10 = Math.floor(exponent10Raw + Math.log10(mantissa));
+        const mantissa10 = mantissa * Math.pow(10, exponent10Raw - exponent10);
+        const expStr = exponent10 ? "e" + exponent10.toString() : "";
+        const mantissaStr = mantissa10.toPrecision(maxStrWidth - expStr.length - 2);
+        return (sign ? "-" : "+") + mantissaStr + expStr;
+    };
+}
+
 function createAddressRenderer(base: AddressDisplayBase) {
     return function addressRenderer(_data: DataView, idx: number): string {
         switch (base) {
@@ -352,6 +473,9 @@ export function createRenderer(config: RendererConfig) {
         }
         case RendererType.Integer: {
             return createIntegerRenderer(config as IntegerRendererConfig);
+        }
+        case RendererType.Float: {
+            return createFloatRenderer(config as FloatRendererConfig);
         }
         default:
             assertExhausted(config.rendererType);

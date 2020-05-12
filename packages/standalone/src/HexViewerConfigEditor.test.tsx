@@ -16,9 +16,10 @@ import {
     createTextRendererConfig,
     createAddressRendererConfig,
     createIntegerRendererConfig,
+    createFloatRendererConfig,
     AddressRendererConfig,
-    IntegerRendererConfig,
     TextRendererConfig,
+    RendererConfig,
 } from "hexplore-hexview/dist/ByteRenderer";
 
 describe("displays the config correctly", () => {
@@ -28,19 +29,22 @@ describe("displays the config correctly", () => {
         expect(tree).toMatchSnapshot();
     }
 
-    test("config with an address column", () => {
+    test("for an address column", () => {
         testConfigRendering({lineWidth: 1, columns: [createAddressRendererConfig()]});
     });
-    test("config with a text column", () => {
+    test("for a text column", () => {
         testConfigRendering({lineWidth: 1, columns: [createTextRendererConfig()]});
     });
-    test("config with a 1-byte column", () => {
+    test("for a 1-byte column", () => {
         testConfigRendering({lineWidth: 1, columns: [createIntegerRendererConfig()]});
     });
-    test("config with a 8-byte column", () => {
+    test("for a 8-byte column", () => {
         testConfigRendering({lineWidth: 1, columns: [createIntegerRendererConfig({width: 8})]});
     });
-    test("the default config", () => {
+    test("for a float column", () => {
+        testConfigRendering({lineWidth: 1, columns: [createFloatRendererConfig()]});
+    });
+    test("for the default config", () => {
         testConfigRendering(defaultConfig);
     });
 });
@@ -236,52 +240,101 @@ describe("can change AddressGutter config", () => {
     });
 });
 
+function interactToggleButton<T extends RendererConfig>(
+    config: T,
+    groupLabel: RegExp,
+    expectedOptions: string[],
+    optionLabel: string,
+    k: keyof T,
+) {
+    const initialCfg: HexViewerConfig = {lineWidth: 1, columns: [config]};
+    const cfgRef = {current: initialCfg};
+    render(
+        <HexViewerConfigEditor
+            config={initialCfg}
+            setConfig={cfg => {
+                cfgRef.current = cfg;
+            }}
+        />,
+    );
+    const group = screen.getByLabelText(groupLabel);
+    // Check that all options are available
+    const options = getAllByRole(group, "radio") as HTMLInputElement[];
+    expect(options.map(getLabel)).toEqual(expectedOptions);
+    // Check that a change is propagated
+    const beforeValue = (cfgRef.current.columns[0] as T)[k];
+    fireEvent.click(getByLabelText(group, optionLabel));
+    const afterValue = (cfgRef.current.columns[0] as T)[k];
+    expect(afterValue).not.toBe(beforeValue);
+    return afterValue;
+}
+
 describe("can change Integer config", () => {
-    function interactToggleButton(
-        groupLabel: RegExp,
-        expectedOptions: string[],
-        optionLabel: string,
-        k: keyof IntegerRendererConfig,
-    ) {
-        const initialCfg: HexViewerConfig = {lineWidth: 1, columns: [createIntegerRendererConfig()]};
-        const cfgRef = {current: initialCfg};
-        render(
-            <HexViewerConfigEditor
-                config={initialCfg}
-                setConfig={cfg => {
-                    cfgRef.current = cfg;
-                }}
-            />,
-        );
-        const group = screen.getByLabelText(groupLabel);
-        // Check that all options are available
-        const options = getAllByRole(group, "radio") as HTMLInputElement[];
-        expect(options.map(getLabel)).toEqual(expectedOptions);
-        // Check that a change is propagated
-        const beforeValue = (cfgRef.current.columns[0] as IntegerRendererConfig)[k];
-        fireEvent.click(getByLabelText(group, optionLabel));
-        const afterValue = (cfgRef.current.columns[0] as IntegerRendererConfig)[k];
-        expect(afterValue).not.toBe(beforeValue);
-        return afterValue;
-    }
     test("can change width", () => {
-        const resultState = interactToggleButton(/^width/i, ["1", "2", "4", "8"], "4", "width");
+        const resultState = interactToggleButton(
+            createIntegerRendererConfig(),
+            /^width/i,
+            ["1", "2", "4", "8"],
+            "4",
+            "width",
+        );
         expect(resultState).toBe(4);
     });
     test("can change display base", () => {
-        const resultState = interactToggleButton(/base/i, ["2", "8", "10", "16"], "8", "displayBase");
+        const resultState = interactToggleButton(
+            createIntegerRendererConfig(),
+            /base/i,
+            ["2", "8", "10", "16"],
+            "8",
+            "displayBase",
+        );
         expect(resultState).toBe(8);
     });
     test("can change endianess", () => {
-        const resultState = interactToggleButton(/endianess/i, ["Little", "Big"], "Big", "littleEndian");
+        const resultState = interactToggleButton(
+            createIntegerRendererConfig(),
+            /endianess/i,
+            ["Little", "Big"],
+            "Big",
+            "littleEndian",
+        );
         expect(resultState).toBe(false);
     });
     test("can change signedness", () => {
-        const resultState = interactToggleButton(/^sign$/i, ["Signed", "Unsigned"], "Signed", "signed");
+        const resultState = interactToggleButton(
+            createIntegerRendererConfig(),
+            /^sign$/i,
+            ["Signed", "Unsigned"],
+            "Signed",
+            "signed",
+        );
         expect(resultState).toBe(true);
     });
     test("can change fixedWidth", () => {
-        const resultState = interactToggleButton(/fixed width/i, ["Yes", "No"], "No", "fixedWidth");
+        const resultState = interactToggleButton(
+            createIntegerRendererConfig(),
+            /fixed width/i,
+            ["Yes", "No"],
+            "No",
+            "fixedWidth",
+        );
+        expect(resultState).toBe(false);
+    });
+});
+
+describe("can change Float config", () => {
+    test("can change width", () => {
+        const resultState = interactToggleButton(createFloatRendererConfig(), /^width/i, ["4", "8"], "8", "width");
+        expect(resultState).toBe(8);
+    });
+    test("can change endianess", () => {
+        const resultState = interactToggleButton(
+            createFloatRendererConfig(),
+            /endianess/i,
+            ["Little", "Big"],
+            "Big",
+            "littleEndian",
+        );
         expect(resultState).toBe(false);
     });
 });

@@ -5,6 +5,7 @@ import {
     createAddressRendererConfig,
     IntegerRendererConfig,
     createTextRendererConfig,
+    createFloatRendererConfig,
 } from "./ByteRenderer";
 
 function constView(bytes: number[]) {
@@ -298,6 +299,102 @@ describe("The integer renderer", () => {
         const renderer = createIntRenderer({width: 2, fixedWidth: false});
         expect(renderer(constView([0, 1]), 0)).toBe("100");
         expect(renderer(constView([13, 0]), 0)).toBe("d");
+    });
+});
+
+describe("The 4-byte float renderer", () => {
+    const leRenderer = createRenderer(createFloatRendererConfig({width: 4, littleEndian: true}));
+    const beRenderer = createRenderer(createFloatRendererConfig({width: 4, littleEndian: false}));
+
+    test.each([
+        [1, "+1.0000000"],
+        [1.5, "+1.5000000"],
+        [4, "+4.0000000"],
+        [16, "+1.60000e1"],
+        [99, "+9.90000e1"],
+        [-123, "-1.23000e2"],
+        [0.123, "+1.2300e-1"],
+    ])("renders ordinary number %f", (i, str) => {
+        const buffer = new ArrayBuffer(8);
+        const view = new DataView(buffer, 0);
+        view.setFloat32(0, i, true);
+        view.setFloat32(4, i, false);
+        expect(leRenderer(view, 0)).toBe(str);
+        expect(beRenderer(view, 4)).toBe(str);
+    });
+
+    test.each([
+        ["smallest number > 1", [0x3f, 0x80, 0x00, 0x01], "+1.0000001"],
+        ["min subnormal", [0x00, 0x00, 0x00, 0x01], "+1.401e-45"],
+        ["max subnormal", [0x00, 0x7f, 0xff, 0xff], "+1.175e-38"],
+        ["min normal number", [0x00, 0x80, 0x00, 0x00], "+1.175e-38"],
+        ["max normal number", [0x7f, 0x7f, 0xff, 0xff], "+3.4028e38"],
+        ["positive zero", [0x00, 0x00, 0x00, 0x00], "+0.0000000"],
+        ["negative zero", [0x80, 0x00, 0x00, 0x00], "-0.0000000"],
+        ["positive infinity", [0x7f, 0x80, 0x00, 0x00], "+Inf"],
+        ["negative infinity", [0xff, 0x80, 0x00, 0x00], "-Inf"],
+        ["signalling NaN", [0x7f, 0x80, 0x00, 0x01], "sNaN"],
+        ["signalling NaN with payload", [0x7f, 0x8a, 0xbc, 0xde], "sNaN"],
+        ["quiet NaN", [0x7f, 0xc0, 0x00, 0x01], "qNaN"],
+        ["quiet NaN with sign", [0xff, 0xc0, 0x00, 0x01], "qNaN"],
+    ])("renders %s", (_name, data, expected) => {
+        expect(beRenderer(constView(data), 0)).toBe(expected);
+        expect(leRenderer(constView(data.reverse()), 0)).toBe(expected);
+    });
+
+    describe("handles truncated values", () => {
+        const view = constView([0x80, 0x00, 0x00, 0x00, 0x00]);
+        expect(beRenderer(view, 0)).toBe("-0.0000000");
+        expect(beRenderer(view, 1)).toBe("+0.0000000");
+        expect(beRenderer(view, 2)).toBe("..........");
+    });
+});
+
+describe("The 8-byte float renderer", () => {
+    const leRenderer = createRenderer(createFloatRendererConfig({width: 8, littleEndian: true}));
+    const beRenderer = createRenderer(createFloatRendererConfig({width: 8, littleEndian: false}));
+
+    test.each([
+        [1, "+1.000000000000000"],
+        [1.5, "+1.500000000000000"],
+        [4, "+4.000000000000000"],
+        [16, "+1.6000000000000e1"],
+        [99, "+9.9000000000000e1"],
+        [-123, "-1.2300000000000e2"],
+        [0.123, "+1.230000000000e-1"],
+    ])("renders ordinary number %f", (i, str) => {
+        const buffer = new ArrayBuffer(16);
+        const view = new DataView(buffer, 0);
+        view.setFloat64(0, i, true);
+        view.setFloat64(8, i, false);
+        expect(leRenderer(view, 0)).toBe(str);
+        expect(beRenderer(view, 8)).toBe(str);
+    });
+
+    test.each([
+        ["smallest number > 1", [0x3f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01], "+1.000000000000000"],
+        ["min subnormal", [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01], "+4.9406564584e-324"],
+        ["max subnormal", [0x00, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff], "+2.2250738585e-308"],
+        ["min normal number", [0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "+2.2250738585e-308"],
+        ["max normal number", [0x7f, 0xef, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff], "+1.79769313486e308"],
+        ["positive zero", [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "+0.000000000000000"],
+        ["negative zero", [0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "-0.000000000000000"],
+        ["positive infinity", [0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "+Inf"],
+        ["negative infinity", [0xff, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "-Inf"],
+        ["signalling NaN", [0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01], "sNaN"],
+        ["signalling NaN with payload", [0x7f, 0xf0, 0x12, 0x00, 0xab, 0x00, 0x00, 0x00], "sNaN"],
+        ["quiet NaN", [0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "qNaN"],
+        ["quiet NaN with sign", [0xff, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], "qNaN"],
+    ])("renders %s", (_name, data, expected) => {
+        expect(beRenderer(constView(data), 0)).toBe(expected);
+        expect(leRenderer(constView(data.reverse()), 0)).toBe(expected);
+    });
+
+    describe("handles truncated values", () => {
+        const view = constView([0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        expect(beRenderer(view, 0)).toBe("-0.000000000000000");
+        expect(beRenderer(view, 1)).toBe("+0.000000000000000");
+        expect(beRenderer(view, 2)).toBe("..................");
     });
 });
 

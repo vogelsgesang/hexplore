@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`displays the config correctly config with a 1-byte column 1`] = `
+exports[`displays the config correctly for a 1-byte column 1`] = `
 <div
   className="hexviewerconfigeditor"
 >
@@ -1056,7 +1056,7 @@ exports[`displays the config correctly config with a 1-byte column 1`] = `
 </div>
 `;
 
-exports[`displays the config correctly config with a 8-byte column 1`] = `
+exports[`displays the config correctly for a 8-byte column 1`] = `
 <div
   className="hexviewerconfigeditor"
 >
@@ -1552,7 +1552,365 @@ exports[`displays the config correctly config with a 8-byte column 1`] = `
 </div>
 `;
 
-exports[`displays the config correctly config with a text column 1`] = `
+exports[`displays the config correctly for a float column 1`] = `
+<div
+  className="hexviewerconfigeditor"
+>
+  <div>
+    <div
+      className="hv-form-row"
+    >
+      <label
+        htmlFor="linewidth-id-5"
+      >
+        Line Width: 
+      </label>
+      <select
+        id="linewidth-id-5"
+        onChange={[Function]}
+        value={1}
+      >
+        <option
+          value={4}
+        >
+          4
+        </option>
+        <option
+          value={8}
+        >
+          8
+        </option>
+        <option
+          value={12}
+        >
+          12
+        </option>
+        <option
+          value={16}
+        >
+          16
+        </option>
+        <option
+          value={20}
+        >
+          20
+        </option>
+        <option
+          value={24}
+        >
+          24
+        </option>
+        <option
+          value={28}
+        >
+          28
+        </option>
+        <option
+          value={32}
+        >
+          32
+        </option>
+        <option
+          value={36}
+        >
+          36
+        </option>
+        <option
+          value={40}
+        >
+          40
+        </option>
+        <option
+          value={44}
+        >
+          44
+        </option>
+        <option
+          value={48}
+        >
+          48
+        </option>
+        <option
+          value={52}
+        >
+          52
+        </option>
+        <option
+          value={56}
+        >
+          56
+        </option>
+        <option
+          value={60}
+        >
+          60
+        </option>
+        <option
+          value={64}
+        >
+          64
+        </option>
+        <option
+          value={68}
+        >
+          68
+        </option>
+        <option
+          value={72}
+        >
+          72
+        </option>
+        <option
+          value={76}
+        >
+          76
+        </option>
+        <option
+          value={80}
+        >
+          80
+        </option>
+        <option
+          value={84}
+        >
+          84
+        </option>
+        <option
+          value={88}
+        >
+          88
+        </option>
+        <option
+          value={92}
+        >
+          92
+        </option>
+        <option
+          value={96}
+        >
+          96
+        </option>
+        <option
+          value={100}
+        >
+          100
+        </option>
+        <option
+          value={104}
+        >
+          104
+        </option>
+        <option
+          value={108}
+        >
+          108
+        </option>
+        <option
+          value={112}
+        >
+          112
+        </option>
+        <option
+          value={116}
+        >
+          116
+        </option>
+        <option
+          value={120}
+        >
+          120
+        </option>
+        <option
+          value={124}
+        >
+          124
+        </option>
+        <option
+          value={128}
+        >
+          128
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    className="hv-renderer-list"
+  >
+    <div
+      aria-labelledby="id-5-0-caption"
+      role="group"
+    >
+      <div
+        className="hv-form-row"
+      >
+        <span
+          id="id-5-0-caption"
+        >
+          Float
+        </span>
+        <div
+          className="btn-group"
+          role="group"
+        >
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            disabled={true}
+            onClick={[Function]}
+            title="Move up"
+            type="button"
+          >
+            ⮝
+          </button>
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            disabled={true}
+            onClick={[Function]}
+            title="Move down"
+            type="button"
+          >
+            ⮟
+          </button>
+          <button
+            className="btn btn-outline-danger btn-sm"
+            disabled={false}
+            onClick={[Function]}
+            title="Remove"
+            type="button"
+          >
+            X
+          </button>
+        </div>
+      </div>
+      <div
+        className="hv-renderer-details"
+      >
+        <div
+          className="hv-form-row"
+        >
+          <label
+            className="form-label"
+            id="id-5-0-width"
+          >
+            Width
+          </label>
+          <div
+            aria-labelledby="id-5-0-width"
+            className="btn-group btn-group-sm btn-group-toggle"
+            role="group"
+          >
+            <label
+              className="btn active btn-primary"
+              disabled={false}
+            >
+              <input
+                autoComplete="off"
+                checked={true}
+                disabled={false}
+                name="id-5-0-width"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={4}
+              />
+              4
+            </label>
+            <label
+              className="btn btn-primary"
+              disabled={false}
+            >
+              <input
+                autoComplete="off"
+                checked={false}
+                disabled={false}
+                name="id-5-0-width"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={8}
+              />
+              8
+            </label>
+          </div>
+        </div>
+        <div
+          className="hv-form-row"
+        >
+          <label
+            className="form-label"
+            id="id-5-0-endianess"
+          >
+            Endianess
+          </label>
+          <div
+            aria-labelledby="id-5-0-endianess"
+            className="btn-group btn-group-sm btn-group-toggle"
+            role="group"
+          >
+            <label
+              className="btn active btn-primary"
+              disabled={false}
+            >
+              <input
+                autoComplete="off"
+                checked={true}
+                disabled={false}
+                name="id-5-0-endianess"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={true}
+              />
+              Little
+            </label>
+            <label
+              className="btn btn-primary"
+              disabled={false}
+            >
+              <input
+                autoComplete="off"
+                checked={false}
+                disabled={false}
+                name="id-5-0-endianess"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={false}
+              />
+              Big
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="hv-add-renderer"
+  >
+    <div
+      className="dropdown"
+      onKeyDown={[Function]}
+    >
+      <button
+        aria-expanded={false}
+        aria-haspopup={true}
+        className="dropdown-toggle btn btn-primary btn-block btn-sm"
+        disabled={false}
+        id="dropdown-id-5"
+        onClick={[Function]}
+        type="button"
+      >
+        Add column
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`displays the config correctly for a text column 1`] = `
 <div
   className="hexviewerconfigeditor"
 >
@@ -2336,7 +2694,7 @@ exports[`displays the config correctly config with a text column 1`] = `
 </div>
 `;
 
-exports[`displays the config correctly config with an address column 1`] = `
+exports[`displays the config correctly for an address column 1`] = `
 <div
   className="hexviewerconfigeditor"
 >
@@ -3124,7 +3482,7 @@ exports[`displays the config correctly config with an address column 1`] = `
 </div>
 `;
 
-exports[`displays the config correctly the default config 1`] = `
+exports[`displays the config correctly for the default config 1`] = `
 <div
   className="hexviewerconfigeditor"
 >
@@ -3133,12 +3491,12 @@ exports[`displays the config correctly the default config 1`] = `
       className="hv-form-row"
     >
       <label
-        htmlFor="linewidth-id-5"
+        htmlFor="linewidth-id-6"
       >
         Line Width: 
       </label>
       <select
-        id="linewidth-id-5"
+        id="linewidth-id-6"
         onChange={[Function]}
         value={16}
       >
@@ -3789,14 +4147,14 @@ exports[`displays the config correctly the default config 1`] = `
     className="hv-renderer-list"
   >
     <div
-      aria-labelledby="id-5-0-caption"
+      aria-labelledby="id-6-0-caption"
       role="group"
     >
       <div
         className="hv-form-row"
       >
         <span
-          id="id-5-0-caption"
+          id="id-6-0-caption"
         >
           Address
         </span>
@@ -3841,12 +4199,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-0-base"
+            id="id-6-0-base"
           >
             Base
           </label>
           <div
-            aria-labelledby="id-5-0-base"
+            aria-labelledby="id-6-0-base"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -3858,7 +4216,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-0-base"
+                name="id-6-0-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -3875,7 +4233,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-0-base"
+                name="id-6-0-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -3889,14 +4247,14 @@ exports[`displays the config correctly the default config 1`] = `
       </div>
     </div>
     <div
-      aria-labelledby="id-5-1-caption"
+      aria-labelledby="id-6-1-caption"
       role="group"
     >
       <div
         className="hv-form-row"
       >
         <span
-          id="id-5-1-caption"
+          id="id-6-1-caption"
         >
           1-byte Hex
         </span>
@@ -3941,12 +4299,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-1-width"
+            id="id-6-1-width"
           >
             Width
           </label>
           <div
-            aria-labelledby="id-5-1-width"
+            aria-labelledby="id-6-1-width"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -3958,7 +4316,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-1-width"
+                name="id-6-1-width"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -3975,7 +4333,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-width"
+                name="id-6-1-width"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -3992,7 +4350,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-width"
+                name="id-6-1-width"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4009,7 +4367,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-width"
+                name="id-6-1-width"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4025,12 +4383,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-1-base"
+            id="id-6-1-base"
           >
             Base
           </label>
           <div
-            aria-labelledby="id-5-1-base"
+            aria-labelledby="id-6-1-base"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -4042,7 +4400,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-base"
+                name="id-6-1-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4059,7 +4417,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-base"
+                name="id-6-1-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4076,7 +4434,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-base"
+                name="id-6-1-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4093,7 +4451,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-1-base"
+                name="id-6-1-base"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4109,12 +4467,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-1-endianess"
+            id="id-6-1-endianess"
           >
             Endianess
           </label>
           <div
-            aria-labelledby="id-5-1-endianess"
+            aria-labelledby="id-6-1-endianess"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -4126,7 +4484,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-1-endianess"
+                name="id-6-1-endianess"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4143,7 +4501,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-endianess"
+                name="id-6-1-endianess"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4159,12 +4517,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-1-sign"
+            id="id-6-1-sign"
           >
             Sign
           </label>
           <div
-            aria-labelledby="id-5-1-sign"
+            aria-labelledby="id-6-1-sign"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -4176,7 +4534,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-sign"
+                name="id-6-1-sign"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4193,7 +4551,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-1-sign"
+                name="id-6-1-sign"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4209,12 +4567,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-1-fw"
+            id="id-6-1-fw"
           >
             Fixed width
           </label>
           <div
-            aria-labelledby="id-5-1-fw"
+            aria-labelledby="id-6-1-fw"
             className="btn-group btn-group-sm btn-group-toggle"
             role="group"
           >
@@ -4226,7 +4584,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={true}
                 disabled={false}
-                name="id-5-1-fw"
+                name="id-6-1-fw"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4243,7 +4601,7 @@ exports[`displays the config correctly the default config 1`] = `
                 autoComplete="off"
                 checked={false}
                 disabled={false}
-                name="id-5-1-fw"
+                name="id-6-1-fw"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4257,14 +4615,14 @@ exports[`displays the config correctly the default config 1`] = `
       </div>
     </div>
     <div
-      aria-labelledby="id-5-2-caption"
+      aria-labelledby="id-6-2-caption"
       role="group"
     >
       <div
         className="hv-form-row"
       >
         <span
-          id="id-5-2-caption"
+          id="id-6-2-caption"
         >
           ASCII
         </span>
@@ -4309,12 +4667,12 @@ exports[`displays the config correctly the default config 1`] = `
         >
           <label
             className="form-label"
-            id="id-5-2-encoding"
+            id="id-6-2-encoding"
           >
             Encoding
           </label>
           <select
-            aria-labelledby="id-5-2-encoding"
+            aria-labelledby="id-6-2-encoding"
             onChange={[Function]}
             value="ascii"
           >
@@ -4365,7 +4723,7 @@ exports[`displays the config correctly the default config 1`] = `
         aria-haspopup={true}
         className="dropdown-toggle btn btn-primary btn-block btn-sm"
         disabled={false}
-        id="dropdown-id-5"
+        id="dropdown-id-6"
         onClick={[Function]}
         type="button"
       >
