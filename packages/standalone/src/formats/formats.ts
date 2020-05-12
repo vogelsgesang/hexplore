@@ -1,12 +1,13 @@
 import {Bookmark} from "../BookmarksPanel";
 import {MinidumpFormat} from "./WindowsMiniDump";
+import {ElfFormat} from "./Elf";
 
 export interface FileFormatSpecification {
     header: Array<number>;
     getBookmarks: (d: ArrayBuffer) => Bookmark[];
 }
 
-export const allFormats = [MinidumpFormat];
+export const allFormats = [MinidumpFormat, ElfFormat];
 
 function headerMatches(array: Uint8Array, header: Array<number>) {
     for (let i = 0; i < header.length; ++i) {
