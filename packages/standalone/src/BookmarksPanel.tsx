@@ -14,9 +14,10 @@ interface BookmarksPanelProps {
     bookmarks: Bookmark[];
     setBookmarks: (h: Bookmark[]) => void;
     goto: (b: Bookmark) => void;
+    exportRange: (b: Bookmark) => void;
 }
 
-export function BookmarksPanel({bookmarks, setBookmarks, goto}: BookmarksPanelProps) {
+export function BookmarksPanel({bookmarks, setBookmarks, goto, exportRange}: BookmarksPanelProps) {
     function removeBookmark(pos: number) {
         setBookmarks(
             produce(bookmarks, draft => {
@@ -47,6 +48,14 @@ export function BookmarksPanel({bookmarks, setBookmarks, goto}: BookmarksPanelPr
                 <ButtonGroup>
                     <Button onClick={() => goto(bookmark)} size="sm" variant="outline-primary">
                         Go to
+                    </Button>
+                    <Button
+                        title="Export range"
+                        onClick={() => exportRange(bookmark)}
+                        size="sm"
+                        variant="outline-primary"
+                    >
+                        ⤓
                     </Button>
                     <Button
                         title="Remove"

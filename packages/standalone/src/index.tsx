@@ -135,6 +135,23 @@ function App() {
         },
         [goto],
     );
+    const exportBookmarkRange = useCallback(
+        (b: Bookmark) => {
+            if (data === undefined) return;
+            const blob = new Blob([new Uint8Array(data, b.from, b.to - b.from)], {type: "application/octet-stream"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.position = "absolute";
+            a.style.visibility = "hidden";
+            a.href = url;
+            a.download = b.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+        [data],
+    );
 
     if (!data) {
         return <FileOpener setData={setData} />;
@@ -151,7 +168,14 @@ function App() {
                 />
             );
         } else if (activeSidebar == "bookmarks") {
-            sidebarContent = <BookmarksPanel bookmarks={bookmarks} setBookmarks={setBookmarks} goto={gotoBookmark} />;
+            sidebarContent = (
+                <BookmarksPanel
+                    bookmarks={bookmarks}
+                    setBookmarks={setBookmarks}
+                    goto={gotoBookmark}
+                    exportRange={exportBookmarkRange}
+                />
+            );
         }
 
         return (

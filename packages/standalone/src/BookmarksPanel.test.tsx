@@ -9,18 +9,20 @@ const testBookmarkList: Bookmark[] = [
     {from: 30, to: 32, name: "Numero tres", key: "t3"},
 ];
 
+const dummyProps = {
+    setBookmarks: () => {},
+    goto: () => {},
+    exportRange: () => {},
+};
+
 test("displays an empty list correctly", () => {
-    const component = snapshotRenderer.create(
-        <BookmarksPanel bookmarks={[]} setBookmarks={() => {}} goto={() => {}} />,
-    );
+    const component = snapshotRenderer.create(<BookmarksPanel {...dummyProps} bookmarks={[]} />);
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 });
 
 test("displays a bookmark list correctly", () => {
-    const component = snapshotRenderer.create(
-        <BookmarksPanel bookmarks={testBookmarkList} setBookmarks={() => {}} goto={() => {}} />,
-    );
+    const component = snapshotRenderer.create(<BookmarksPanel {...dummyProps} bookmarks={testBookmarkList} />);
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 });
@@ -29,11 +31,11 @@ test("can remove a bookmark", () => {
     const cfgRef = {current: testBookmarkList};
     render(
         <BookmarksPanel
+            {...dummyProps}
             bookmarks={testBookmarkList}
             setBookmarks={b => {
                 cfgRef.current = b;
             }}
-            goto={() => {}}
         />,
     );
     const group = screen.getByLabelText("My 2nd bookmark");
@@ -47,11 +49,11 @@ test("can edit the name", () => {
     const cfgRef = {current: testBookmarkList};
     render(
         <BookmarksPanel
+            {...dummyProps}
             bookmarks={testBookmarkList}
             setBookmarks={b => {
                 cfgRef.current = b;
             }}
-            goto={() => {}}
         />,
     );
     const group = screen.getByLabelText("My 2nd bookmark");
@@ -64,9 +66,18 @@ test("can edit the name", () => {
 
 test("can `go to` a bookmark", () => {
     const gotoFn = jest.fn();
-    render(<BookmarksPanel bookmarks={testBookmarkList} setBookmarks={() => {}} goto={gotoFn} />);
+    render(<BookmarksPanel {...dummyProps} bookmarks={testBookmarkList} goto={gotoFn} />);
     const group = screen.getByLabelText("My 2nd bookmark");
     fireEvent.click(getByText(group, /go to/i));
+    expect(gotoFn).toHaveBeenCalledTimes(1);
+    expect(gotoFn).toHaveBeenCalledWith(testBookmarkList[1]);
+});
+
+test("can `export` the range of a bookmark", () => {
+    const gotoFn = jest.fn();
+    render(<BookmarksPanel {...dummyProps} bookmarks={testBookmarkList} exportRange={gotoFn} />);
+    const group = screen.getByLabelText("My 2nd bookmark");
+    fireEvent.click(getByTitle(group, /Export/i));
     expect(gotoFn).toHaveBeenCalledTimes(1);
     expect(gotoFn).toHaveBeenCalledWith(testBookmarkList[1]);
 });
