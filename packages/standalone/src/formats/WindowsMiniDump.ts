@@ -9,7 +9,6 @@ function getBookmarks(data: ArrayBuffer) {
     try {
         const parsedMinidump = new WindowsMinidump(new KaitaiStream(data));
         const bookmarks: Bookmark[] = [];
-        console.log(parsedMinidump.streams);
         bookmarks.push({
             from: parsedMinidump.ofsStreams as number,
             to: (parsedMinidump.ofsStreams + parsedMinidump.numStreams * 12) as number,
@@ -17,6 +16,7 @@ function getBookmarks(data: ArrayBuffer) {
             className: "hv-highlight-blue",
             name: "Directory",
         });
+        let id = 0;
         for (const stream of parsedMinidump.streams) {
             let name = "";
             if (WindowsMinidump.StreamTypes.hasOwnProperty(stream.streamType)) {
@@ -27,10 +27,11 @@ function getBookmarks(data: ArrayBuffer) {
             bookmarks.push({
                 from: stream.ofsData as number,
                 to: (stream.ofsData + stream.lenData) as number,
-                key: "mdmp_stream_" + stream.streamType,
-                className: "hv-highlight-red",
+                key: "mdmp_stream_" + id,
+                className: ["hv-highlight-red", "hv-highlight-blue"][id % 2],
                 name: name,
             });
+            ++id;
         }
         return bookmarks;
     } catch (e) {
