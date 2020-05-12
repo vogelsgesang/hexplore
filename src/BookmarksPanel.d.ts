@@ -8,7 +8,8 @@ interface BookmarksPanelProps {
     bookmarks: Bookmark[];
     setBookmarks: (h: Bookmark[]) => void;
     goto: (b: Bookmark) => void;
+    exportRange: (b: Bookmark) => void;
 }
-export declare function BookmarksPanel({ bookmarks, setBookmarks, goto }: BookmarksPanelProps): JSX.Element;
+export declare function BookmarksPanel({ bookmarks, setBookmarks, goto, exportRange }: BookmarksPanelProps): JSX.Element;
 export {};
 //# sourceMappingURL=BookmarksPanel.d.ts.map
