@@ -52,6 +52,7 @@ describe("The ASCII renderer", () => {
     test("renders control characters as dot", () => {
         expect(renderer(constView([0]), 0)).toBe(".");
         expect(renderer(constView([19]), 0)).toBe(".");
+        expect(renderer(constView([127]), 0)).toBe(".");
         expect(renderer(constView([128]), 0)).toBe(".");
     });
     test("renders invalid characters as dot", () => {

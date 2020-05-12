@@ -141,7 +141,7 @@ export function getAlignment(c: RendererConfig) {
 }
 
 function charFromCodePoint(codepoint: number) {
-    const isNonPrintable = codepoint < 0x20;
+    const isNonPrintable = codepoint < 0x20 || codepoint == 127;
     if (isNonPrintable) {
         return ".";
     } else if (codepoint > 0xd800 && codepoint <= 0xdfff) {
