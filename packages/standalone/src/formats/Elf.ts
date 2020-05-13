@@ -13,7 +13,7 @@ function getBookmarks(data: ArrayBuffer) {
         let sectionId = 0;
         for (const section of elf.header.sectionHeaders) {
             if (section.type == Elf.ShType.NULL_TYPE) continue;
-            let name = section.name;
+            const name = section.name;
             bookmarks.push({
                 from: section.ofsBody as number,
                 to: (section.ofsBody + section.lenBody) as number,
