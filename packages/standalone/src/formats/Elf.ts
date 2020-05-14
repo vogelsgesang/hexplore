@@ -1,9 +1,9 @@
 import {Bookmark} from "../BookmarksPanel";
 import {FileFormatSpecification} from "./formats";
 //@ts-ignore
-import Elf from "./katai/Elf";
+import {KaitaiStream} from "kaitai-struct";
 //@ts-ignore
-import KaitaiStream from "./katai/KaitaiStream";
+import Elf from "./katai/Elf";
 
 function getBookmarks(data: ArrayBuffer) {
     try {

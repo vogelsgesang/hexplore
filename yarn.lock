@@ -4499,6 +4499,11 @@ jsx-ast-utils@^2.2.3:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
+kaitai-struct@^0.9.0-SNAPSHOT.1:
+  version "0.9.0-SNAPSHOT.1"
+  resolved "https://registry.yarnpkg.com/kaitai-struct/-/kaitai-struct-0.9.0-SNAPSHOT.1.tgz#fb593095a1a3e50fa8edadb6194da62c7cc5467c"
+  integrity sha512-+xJH3mcSPxfxTrd+MycNaLfEtBAVeRNveKF0jW6J67wFnz6IVeG5Agki2emqWuVHMuymqWtFVJkrFRLRcbzFsQ==
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"

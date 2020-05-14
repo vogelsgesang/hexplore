@@ -1,9 +1,9 @@
 import {Bookmark} from "../BookmarksPanel";
 import {FileFormatSpecification} from "./formats";
 //@ts-ignore
-import WindowsMinidump from "./katai/WindowsMiniDump";
+import {KaitaiStream} from "kaitai-struct";
 //@ts-ignore
-import KaitaiStream from "./katai/KaitaiStream";
+import WindowsMinidump from "./katai/WindowsMiniDump";
 
 function getBookmarks(data: ArrayBuffer) {
     try {

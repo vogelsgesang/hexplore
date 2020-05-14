@@ -1,5 +1,5 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-import KaitaiStream from "./KaitaiStream";
+import {KaitaiStream} from "kaitai-struct";
 
   /**
    * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}
