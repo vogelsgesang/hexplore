@@ -4,13 +4,8 @@ import {Range, HexViewer, HexViewerConfig, HexViewerHandle, defaultConfig} from 
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
-import {DataInspector} from "./DataInspector";
+import {DataInspector, defaultInspectorRepresentations} from "./DataInspector";
 import {AddressEditor, AddressEditorHandle} from "./AddressEditor";
-import {
-    RendererConfig,
-    createAddressRendererConfig,
-    createIntegerRendererConfig,
-} from "hexplore-hexview/dist/ByteRenderer";
 import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import Button from "react-bootstrap/Button";
 import {findFormat} from "./formats/formats";
@@ -26,14 +21,6 @@ const styles: Array<string> = [
     "hv-highlight-underline-red",
     "hv-highlight-underline-green",
     "hv-highlight-underline-blue",
-];
-
-const defaultInspectorRepresentations: RendererConfig[] = [
-    createAddressRendererConfig(),
-    createIntegerRendererConfig({displayBase: 10, width: 1, signed: true, fixedWidth: false}),
-    createIntegerRendererConfig({displayBase: 10, width: 2, signed: true, fixedWidth: false}),
-    createIntegerRendererConfig({displayBase: 10, width: 4, signed: true, fixedWidth: false}),
-    createIntegerRendererConfig({displayBase: 10, width: 8, signed: true, fixedWidth: false}),
 ];
 
 function usePersistedURLState<T>(key: string, initialValue: T): [T, (v: T) => void] {

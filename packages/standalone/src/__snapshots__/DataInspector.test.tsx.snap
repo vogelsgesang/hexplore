@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`displays the data correctly for address 0 1`] = `
+<div
+  className="hv-data-inspector"
+>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Address
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    0x0
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 1-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     1
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 2-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     513
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 4-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     67305985
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 8-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     578437695752307201
+  </div>
+</div>
+`;
+
+exports[`displays the data correctly for address 1 1`] = `
+<div
+  className="hv-data-inspector"
+>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Address
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    0x1
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 1-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     2
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 2-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     770
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 4-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     84148994
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 8-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    .
+  </div>
+</div>
+`;
+
+exports[`displays the data correctly for last address 1`] = `
+<div
+  className="hv-data-inspector"
+>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Address
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    0x7
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 1-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+     8
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 2-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    .
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 4-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    .
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Signed 8-byte Decimal
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    .
+  </div>
+</div>
+`;
