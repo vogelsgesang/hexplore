@@ -1,7 +1,9 @@
 import {Bookmark} from "../BookmarksPanel";
 import {FileFormatSpecification} from "./formats";
+//eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 //@ts-ignore
 import {KaitaiStream} from "kaitai-struct";
+//eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 //@ts-ignore
 import WindowsMinidump from "./katai/WindowsMiniDump";
 

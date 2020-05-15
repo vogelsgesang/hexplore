@@ -146,7 +146,11 @@ export interface HexViewerProps {
     setSelection?: (r: Range) => void;
 }
 
-export const HexViewer = forwardRef(function HexViewer(props: HexViewerProps, ref) {
+export interface HexViewerHandle {
+    goto(p: number): void;
+}
+
+export const HexViewer = forwardRef<HexViewerHandle, HexViewerProps>(function HexViewer(props: HexViewerProps, ref) {
     const viewConfig = props.viewConfig;
     const lineWidth = viewConfig.lineWidth;
     const byteLength = props.data.byteLength;

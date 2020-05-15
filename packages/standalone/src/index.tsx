@@ -1,11 +1,11 @@
 import React, {useRef, useState, useEffect, useCallback} from "react";
 import ReactDOM from "react-dom";
-import {Range, HexViewer, HexViewerConfig, defaultConfig} from "hexplore-hexview";
+import {Range, HexViewer, HexViewerConfig, HexViewerHandle, defaultConfig} from "hexplore-hexview";
 import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
 import {DataInspector} from "./DataInspector";
-import {AddressEditor} from "./AddressEditor";
+import {AddressEditor, AddressEditorHandle} from "./AddressEditor";
 import {
     RendererConfig,
     createAddressRendererConfig,
@@ -79,8 +79,8 @@ function App() {
     const [viewConfig, setViewConfig] = useState<HexViewerConfig>(defaultConfig);
     const [activeSidebar, setActiveSidebar] = useState<"columnConfig" | "dataInspector" | "bookmarks">("columnConfig");
     const bookmarkCnt = useRef(0);
-    const addressEditorRef = useRef<any>();
-    const hexViewerRef = useRef<any>();
+    const addressEditorRef = useRef<AddressEditorHandle>(null);
+    const hexViewerRef = useRef<HexViewerHandle>(null);
 
     const [theme, setTheme] = usePersistedURLState("theme", "light");
     const toggleTheme = () => {

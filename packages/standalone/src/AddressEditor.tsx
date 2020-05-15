@@ -15,7 +15,14 @@ function parseAddress(str: string) {
     return undefined;
 }
 
-export const AddressEditor = forwardRef(function AddressEditor({address, setAddress}: AdressEditorProperties, ref) {
+export interface AddressEditorHandle {
+    focus(): void;
+}
+
+export const AddressEditor = forwardRef<AddressEditorHandle, AdressEditorProperties>(function AddressEditor(
+    {address, setAddress}: AdressEditorProperties,
+    ref,
+) {
     const [draft, setDraft] = useState<string | undefined>(undefined);
     const inputRef = useRef<HTMLInputElement>(null);
 
