@@ -1,1 +1,1 @@
-{"version":3,"file":"WindowsMiniDump.d.ts","sourceRoot":"","sources":["../../../src/formats/WindowsMiniDump.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,uBAAuB,EAAC,MAAM,WAAW,CAAC;AAyClD,eAAO,MAAM,cAAc,EAAE,uBAG5B,CAAC"}
+{"version":3,"file":"WindowsMiniDump.d.ts","sourceRoot":"","sources":["../../../src/formats/WindowsMiniDump.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,uBAAuB,EAAC,MAAM,WAAW,CAAC;AA2ClD,eAAO,MAAM,cAAc,EAAE,uBAG5B,CAAC"}
