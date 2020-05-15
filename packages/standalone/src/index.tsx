@@ -1,7 +1,6 @@
 import React, {useRef, useState, useEffect, useCallback} from "react";
 import ReactDOM from "react-dom";
 import {Range, HexViewer, HexViewerConfig, HexViewerHandle, defaultConfig} from "hexplore-hexview";
-import objstr from "hexplore-hexview/dist/objstr";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
 import {FileOpener} from "./FileOpener";
 import {DataInspector, defaultInspectorRepresentations} from "./DataInspector";
@@ -9,6 +8,7 @@ import {AddressEditor, AddressEditorHandle} from "./AddressEditor";
 import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import Button from "react-bootstrap/Button";
 import {findFormat} from "./formats/formats";
+import {TabbedSidebar, SidebarTab} from "./Sidebar";
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
@@ -64,10 +64,13 @@ function App() {
     const [selection, setSelection] = useState<Range>({from: 0, to: 1});
     const [bookmarks, setBookmarks] = useState<Array<Bookmark>>([]);
     const [viewConfig, setViewConfig] = useState<HexViewerConfig>(defaultConfig);
-    const [activeSidebar, setActiveSidebar] = useState<"columnConfig" | "dataInspector" | "bookmarks">("columnConfig");
+    const [activeSidebar, setActiveSidebar] = useState<React.Key | undefined>("columnConfig");
     const bookmarkCnt = useRef(0);
     const addressEditorRef = useRef<AddressEditorHandle>(null);
     const hexViewerRef = useRef<HexViewerHandle>(null);
+    const [sidebarSize, setSidebarSize] = useState<number>();
+
+    console.log({sidebarSize});
 
     const [theme, setTheme] = usePersistedURLState("theme", "light");
     const toggleTheme = () => {
@@ -152,28 +155,6 @@ function App() {
     if (!data) {
         return <FileOpener setData={setDataWrapped} />;
     } else {
-        let sidebarContent;
-        if (activeSidebar == "columnConfig") {
-            sidebarContent = <HexViewerConfigEditor config={viewConfig} setConfig={setViewConfig} />;
-        } else if (activeSidebar == "dataInspector") {
-            sidebarContent = (
-                <DataInspector
-                    data={data}
-                    position={cursorPosition}
-                    representations={defaultInspectorRepresentations}
-                />
-            );
-        } else if (activeSidebar == "bookmarks") {
-            sidebarContent = (
-                <BookmarksPanel
-                    bookmarks={bookmarks}
-                    setBookmarks={setBookmarks}
-                    goto={gotoBookmark}
-                    exportRange={exportBookmarkRange}
-                />
-            );
-        }
-
         return (
             <div style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
                 <div style={{flex: 1, minHeight: 0, display: "flex"}}>
@@ -189,36 +170,32 @@ function App() {
                             highlightRanges={bookmarks}
                         />
                     </div>
-                    <div className="sidebar">{sidebarContent}</div>
-                    <div className="sidebar-tabs">
-                        <div
-                            onClick={() => setActiveSidebar("columnConfig")}
-                            className={objstr({
-                                "sidebar-tab": true,
-                                selected: activeSidebar == "columnConfig",
-                            })}
-                        >
-                            Column Config
-                        </div>
-                        <div
-                            onClick={() => setActiveSidebar("dataInspector")}
-                            className={objstr({
-                                "sidebar-tab": true,
-                                selected: activeSidebar == "dataInspector",
-                            })}
-                        >
-                            Data Inspector
-                        </div>
-                        <div
-                            onClick={() => setActiveSidebar("bookmarks")}
-                            className={objstr({
-                                "sidebar-tab": true,
-                                selected: activeSidebar == "bookmarks",
-                            })}
-                        >
-                            Bookmarks
-                        </div>
-                    </div>
+                    <TabbedSidebar
+                        active={activeSidebar}
+                        setActive={setActiveSidebar}
+                        size={sidebarSize}
+                        setSize={setSidebarSize}
+                    >
+                        <SidebarTab key="columnConfig" caption="Column Config">
+                            <HexViewerConfigEditor config={viewConfig} setConfig={setViewConfig} />
+                        </SidebarTab>
+                        <SidebarTab key="dataInspector" caption="Data Inspector">
+                            <DataInspector
+                                key="dataInspector"
+                                data={data}
+                                position={cursorPosition}
+                                representations={defaultInspectorRepresentations}
+                            />
+                        </SidebarTab>
+                        <SidebarTab key="bookmarks" caption="Bookmarks">
+                            <BookmarksPanel
+                                bookmarks={bookmarks}
+                                setBookmarks={setBookmarks}
+                                goto={gotoBookmark}
+                                exportRange={exportBookmarkRange}
+                            />
+                        </SidebarTab>
+                    </TabbedSidebar>
                 </div>
                 <div className="statusbar" style={{flex: 0, display: "flex"}}>
                     <span style={{padding: ".2em", display: "inline-block"}}>

@@ -1,0 +1,43 @@
+.sidebar-resize-wrapper {
+    position: relative;
+}
+
+.sidebar-resizer {
+    position: absolute;
+    top: 0;
+    left: -5px;
+    width: 10px;
+    height: 100%;
+    cursor: w-resize;
+}
+
+.sidebar-content {
+    width: 15em;
+    overflow: auto;
+    background: var(--secondary-bg-color);
+    color: var(--secondary-fg-color);
+    border-left: 1px solid var(--secondary-border-color);
+    height: 100%;
+}
+
+.sidebar-tabs {
+    width: 2em;
+    overflow: auto;
+    border-left: 1px solid var(--secondary-border-color);
+    background: var(--secondary-bg-color);
+    color: var(--secondary-fg-color);
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+
+.sidebar-tab {
+    writing-mode: vertical-lr;
+    border-bottom: 1px solid var(--secondary-border-color);
+    padding: .5em;
+    cursor: pointer;
+}
+
+.sidebar-tab.selected {
+    background: var(--secondary-select-bg-color);
+}

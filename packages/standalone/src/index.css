@@ -42,35 +42,6 @@ body, html, #main {
     background: var(--secondary-bg-color);
 }
 
-.sidebar {
-    width: 15em;
-    overflow: auto;
-    background: var(--secondary-bg-color);
-    color: var(--secondary-fg-color);
-    border-left: 1px solid var(--secondary-border-color);
-}
-
-.sidebar-tabs {
-    width: 2em;
-    overflow: auto;
-    border-left: 1px solid var(--secondary-border-color);
-    background: var(--secondary-bg-color);
-    color: var(--secondary-fg-color);
-    display: flex;
-    flex-direction: column;
-    user-select: none;
-}
-
-.sidebar-tab {
-    writing-mode: vertical-lr;
-    border-bottom: 1px solid var(--secondary-border-color);
-    padding: .5em;
-}
-
-.sidebar-tab.selected {
-    background: var(--secondary-select-bg-color);
-}
-
 .statusbar {
     background: var(--secondary-bg-color);
     border-top: 1px solid var(--secondary-border-color);
