@@ -11,11 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build
-        run: |
-          yarn install
-          yarn run --cwd=packages/hexview build
-          yarn run --cwd=packages/standalone build
+      - name: Install
+        run: yarn install
+
+      - name: Build hexview
+        run: yarn run --cwd=packages/hexview build
+
+      - name: Build standalone frontend
+        run: yarn run --cwd=packages/standalone build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
