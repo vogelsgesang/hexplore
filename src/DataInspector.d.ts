@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import { RendererConfig } from "hexplore-hexview/dist/ByteRenderer";
 import "./DataInspector.css";
+export declare const defaultInspectorRepresentations: RendererConfig[];
 interface DataInspectorProps {
     data: ArrayBuffer;
     position: number;
