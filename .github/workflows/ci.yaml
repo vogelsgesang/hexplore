@@ -1,4 +1,4 @@
-name: github pages
+name: Test and publish
 
 on:
   push:
@@ -25,13 +25,23 @@ jobs:
       - name: Install
         run: yarn install
 
+      - name: Lint
+        run: yarn run lint-test
+
       - name: Build hexview
         run: yarn run --cwd=packages/hexview build
+
+      - name: Test hexview
+        run: yarn run --cwd=packages/hexview test
 
       - name: Build standalone frontend
         run: yarn run --cwd=packages/standalone build
 
+      - name: Test standalone frontend
+        run: yarn run --cwd=packages/standalone test
+
       - name: Deploy
+        if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
