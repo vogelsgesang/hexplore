@@ -27,7 +27,6 @@ export function TabbedSidebar({active, setActive, size, setSize, children}: Side
             selectedContent = e;
         }
     });
-    console.log({size});
     let renderedTab = null;
     if (selectedContent) {
         renderedTab = (

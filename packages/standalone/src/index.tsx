@@ -50,7 +50,6 @@ function usePersistedURLState<T>(key: string, initialValue: T): [T, (v: T) => vo
         const params = new URLSearchParams(window.location.search);
         if (params.has(key)) {
             params.delete(key);
-            console.log("change", params.toString());
             window.history.replaceState(null, "", "?" + params.toString());
         }
         setRaw(v);
@@ -69,8 +68,6 @@ function App() {
     const addressEditorRef = useRef<AddressEditorHandle>(null);
     const hexViewerRef = useRef<HexViewerHandle>(null);
     const [sidebarSize, setSidebarSize] = useState<number>();
-
-    console.log({sidebarSize});
 
     const [theme, setTheme] = usePersistedURLState("theme", "light");
     const toggleTheme = () => {
