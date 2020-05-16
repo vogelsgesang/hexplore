@@ -115,6 +115,7 @@ export function DataGrid<T>({
         document.removeEventListener("mousemove", docMousemove);
     };
     const mousedown = (e: React.MouseEvent) => {
+        if (e.button !== 0) return;
         const elemIdx = getElementIdxFromMouseEvent(e);
         updateCursorPosition(Math.min(elemIdx, overallLength - 1), e.shiftKey);
         document.addEventListener("mouseup", docMouseup);

@@ -9,10 +9,12 @@ import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import Button from "react-bootstrap/Button";
 import {findFormat} from "./formats/formats";
 import {TabbedSidebar, SidebarTab} from "./Sidebar";
+import { Menu, Item, contextMenu } from 'react-contexify';
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-contexify/dist/ReactContexify.min.css';
 
 const styles: Array<string> = [
     "hv-highlight-red",
@@ -81,33 +83,19 @@ function App() {
         cl.add(theme + "-theme");
     }, [theme]);
 
-    useEffect(
-        function() {
-            function onKeyDown(e: KeyboardEvent) {
-                if (!data) return;
-                if (e.key == "g" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                    addressEditorRef.current?.focus();
-                    e.preventDefault();
-                } else if (e.key.toLowerCase() == "m" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
-                    // Add mark
-                    const key = "m" + new Date().getTime();
-                    const className = styles[bookmarkCnt.current++ % styles.length];
-                    const newMark: Bookmark = {
-                        ...selection,
-                        className: className,
-                        key: key,
-                        name: "mark " + bookmarkCnt.current,
-                    };
-                    setBookmarks(bookmarks.concat([newMark]));
-                    setSelection({from: cursorPosition, to: cursorPosition + 1});
-                    e.preventDefault();
-                }
-            }
-            window.addEventListener("keydown", onKeyDown);
-            return () => window.removeEventListener("keydown", onKeyDown);
-        },
-        [addressEditorRef, data, cursorPosition, setBookmarks, bookmarks, setSelection, selection],
-    );
+    const addBookmarkForSelection = useCallback(() => {
+        // Add mark
+        const key = "m" + new Date().getTime();
+        const className = styles[bookmarkCnt.current++ % styles.length];
+        const newMark: Bookmark = {
+            ...selection,
+            className: className,
+            key: key,
+            name: "mark " + bookmarkCnt.current,
+        };
+        setBookmarks(bookmarks.concat([newMark]));
+        setSelection({from: cursorPosition, to: cursorPosition + 1});
+    }, [setBookmarks, setSelection, selection, cursorPosition]);
 
     const goto = useCallback(
         (p: number) => {
@@ -123,16 +111,16 @@ function App() {
         },
         [goto],
     );
-    const exportBookmarkRange = useCallback(
-        (b: Bookmark) => {
+    const exportRange = useCallback(
+        (r: Range, name: string) => {
             if (data === undefined) return;
-            const blob = new Blob([new Uint8Array(data, b.from, b.to - b.from)], {type: "application/octet-stream"});
+            const blob = new Blob([new Uint8Array(data, r.from, r.to - r.from)], {type: "application/octet-stream"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.style.position = "absolute";
             a.style.visibility = "hidden";
             a.href = url;
-            a.download = b.name;
+            a.download = name;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -140,6 +128,14 @@ function App() {
         },
         [data],
     );
+    const exportBookmarkRange = useCallback(
+        (b: Bookmark) => { exportRange(b, b.name + ".bin"); },
+        [exportRange],
+    );
+    const exportSelectedRange = useCallback(
+        () => { exportRange(selection, "range_" + selection.from + "_" + selection.to + ".bin"); },
+        [exportRange, selection],
+    )
 
     function setDataWrapped(data: ArrayBuffer) {
         setData(data);
@@ -149,13 +145,34 @@ function App() {
         }
     }
 
+    useEffect(
+        function() {
+            function onKeyDown(e: KeyboardEvent) {
+                if (e.key == "g" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+                    addressEditorRef.current?.focus();
+                    e.preventDefault();
+                } else if (e.key.toLowerCase() == "m" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+                    addBookmarkForSelection();
+                    e.preventDefault();
+                }
+            }
+            window.addEventListener("keydown", onKeyDown);
+            return () => window.removeEventListener("keydown", onKeyDown);
+        },
+        [addressEditorRef, addBookmarkForSelection],
+    );
+
     if (!data) {
         return <FileOpener setData={setDataWrapped} />;
     } else {
         return (
             <div style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
+                <Menu id='hexviewer-menu'>
+                    <Item onClick={exportSelectedRange}>Export Range</Item>
+                    <Item onClick={addBookmarkForSelection}>Mark range</Item>
+                </Menu>
                 <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                    <div style={{flex: 1, minWidth: 0, display: "flex"}}>
+                    <div style={{flex: 1, minWidth: 0, display: "flex"}} onContextMenu={(e) => { contextMenu.show({id: "hexviewer-menu", event: e}); e.preventDefault(); }}>
                         <HexViewer
                             ref={hexViewerRef}
                             data={data}
