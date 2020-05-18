@@ -9,12 +9,12 @@ import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import Button from "react-bootstrap/Button";
 import {findFormat} from "./formats/formats";
 import {TabbedSidebar, SidebarTab} from "./Sidebar";
-import { Menu, Item, contextMenu } from 'react-contexify';
+import {Menu, Item, contextMenu} from "react-contexify";
 
 import "hexplore-hexview/dist/hexview.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'react-contexify/dist/ReactContexify.min.css';
+import "react-contexify/dist/ReactContexify.min.css";
 
 const styles: Array<string> = [
     "hv-highlight-red",
@@ -95,7 +95,7 @@ function App() {
         };
         setBookmarks(bookmarks.concat([newMark]));
         setSelection({from: cursorPosition, to: cursorPosition + 1});
-    }, [setBookmarks, setSelection, selection, cursorPosition]);
+    }, [setBookmarks, bookmarks, setSelection, selection, cursorPosition]);
 
     const goto = useCallback(
         (p: number) => {
@@ -129,13 +129,14 @@ function App() {
         [data],
     );
     const exportBookmarkRange = useCallback(
-        (b: Bookmark) => { exportRange(b, b.name + ".bin"); },
+        (b: Bookmark) => {
+            exportRange(b, b.name + ".bin");
+        },
         [exportRange],
     );
-    const exportSelectedRange = useCallback(
-        () => { exportRange(selection, "range_" + selection.from + "_" + selection.to + ".bin"); },
-        [exportRange, selection],
-    )
+    const exportSelectedRange = useCallback(() => {
+        exportRange(selection, "range_" + selection.from + "_" + selection.to + ".bin");
+    }, [exportRange, selection]);
 
     function setDataWrapped(data: ArrayBuffer) {
         setData(data);
@@ -167,12 +168,18 @@ function App() {
     } else {
         return (
             <div style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
-                <Menu id='hexviewer-menu'>
+                <Menu id="hexviewer-menu">
                     <Item onClick={exportSelectedRange}>Export Range</Item>
                     <Item onClick={addBookmarkForSelection}>Mark range</Item>
                 </Menu>
                 <div style={{flex: 1, minHeight: 0, display: "flex"}}>
-                    <div style={{flex: 1, minWidth: 0, display: "flex"}} onContextMenu={(e) => { contextMenu.show({id: "hexviewer-menu", event: e}); e.preventDefault(); }}>
+                    <div
+                        style={{flex: 1, minWidth: 0, display: "flex"}}
+                        onContextMenu={e => {
+                            contextMenu.show({id: "hexviewer-menu", event: e});
+                            e.preventDefault();
+                        }}
+                    >
                         <HexViewer
                             ref={hexViewerRef}
                             data={data}
