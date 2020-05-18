@@ -1,9 +1,6 @@
 name: Test and publish
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   deploy:
