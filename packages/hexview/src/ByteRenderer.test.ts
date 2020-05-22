@@ -300,6 +300,10 @@ describe("The integer renderer", () => {
         expect(renderer(constView([0, 1]), 0)).toBe("100");
         expect(renderer(constView([13, 0]), 0)).toBe("d");
     });
+    describe("renders 8-byte zero also for variable-width", () => {
+        const rendererDec = createIntRenderer({width: 8, displayBase: 10, fixedWidth: false});
+        expect(rendererDec(constView([0, 0, 0, 0, 0, 0, 0, 0]), 0)).toBe("0");
+    });
 });
 
 describe("The 4-byte float renderer", () => {

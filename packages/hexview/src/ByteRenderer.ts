@@ -300,6 +300,7 @@ function formatInteger64bit(low: number, high: number, base: number, width: numb
         low = Math.floor(mod / base);
         s = (mod % base).toString(base) + s;
     }
+    if (s == "") s = "0";
     s = s.padStart(width, "0");
     if (signed) {
         s = (negative ? "-" : " ") + s;
