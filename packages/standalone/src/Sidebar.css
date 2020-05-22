@@ -21,20 +21,20 @@
 }
 
 .sidebar-tabs {
-    width: 2em;
-    overflow: auto;
+    writing-mode: vertical-lr;
     border-left: 1px solid var(--secondary-border-color);
     background: var(--secondary-bg-color);
     color: var(--secondary-fg-color);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     user-select: none;
+    overflow: auto;
 }
 
 .sidebar-tab {
-    writing-mode: vertical-lr;
+    display: inline-block;
+    padding: .6em .2em;
     border-bottom: 1px solid var(--secondary-border-color);
-    padding: .5em;
     cursor: pointer;
 }
 
