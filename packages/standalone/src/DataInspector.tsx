@@ -1,6 +1,10 @@
 import React, {useMemo} from "react";
 import {createRenderer, humanReadableRendererName, RendererConfig} from "hexplore-hexview/dist/ByteRenderer";
-import {createAddressRendererConfig, createIntegerRendererConfig} from "hexplore-hexview/dist/ByteRenderer";
+import {
+    createAddressRendererConfig,
+    createIntegerRendererConfig,
+    createFloatRendererConfig,
+} from "hexplore-hexview/dist/ByteRenderer";
 
 import "./DataInspector.css";
 
@@ -10,6 +14,8 @@ export const defaultInspectorRepresentations: RendererConfig[] = [
     createIntegerRendererConfig({displayBase: 10, width: 2, signed: true, fixedWidth: false}),
     createIntegerRendererConfig({displayBase: 10, width: 4, signed: true, fixedWidth: false}),
     createIntegerRendererConfig({displayBase: 10, width: 8, signed: true, fixedWidth: false}),
+    createFloatRendererConfig({width: 4}),
+    createFloatRendererConfig({width: 8}),
 ];
 
 interface DataInspectorProps {

@@ -54,6 +54,26 @@ exports[`displays the data correctly for address 0 1`] = `
   >
      578437695752307201
   </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Float
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    +1.540e-36
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Double
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    +5.4476037220e-270
+  </div>
 </div>
 `;
 
@@ -111,6 +131,26 @@ exports[`displays the data correctly for address 1 1`] = `
   >
     .
   </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Float
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    +6.207e-36
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Double
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    ..................
+  </div>
 </div>
 `;
 
@@ -167,6 +207,26 @@ exports[`displays the data correctly for last address 1`] = `
     className="hv-data-inspector-value"
   >
     .
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Float
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    ..........
+  </div>
+  <div
+    className="hv-data-inspector-caption"
+  >
+    Double
+  </div>
+  <div
+    className="hv-data-inspector-value"
+  >
+    ..................
   </div>
 </div>
 `;
