@@ -144,6 +144,15 @@ export function DataGrid<T>({
                 case "ArrowDown":
                     newPos = cursorPosition < overallLength - lineWidth ? cursorPosition + lineWidth : cursorPosition;
                     break;
+                case "Home":
+                    newPos = Math.floor(cursorPosition / lineWidth) * lineWidth;
+                    break;
+                case "End":
+                    newPos = Math.min(
+                        Math.floor(cursorPosition / lineWidth) * lineWidth + lineWidth - 1,
+                        overallLength - 1,
+                    );
+                    break;
             }
             if (newPos !== undefined) {
                 updateCursorPosition(newPos, e.shiftKey);
