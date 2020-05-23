@@ -12,5 +12,5 @@ export interface SidebarProps {
     size?: number;
     setSize?: (s: number) => void;
 }
-export declare function TabbedSidebar({ active, setActive, size, setSize, children }: SidebarProps): JSX.Element;
+export declare function TabbedSidebar({ active, setActive, size, setSize, children: reactChildren }: SidebarProps): JSX.Element;
 //# sourceMappingURL=Sidebar.d.ts.map
