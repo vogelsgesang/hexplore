@@ -1,4 +1,14 @@
-import React, {ReactElement, ReactNode, CSSProperties, useRef, useEffect, RefObject} from "react";
+import React, {
+    ReactElement,
+    ReactNode,
+    CSSProperties,
+    useRef,
+    useEffect,
+    RefObject,
+    useCallback,
+    KeyboardEvent,
+    createRef,
+} from "react";
 import objstr from "hexplore-hexview/dist/objstr";
 
 import "./Sidebar.css";
@@ -20,9 +30,12 @@ export interface SidebarProps {
     setSize?: (s: number) => void;
 }
 
-export function TabbedSidebar({active, setActive, size, setSize, children}: SidebarProps) {
+export function TabbedSidebar({active, setActive, size, setSize, children: reactChildren}: SidebarProps) {
+    const children = React.Children.toArray(reactChildren) as ReactElement<SidebarTabProps>[];
+    const elementsRef = useRef(React.Children.map(children, () => createRef<HTMLDivElement>()));
+
     let selectedContent = undefined;
-    React.Children.forEach(children, e => {
+    children.forEach(e => {
         if (e.key === active) {
             selectedContent = e;
         }
@@ -36,22 +49,57 @@ export function TabbedSidebar({active, setActive, size, setSize, children}: Side
         );
     }
 
+    const onKeyDown = useCallback(
+        (idx: number, e: KeyboardEvent) => {
+            let activated;
+            switch (e.key) {
+                case " ":
+                case "Enter":
+                    activated = idx;
+                    break;
+                case "ArrowUp":
+                    if (idx != 0) activated = idx - 1;
+                    break;
+                case "ArrowDown":
+                    if (idx < React.Children.count(children) - 1) activated = idx + 1;
+                    break;
+            }
+            if (activated != undefined) {
+                e.preventDefault();
+                elementsRef.current[activated].current?.focus();
+                elementsRef.current[activated].current?.scrollIntoView();
+                const k = children[activated].key;
+                if (k === null) {
+                    return;
+                }
+                setActive(k === active ? undefined : k);
+            }
+        },
+        [children, active, setActive],
+    );
+
+    console.log("redraw");
     return (
         <React.Fragment>
             {renderedTab}
             <div className="sidebar-tabs">
-                {React.Children.map(children, e => {
+                {children.map((e, i) => {
                     const k = e.key;
                     if (k === null) {
                         return;
                     }
+                    console.log(k);
                     return (
                         <div
-                            onClick={() => setActive(k === active ? undefined : k)}
+                            key={k}
+                            ref={elementsRef.current[i]}
+                            tabIndex={0}
                             className={objstr({
                                 "sidebar-tab": true,
                                 selected: active === e.key,
                             })}
+                            onClick={() => setActive(k === active ? undefined : k)}
+                            onKeyDown={onKeyDown.bind(undefined, i)}
                         >
                             {e.props.caption}
                         </div>

@@ -33,9 +33,15 @@
 
 .sidebar-tab {
     display: inline-block;
+    white-space: nowrap;
     padding: .6em .2em;
+    margin: 1px; /* to make sure the focus outline stays visible */
     border-bottom: 1px solid var(--secondary-border-color);
     cursor: pointer;
+}
+
+.sidebar-tab:focus {
+    outline: 1px solid #66f;
 }
 
 .sidebar-tab.selected {
