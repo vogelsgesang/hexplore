@@ -53,10 +53,12 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
     const onKeyDown = useCallback(
         (idx: number, e: KeyboardEvent) => {
             let activated;
+            let toggle = false;
             switch (e.key) {
                 case " ":
                 case "Enter":
                     activated = idx;
+                    toggle = true;
                     break;
                 case "ArrowUp":
                     if (idx != 0) activated = idx - 1;
@@ -73,7 +75,7 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
                 if (k === null) {
                     return;
                 }
-                setActive(k === active ? undefined : k);
+                setActive(toggle && k === active ? undefined : k);
             }
         },
         [children, active, setActive],
