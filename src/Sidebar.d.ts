@@ -1,14 +1,15 @@
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import "./Sidebar.css";
 export interface SidebarTabProps {
+    id: string;
     caption: string;
     children: ReactNode | ReactNode[];
 }
 export declare function SidebarTab({ children }: SidebarTabProps): JSX.Element;
 export interface SidebarProps {
     children: ReactElement<SidebarTabProps> | ReactElement<SidebarTabProps>[];
-    active: React.Key | undefined;
-    setActive: (a: React.Key | undefined) => void;
+    active: string | undefined;
+    setActive: (a: string | undefined) => void;
     size?: number;
     setSize?: (s: number) => void;
 }
