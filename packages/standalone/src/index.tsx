@@ -65,7 +65,7 @@ function App() {
     const [selection, setSelection] = useState<Range>({from: 0, to: 1});
     const [bookmarks, setBookmarks] = useState<Array<Bookmark>>([]);
     const [viewConfig, setViewConfig] = useState<HexViewerConfig>(defaultConfig);
-    const [activeSidebar, setActiveSidebar] = useState<React.Key | undefined>("columnConfig");
+    const [activeSidebar, setActiveSidebar] = useState<string | undefined>("columnConfig");
     const bookmarkCnt = useRef(0);
     const addressEditorRef = useRef<AddressEditorHandle>(null);
     const hexViewerRef = useRef<HexViewerHandle>(null);
@@ -197,10 +197,10 @@ function App() {
                         size={sidebarSize}
                         setSize={setSidebarSize}
                     >
-                        <SidebarTab key="columnConfig" caption="Column Config">
+                        <SidebarTab id="columnConfig" caption="Column Config">
                             <HexViewerConfigEditor config={viewConfig} setConfig={setViewConfig} />
                         </SidebarTab>
-                        <SidebarTab key="dataInspector" caption="Data Inspector">
+                        <SidebarTab id="dataInspector" caption="Data Inspector">
                             <DataInspector
                                 key="dataInspector"
                                 data={data}
@@ -208,7 +208,7 @@ function App() {
                                 representations={defaultInspectorRepresentations}
                             />
                         </SidebarTab>
-                        <SidebarTab key="bookmarks" caption="Bookmarks">
+                        <SidebarTab id="bookmarks" caption="Bookmarks">
                             <BookmarksPanel
                                 bookmarks={bookmarks}
                                 setBookmarks={setBookmarks}

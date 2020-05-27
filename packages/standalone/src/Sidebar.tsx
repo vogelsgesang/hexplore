@@ -14,6 +14,7 @@ import objstr from "hexplore-hexview/dist/objstr";
 import "./Sidebar.css";
 
 export interface SidebarTabProps {
+    id: string;
     caption: string;
     children: ReactNode | ReactNode[];
 }
@@ -24,8 +25,8 @@ export function SidebarTab({children}: SidebarTabProps) {
 
 export interface SidebarProps {
     children: ReactElement<SidebarTabProps> | ReactElement<SidebarTabProps>[];
-    active: React.Key | undefined;
-    setActive: (a: React.Key | undefined) => void;
+    active: string | undefined;
+    setActive: (a: string | undefined) => void;
     size?: number;
     setSize?: (s: number) => void;
 }
@@ -36,7 +37,7 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
 
     let selectedContent = undefined;
     children.forEach(e => {
-        if (e.key === active) {
+        if (e.props.id === active) {
             selectedContent = e;
         }
     });
@@ -68,7 +69,7 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
                 e.preventDefault();
                 elementsRef.current[activated].current?.focus();
                 elementsRef.current[activated].current?.scrollIntoView();
-                const k = children[activated].key;
+                const k = children[activated].props.id;
                 if (k === null) {
                     return;
                 }
@@ -78,17 +79,15 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
         [children, active, setActive],
     );
 
-    console.log("redraw");
     return (
         <React.Fragment>
             {renderedTab}
             <div className="sidebar-tabs">
                 {children.map((e, i) => {
-                    const k = e.key;
+                    const k = e.props.id;
                     if (k === null) {
                         return;
                     }
-                    console.log(k);
                     return (
                         <div
                             key={k}
@@ -96,7 +95,7 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
                             tabIndex={0}
                             className={objstr({
                                 "sidebar-tab": true,
-                                selected: active === e.key,
+                                selected: active === e.props.id,
                             })}
                             onClick={() => setActive(k === active ? undefined : k)}
                             onKeyDown={onKeyDown.bind(undefined, i)}
