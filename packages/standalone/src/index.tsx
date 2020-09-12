@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect, useCallback} from "react";
+import React, {useRef, useState, useEffect, useCallback, Fragment} from "react";
 import ReactDOM from "react-dom";
 import {Range, HexViewer, HexViewerConfig, HexViewerHandle, defaultConfig} from "hexplore-hexview";
 import {HexViewerConfigEditor} from "./HexViewerConfigEditor";
@@ -9,6 +9,7 @@ import {BookmarksPanel, Bookmark} from "./BookmarksPanel";
 import Button from "react-bootstrap/Button";
 import {findFormat} from "./formats/formats";
 import {TabbedSidebar, SidebarTab} from "./Sidebar";
+import {IconLibrary} from "./Icon";
 import {Menu, Item, contextMenu} from "react-contexify";
 
 import "hexplore-hexview/dist/hexview.css";
@@ -163,10 +164,11 @@ function App() {
         [addressEditorRef, addBookmarkForSelection],
     );
 
+    let mainContent;
     if (!data) {
-        return <FileOpener setData={setDataWrapped} />;
+        mainContent = <FileOpener setData={setDataWrapped} />;
     } else {
-        return (
+        mainContent = (
             <div style={{display: "flex", flexDirection: "column", height: "100%", alignContent: "stretch"}}>
                 <Menu id="hexviewer-menu">
                     <Item onClick={exportSelectedRange}>Export Range</Item>
@@ -233,6 +235,12 @@ function App() {
             </div>
         );
     }
+    return (
+        <Fragment>
+            <IconLibrary />
+            {mainContent}
+        </Fragment>
+    );
 }
 
 window.addEventListener("DOMContentLoaded", _event => {

@@ -25,6 +25,7 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 
 import "./HexViewerConfigEditor.css";
+import {Icon} from "./Icon";
 
 let nextId = 0;
 function useUniqueId() {
@@ -189,7 +190,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                             size="sm"
                             variant="outline-secondary"
                         >
-                            ⮝
+                            <Icon icon="arrow-up" />
                         </Button>
                         <Button
                             disabled={isLast}
@@ -198,7 +199,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                             size="sm"
                             variant="outline-secondary"
                         >
-                            ⮟
+                            <Icon icon="arrow-down" />
                         </Button>
                         <Button
                             title="Remove"
@@ -206,7 +207,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
                             size="sm"
                             variant="outline-danger"
                         >
-                            X
+                            <Icon icon="trash" />
                         </Button>
                     </ButtonGroup>
                 </div>

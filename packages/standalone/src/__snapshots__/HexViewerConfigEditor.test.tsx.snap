@@ -687,7 +687,13 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -696,7 +702,13 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -705,7 +717,13 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -1183,7 +1201,13 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -1192,7 +1216,13 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -1201,7 +1231,13 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -1759,7 +1795,13 @@ exports[`displays the config correctly for a float column 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -1768,7 +1810,13 @@ exports[`displays the config correctly for a float column 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -1777,7 +1825,13 @@ exports[`displays the config correctly for a float column 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -2597,7 +2651,13 @@ exports[`displays the config correctly for a text column 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -2606,7 +2666,13 @@ exports[`displays the config correctly for a text column 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -2615,7 +2681,13 @@ exports[`displays the config correctly for a text column 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -3381,7 +3453,13 @@ exports[`displays the config correctly for an address column 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -3390,7 +3468,13 @@ exports[`displays the config correctly for an address column 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -3399,7 +3483,13 @@ exports[`displays the config correctly for an address column 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -4169,7 +4259,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -4178,7 +4274,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -4187,7 +4289,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -4269,7 +4377,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -4278,7 +4392,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -4287,7 +4407,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -4637,7 +4763,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move up"
             type="button"
           >
-            ⮝
+            <svg
+              className="hv-icon hv-icon-arrow-up"
+            >
+              <use
+                xlinkHref="#icon-arrow-up"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -4646,7 +4778,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Move down"
             type="button"
           >
-            ⮟
+            <svg
+              className="hv-icon hv-icon-arrow-down"
+            >
+              <use
+                xlinkHref="#icon-arrow-down"
+              />
+            </svg>
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
@@ -4655,7 +4793,13 @@ exports[`displays the config correctly for the default config 1`] = `
             title="Remove"
             type="button"
           >
-            X
+            <svg
+              className="hv-icon hv-icon-trash"
+            >
+              <use
+                xlinkHref="#icon-trash"
+              />
+            </svg>
           </button>
         </div>
       </div>
