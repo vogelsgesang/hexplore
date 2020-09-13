@@ -741,11 +741,11 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-3-0-width"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -762,7 +762,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               1
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -779,7 +779,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -796,7 +796,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               4
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -825,11 +825,11 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-3-0-base"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -846,7 +846,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -863,7 +863,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               8
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -880,7 +880,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               10
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -909,11 +909,11 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-3-0-endianess"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -930,7 +930,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               Little
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -959,11 +959,11 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-3-0-sign"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -980,7 +980,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               Signed
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1009,11 +1009,11 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-3-0-fw"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1030,7 +1030,7 @@ exports[`displays the config correctly for a 1-byte column 1`] = `
               Yes
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1255,11 +1255,11 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-4-0-width"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1276,7 +1276,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               1
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1293,7 +1293,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1310,7 +1310,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               4
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1339,11 +1339,11 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-4-0-base"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1360,7 +1360,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1377,7 +1377,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               8
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1394,7 +1394,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               10
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1423,11 +1423,11 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-4-0-endianess"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1444,7 +1444,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               Little
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1473,11 +1473,11 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-4-0-sign"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1494,7 +1494,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               Signed
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1523,11 +1523,11 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
           </label>
           <div
             aria-labelledby="id-4-0-fw"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1544,7 +1544,7 @@ exports[`displays the config correctly for a 8-byte column 1`] = `
               Yes
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1849,11 +1849,11 @@ exports[`displays the config correctly for a float column 1`] = `
           </label>
           <div
             aria-labelledby="id-5-0-width"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1870,7 +1870,7 @@ exports[`displays the config correctly for a float column 1`] = `
               4
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1899,11 +1899,11 @@ exports[`displays the config correctly for a float column 1`] = `
           </label>
           <div
             aria-labelledby="id-5-0-endianess"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -1920,7 +1920,7 @@ exports[`displays the config correctly for a float column 1`] = `
               Little
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -3507,11 +3507,11 @@ exports[`displays the config correctly for an address column 1`] = `
           </label>
           <div
             aria-labelledby="id-1-0-base"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -3528,7 +3528,7 @@ exports[`displays the config correctly for an address column 1`] = `
               10
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4313,11 +4313,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-0-base"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4334,7 +4334,7 @@ exports[`displays the config correctly for the default config 1`] = `
               10
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4431,11 +4431,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-1-width"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4452,7 +4452,7 @@ exports[`displays the config correctly for the default config 1`] = `
               1
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4469,7 +4469,7 @@ exports[`displays the config correctly for the default config 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4486,7 +4486,7 @@ exports[`displays the config correctly for the default config 1`] = `
               4
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4515,11 +4515,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-1-base"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4536,7 +4536,7 @@ exports[`displays the config correctly for the default config 1`] = `
               2
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4553,7 +4553,7 @@ exports[`displays the config correctly for the default config 1`] = `
               8
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4570,7 +4570,7 @@ exports[`displays the config correctly for the default config 1`] = `
               10
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4599,11 +4599,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-1-endianess"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4620,7 +4620,7 @@ exports[`displays the config correctly for the default config 1`] = `
               Little
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4649,11 +4649,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-1-sign"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4670,7 +4670,7 @@ exports[`displays the config correctly for the default config 1`] = `
               Signed
             </label>
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4699,11 +4699,11 @@ exports[`displays the config correctly for the default config 1`] = `
           </label>
           <div
             aria-labelledby="id-6-1-fw"
-            className="btn-group btn-group-sm btn-group-toggle"
+            className="btn-group btn-group-toggle"
             role="group"
           >
             <label
-              className="btn active btn-primary"
+              className="btn active btn-primary btn-sm"
               disabled={false}
             >
               <input
@@ -4720,7 +4720,7 @@ exports[`displays the config correctly for the default config 1`] = `
               Yes
             </label>
             <label
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
               disabled={false}
             >
               <input

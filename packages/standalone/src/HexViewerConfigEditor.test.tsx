@@ -55,7 +55,7 @@ describe("can add columns", () => {
         render(
             <HexViewerConfigEditor
                 config={cfg}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -97,7 +97,7 @@ describe("can remove columns", () => {
         render(
             <HexViewerConfigEditor
                 config={cfg}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -131,7 +131,7 @@ describe("can reorder columns", () => {
         render(
             <HexViewerConfigEditor
                 config={cfg}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -167,7 +167,7 @@ describe("linewidth", () => {
         render(
             <HexViewerConfigEditor
                 config={cfgRef.current}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -183,7 +183,7 @@ describe("linewidth", () => {
         render(
             <HexViewerConfigEditor
                 config={cfgRef.current}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -200,7 +200,7 @@ describe("linewidth", () => {
         render(
             <HexViewerConfigEditor
                 config={cfgRef.current}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -224,7 +224,7 @@ describe("can change AddressGutter config", () => {
         render(
             <HexViewerConfigEditor
                 config={initialCfg}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
@@ -252,7 +252,7 @@ function interactToggleButton<T extends RendererConfig>(
     render(
         <HexViewerConfigEditor
             config={initialCfg}
-            setConfig={cfg => {
+            setConfig={(cfg) => {
                 cfgRef.current = cfg;
             }}
         />,
@@ -346,14 +346,14 @@ describe("can change Text config", () => {
         render(
             <HexViewerConfigEditor
                 config={initialCfg}
-                setConfig={cfg => {
+                setConfig={(cfg) => {
                     cfgRef.current = cfg;
                 }}
             />,
         );
         const select = screen.getByLabelText(/Encoding/i) as HTMLSelectElement;
         // Check that all options are available
-        expect(Array.from(select.options).map(e => e.value)).toEqual([
+        expect(Array.from(select.options).map((e) => e.value)).toEqual([
             "ascii",
             "utf8",
             "utf16le",

@@ -36,7 +36,7 @@ export function TabbedSidebar({active, setActive, size, setSize, children: react
     const elementsRef = useRef(React.Children.map(children, () => createRef<HTMLDivElement>()));
 
     let selectedContent = undefined;
-    children.forEach(e => {
+    children.forEach((e) => {
         if (e.props.id === active) {
             selectedContent = e;
         }
@@ -178,7 +178,7 @@ function Resizable({size, setSize, children, className}: ResizableProps) {
             if (!containerRef.current) return;
             startSize.current = containerRef.current.clientWidth;
         },
-        onDrag: d => {
+        onDrag: (d) => {
             if (!setSize || !startSize.current) return;
             setSize(Math.min(Math.max(startSize.current - d.x, 10), 1000));
         },

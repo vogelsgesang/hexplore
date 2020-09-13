@@ -122,13 +122,13 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         viewOffsetY: viewOffset,
         cursorPosition: Math.floor(cursorPosition / elementWidth),
         setHoverPosition: useCallback(
-            e =>
+            (e) =>
                 setHoverRange
                     ? setHoverRange(e !== undefined ? {from: e * elementWidth, to: (e + 1) * elementWidth} : undefined)
                     : undefined,
             [setHoverRange, elementWidth],
         ),
-        setCursorPosition: useCallback(e => (setCursorPosition ? setCursorPosition(e * elementWidth) : undefined), [
+        setCursorPosition: useCallback((e) => (setCursorPosition ? setCursorPosition(e * elementWidth) : undefined), [
             setCursorPosition,
             elementWidth,
         ]),
@@ -146,7 +146,7 @@ const HexViewerColumn = React.memo(function HexViewerColumn({
         ),
         highlightRanges: useMemo(
             () =>
-                highlightRanges?.map(h => {
+                highlightRanges?.map((h) => {
                     return {...h, from: Math.floor(h.from / elementWidth), to: Math.ceil(h.to / elementWidth)};
                 }),
             [highlightRanges, elementWidth],

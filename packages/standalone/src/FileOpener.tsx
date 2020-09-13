@@ -20,17 +20,17 @@ export function FileOpener({setData}: FileOpenerProps) {
     function openURL(url: string) {
         setLoadState({state: "loading", detail: 'Downloading "' + url + '"'});
         fetch(url)
-            .then(function(response) {
+            .then(function (response) {
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 return response.arrayBuffer();
             })
-            .then(response => {
+            .then((response) => {
                 setLoadState({state: "pristine"});
                 setData(response);
             })
-            .catch(e => {
+            .catch((e) => {
                 // Show the error only after some additonal time.
                 // Thereby, we make sure that the spinner is visible for at least for a short moment and
                 // we don't get an unpleasant "flash" in case the download fails immediately.
@@ -88,14 +88,14 @@ export function FileOpener({setData}: FileOpenerProps) {
                 <div className="caption">Which file do you want to open?</div>
                 <div className="source-alternatives">
                     <form
-                        onSubmit={e => {
+                        onSubmit={(e) => {
                             openURL(url);
                             e.preventDefault();
                         }}
                         className="source-alternative-url"
                     >
                         <div className="source-caption">Remote file</div>
-                        <input aria-label="URL" value={url} onChange={e => setUrl(e.target.value)} />
+                        <input aria-label="URL" value={url} onChange={(e) => setUrl(e.target.value)} />
                         <Button type="submit" size="sm" block>
                             Open URL
                         </Button>

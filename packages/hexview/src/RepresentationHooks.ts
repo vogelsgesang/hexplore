@@ -10,17 +10,16 @@ interface Vector2 {
 export function useScrollAware<T extends HTMLElement>(ref: RefObject<T>): Vector2 {
     const [scrollPos, setScrollPos] = useState<Vector2>({x: 0, y: 0});
 
-    function onScroll(e: Event) {
-        setScrollPos({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
-    }
-
     useLayoutEffect(() => {
         const scrollElem = ref.current;
         assert(scrollElem);
         setScrollPos({x: scrollElem.scrollLeft, y: scrollElem.scrollTop});
+        function onScroll(e: Event) {
+            setScrollPos({x: (e.target as T).scrollLeft, y: (e.target as T).scrollTop});
+        }
         scrollElem.addEventListener("scroll", onScroll);
         return () => scrollElem.removeEventListener("scroll", onScroll);
-    }, [ref]);
+    }, [ref, setScrollPos]);
 
     return scrollPos;
 }
@@ -31,7 +30,7 @@ export function useSizeAware<T extends HTMLElement>(ref: RefObject<T>): Vector2 
     useLayoutEffect(() => {
         const elem = ref.current;
         assert(elem);
-        const ro = new ResizeObserver(entries => {
+        const ro = new ResizeObserver((entries) => {
             assert(entries.length === 1);
             const entry = entries[0];
             const {width, height} = entry.contentRect;
@@ -149,7 +148,7 @@ export function useInfiniteScroll<T extends HTMLElement>({
     }
 
     useLayoutEffect(
-        function() {
+        function () {
             // It's important that we don't set the scroll position, if we are already close by ~1px.
             // Otherwise, we might enten an endless scrolling loop due to rounding issues (observed in Firefox)
             if (ref.current && Math.abs(physicalScrollPos - ref.current.scrollTop) >= 1) {

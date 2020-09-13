@@ -69,7 +69,7 @@ export const AddressEditor = forwardRef<AddressEditorHandle, AdressEditorPropert
             ref={inputRef}
             value={displayedValue}
             onFocus={onFocus}
-            onChange={e => setDraft(e.target.value)}
+            onChange={(e) => setDraft(e.target.value)}
             onKeyDown={onKeyDown}
             onBlur={() => setDraft(undefined)}
             width={16}

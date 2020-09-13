@@ -277,9 +277,7 @@ function createUtf32Renderer(littleEndian: boolean) {
 }
 
 function formatInteger(v: number, base: number, width: number, signed: boolean) {
-    let s = Math.abs(v)
-        .toString(base)
-        .padStart(width, "0");
+    let s = Math.abs(v).toString(base).padStart(width, "0");
     if (signed) {
         s = (v < 0 ? "-" : " ") + s;
     }

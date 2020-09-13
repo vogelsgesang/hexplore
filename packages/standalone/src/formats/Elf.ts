@@ -1,9 +1,9 @@
 import {Bookmark} from "../BookmarksPanel";
 import {FileFormatSpecification} from "./formats";
-//eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+//eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import {KaitaiStream} from "kaitai-struct";
-//eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+//eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import Elf from "./katai/Elf";
 

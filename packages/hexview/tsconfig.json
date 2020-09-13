@@ -4,12 +4,12 @@
     "compilerOptions": {
       "target": "es5",
       "module": "CommonJS",
-      "lib": ["dom", "es5"],
+      "lib": ["dom", "es2017"],
       "jsx": "react",
       "rootDir": "src",
       "outDir": "dist",
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "types": ["jest", "react", "react-dom"]
     },
     "include": ["src/**/*"]
-  }
-  
+}

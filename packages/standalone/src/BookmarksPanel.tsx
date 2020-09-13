@@ -20,14 +20,14 @@ interface BookmarksPanelProps {
 export function BookmarksPanel({bookmarks, setBookmarks, goto, exportRange}: BookmarksPanelProps) {
     function removeBookmark(pos: number) {
         setBookmarks(
-            produce(bookmarks, draft => {
+            produce(bookmarks, (draft) => {
                 draft.splice(pos, 1);
             }),
         );
     }
     function renameBookmark(pos: number, newName: string) {
         setBookmarks(
-            produce(bookmarks, draft => {
+            produce(bookmarks, (draft) => {
                 draft[pos].name = newName;
             }),
         );
@@ -43,7 +43,7 @@ export function BookmarksPanel({bookmarks, setBookmarks, goto, exportRange}: Boo
                     type="text"
                     className="hv-stealth-input hv-bookmarks-list-name"
                     value={bookmark.name}
-                    onChange={e => renameBookmark(i, e.target.value)}
+                    onChange={(e) => renameBookmark(i, e.target.value)}
                 />
                 <ButtonGroup>
                     <Button onClick={() => goto(bookmark)} size="sm" variant="outline-primary">

@@ -1,4 +1,4 @@
-export default function(obj: {[key: string]: boolean}): string {
+export default function (obj: {[key: string]: boolean}): string {
     let k,
         cls = "";
     for (k in obj) {

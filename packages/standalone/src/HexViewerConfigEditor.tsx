@@ -60,7 +60,7 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
             <select
                 id={lineWidthId}
                 value={config.lineWidth}
-                onChange={e => setConfig({...config, lineWidth: Number.parseInt(e.target.value)})}
+                onChange={(e) => setConfig({...config, lineWidth: Number.parseInt(e.target.value)})}
             >
                 {widthOptions}
             </select>
@@ -69,42 +69,42 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
 
     function addAddressGutter() {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.push(createAddressRendererConfig());
             }),
         );
     }
     function addIntegerColumn() {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.push(createIntegerRendererConfig({displayBase: 10}));
             }),
         );
     }
     function addHexColumn() {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.push(createIntegerRendererConfig({displayBase: 16}));
             }),
         );
     }
     function addFloatColumn() {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.push(createFloatRendererConfig({width: 4}));
             }),
         );
     }
     function addTextColumn() {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.push(createTextRendererConfig());
             }),
         );
     }
     function moveUp(pos: number) {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 const tmp = draft.columns[pos - 1];
                 draft.columns[pos - 1] = draft.columns[pos];
                 draft.columns[pos] = tmp;
@@ -116,14 +116,14 @@ export function HexViewerConfigEditor({config, setConfig}: HexViewerConfigEditor
     }
     function removeColumn(pos: number) {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.splice(pos, 1);
             }),
         );
     }
     function setColumnConfig(pos: number, columnConfig: RendererConfig) {
         setConfig(
-            produce(config, draft => {
+            produce(config, (draft) => {
                 draft.columns.splice(pos, 1, columnConfig);
                 const alignment = getAlignment(columnConfig);
                 draft.lineWidth = Math.ceil(draft.lineWidth / alignment) * alignment;
@@ -252,7 +252,7 @@ function AddressGutterConfigEditor({
 }: ColumnConfigEditorProps<AddressRendererConfig>) {
     const changeBase = (v: AddressDisplayBase) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.displayBase = v;
             }),
         );
@@ -267,10 +267,13 @@ function AddressGutterConfigEditor({
                     name={id + "-base"}
                     value={columnConfig.displayBase}
                     onChange={changeBase}
-                    size="sm"
                 >
-                    <ToggleButton value={10}>10</ToggleButton>
-                    <ToggleButton value={16}>16</ToggleButton>
+                    <ToggleButton size="sm" value={10}>
+                        10
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={16}>
+                        16
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>
@@ -285,7 +288,7 @@ function TextColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConfi
                 <select
                     aria-labelledby={id + "-encoding"}
                     value={columnConfig.encoding}
-                    onChange={e =>
+                    onChange={(e) =>
                         setColumnConfig({...columnConfig, encoding: e.target.value as typeof columnConfig.encoding})
                     }
                 >
@@ -308,35 +311,35 @@ function IntegerColumnConfigEditor({
 }: ColumnConfigEditorProps<IntegerRendererConfig>) {
     const changeWidth = (v: 1 | 2 | 4 | 8) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.width = v;
             }),
         );
     };
     const changeBase = (v: IntegerDisplayBase) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.displayBase = v;
             }),
         );
     };
     const changeLE = (v: boolean) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.littleEndian = v;
             }),
         );
     };
     const changeSigned = (v: boolean) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.signed = v;
             }),
         );
     };
     const changeFixedWidth = (v: boolean) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.fixedWidth = v;
             }),
         );
@@ -351,12 +354,19 @@ function IntegerColumnConfigEditor({
                     name={id + "-width"}
                     value={columnConfig.width}
                     onChange={changeWidth}
-                    size="sm"
                 >
-                    <ToggleButton value={1}>1</ToggleButton>
-                    <ToggleButton value={2}>2</ToggleButton>
-                    <ToggleButton value={4}>4</ToggleButton>
-                    <ToggleButton value={8}>8</ToggleButton>
+                    <ToggleButton size="sm" value={1}>
+                        1
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={2}>
+                        2
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={4}>
+                        4
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={8}>
+                        8
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
@@ -367,12 +377,19 @@ function IntegerColumnConfigEditor({
                     name={id + "-base"}
                     value={columnConfig.displayBase}
                     onChange={changeBase}
-                    size="sm"
                 >
-                    <ToggleButton value={2}>2</ToggleButton>
-                    <ToggleButton value={8}>8</ToggleButton>
-                    <ToggleButton value={10}>10</ToggleButton>
-                    <ToggleButton value={16}>16</ToggleButton>
+                    <ToggleButton size="sm" value={2}>
+                        2
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={8}>
+                        8
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={10}>
+                        10
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={16}>
+                        16
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
@@ -383,10 +400,13 @@ function IntegerColumnConfigEditor({
                     name={id + "-endianess"}
                     value={columnConfig.littleEndian}
                     onChange={changeLE}
-                    size="sm"
                 >
-                    <ToggleButton value={true}>Little</ToggleButton>
-                    <ToggleButton value={false}>Big</ToggleButton>
+                    <ToggleButton size="sm" value={true}>
+                        Little
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={false}>
+                        Big
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
@@ -397,10 +417,13 @@ function IntegerColumnConfigEditor({
                     name={id + "-sign"}
                     value={columnConfig.signed}
                     onChange={changeSigned}
-                    size="sm"
                 >
-                    <ToggleButton value={true}>Signed</ToggleButton>
-                    <ToggleButton value={false}>Unsigned</ToggleButton>
+                    <ToggleButton size="sm" value={true}>
+                        Signed
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={false}>
+                        Unsigned
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
@@ -411,10 +434,13 @@ function IntegerColumnConfigEditor({
                     name={id + "-fw"}
                     value={columnConfig.fixedWidth}
                     onChange={changeFixedWidth}
-                    size="sm"
                 >
-                    <ToggleButton value={true}>Yes</ToggleButton>
-                    <ToggleButton value={false}>No</ToggleButton>
+                    <ToggleButton size="sm" value={true}>
+                        Yes
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={false}>
+                        No
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>
@@ -424,14 +450,14 @@ function IntegerColumnConfigEditor({
 function FloatColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConfigEditorProps<FloatRendererConfig>) {
     const changeWidth = (v: 4 | 8) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.width = v;
             }),
         );
     };
     const changeLE = (v: boolean) => {
         setColumnConfig(
-            produce(columnConfig, draft => {
+            produce(columnConfig, (draft) => {
                 draft.littleEndian = v;
             }),
         );
@@ -446,10 +472,13 @@ function FloatColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConf
                     name={id + "-width"}
                     value={columnConfig.width}
                     onChange={changeWidth}
-                    size="sm"
                 >
-                    <ToggleButton value={4}>4</ToggleButton>
-                    <ToggleButton value={8}>8</ToggleButton>
+                    <ToggleButton size="sm" value={4}>
+                        4
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={8}>
+                        8
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
             <div className="hv-form-row">
@@ -460,10 +489,13 @@ function FloatColumnConfigEditor({id, columnConfig, setColumnConfig}: ColumnConf
                     name={id + "-endianess"}
                     value={columnConfig.littleEndian}
                     onChange={changeLE}
-                    size="sm"
                 >
-                    <ToggleButton value={true}>Little</ToggleButton>
-                    <ToggleButton value={false}>Big</ToggleButton>
+                    <ToggleButton size="sm" value={true}>
+                        Little
+                    </ToggleButton>
+                    <ToggleButton size="sm" value={false}>
+                        Big
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </React.Fragment>

@@ -113,7 +113,7 @@ export class HexViewerView extends DOMWidgetView {
 
     rebuildHighlightRanges() {
         const rawRanges: Array<PyHightlightRanges> = this.model.get("highlight_ranges");
-        this.highlightRanges = rawRanges.map(function(r, i): HighlightRange {
+        this.highlightRanges = rawRanges.map(function (r, i): HighlightRange {
             return {from: r.from, to: r.to, className: "hv-highlight-" + r.style, key: "h" + i};
         });
         console.log(this.highlightRanges);
@@ -131,7 +131,7 @@ export class HexViewerView extends DOMWidgetView {
                 data={data}
                 viewConfig={this.columnConfig}
                 cursorPosition={cursorPosition}
-                setCursorPosition={pos => {
+                setCursorPosition={(pos) => {
                     this.model.set("cursor_position", pos);
                     this.model.save_changes();
                 }}

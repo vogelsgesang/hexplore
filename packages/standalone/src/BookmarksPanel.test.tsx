@@ -33,7 +33,7 @@ test("can remove a bookmark", () => {
         <BookmarksPanel
             {...dummyProps}
             bookmarks={testBookmarkList}
-            setBookmarks={b => {
+            setBookmarks={(b) => {
                 cfgRef.current = b;
             }}
         />,
@@ -51,7 +51,7 @@ test("can edit the name", () => {
         <BookmarksPanel
             {...dummyProps}
             bookmarks={testBookmarkList}
-            setBookmarks={b => {
+            setBookmarks={(b) => {
                 cfgRef.current = b;
             }}
         />,

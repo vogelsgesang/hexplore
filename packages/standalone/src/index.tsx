@@ -148,7 +148,7 @@ function App() {
     }
 
     useEffect(
-        function() {
+        function () {
             function onKeyDown(e: KeyboardEvent) {
                 if (e.key == "g" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
                     addressEditorRef.current?.focus();
@@ -177,7 +177,7 @@ function App() {
                 <div style={{flex: 1, minHeight: 0, display: "flex"}}>
                     <div
                         style={{flex: 1, minWidth: 0, display: "flex"}}
-                        onContextMenu={e => {
+                        onContextMenu={(e) => {
                             contextMenu.show({id: "hexviewer-menu", event: e});
                             e.preventDefault();
                         }}
@@ -243,7 +243,7 @@ function App() {
     );
 }
 
-window.addEventListener("DOMContentLoaded", _event => {
+window.addEventListener("DOMContentLoaded", (_event) => {
     const domContainer = document.querySelector("#main");
     ReactDOM.render(<App />, domContainer);
 });
